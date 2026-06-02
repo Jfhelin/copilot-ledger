@@ -1,0 +1,107 @@
+import type { TrackType } from "./theme";
+
+export interface TokenUsage {
+  inputTokens?: number;
+  outputTokens?: number;
+  cacheRead?: number;
+  cacheWrite?: number;
+  cacheHitRate?: number;
+}
+
+export type SessionFormat = "claude-code" | "copilot-cli" | "vscode-chat" | "atif" | "copilot-prompts" | "copilot-chat-export" | "codex";
+
+export interface ParseIssues {
+  malformedLines: number;
+  invalidEvents: number;
+}
+
+export interface NormalizedEvent {
+  t: number;
+  agent: string;
+  track: TrackType;
+  text: string;
+  duration: number;
+  intensity: number;
+  toolName?: string;
+  toolInput?: unknown;
+  raw?: unknown;
+  turnIndex?: number;
+  isError: boolean;
+  model?: string | null;
+  tokenUsage?: TokenUsage | null;
+  toolCallId?: string | null;
+  parentToolCallId?: string | null;
+  agentName?: string | null;
+  agentDisplayName?: string | null;
+  [key: string]: unknown;
+}
+
+export interface EventEntry {
+  index: number;
+  event: NormalizedEvent;
+}
+
+export interface SessionTurn {
+  index: number;
+  startTime: number;
+  endTime: number;
+  eventIndices: number[];
+  userMessage?: string;
+  toolCount?: number;
+  hasError?: boolean;
+  [key: string]: unknown;
+}
+
+export interface SessionMetadata {
+  totalEvents: number;
+  totalTurns: number;
+  totalToolCalls: number;
+  errorCount: number;
+  duration: number;
+  models: Record<string, number>;
+  primaryModel: string | null;
+  tokenUsage?: TokenUsage | null;
+  warnings?: string[];
+  parseIssues?: ParseIssues;
+  format?: SessionFormat;
+  customTitle?: string;
+  generatedTitle?: string;
+  sessionMode?: string;
+  totalCost?: number | null;
+  totalCostUnit?: "usd" | "premium_requests" | null;
+  [key: string]: unknown;
+}
+
+export interface ParsedSession {
+  events: NormalizedEvent[];
+  turns: SessionTurn[];
+  metadata: SessionMetadata;
+}
+
+export interface TimeMap {
+  toPosition: (time: number) => number;
+  toTime: (position: number) => number;
+  displayTotal: number;
+  hasCompression: boolean;
+}
+
+export interface WaterfallItem {
+  event: NormalizedEvent;
+  originalIndex: number;
+  depth: number;
+  parentToolCallId: string | null;
+}
+
+export interface WaterfallStats {
+  totalCalls: number;
+  maxConcurrency: number;
+  maxDepth: number;
+  longestTool: string | null;
+  toolFrequency: Record<string, number>;
+}
+
+export interface WaterfallLayoutItem {
+  item: WaterfallItem;
+  top: number;
+  height: number;
+}

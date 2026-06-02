@@ -1,0 +1,9 @@
+{
+  "name": "@copilot-ledger/skill",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Copilot CLI skill for analysing VS Code Copilot Chat exports (token spend, cache, sub-agent flow).",
+  "scripts": {
+    "install-local": "ln -sfn \"$(pwd)\" \"$HOME/.copilot/skills/copilot-chat-export\""
+  }
+}
