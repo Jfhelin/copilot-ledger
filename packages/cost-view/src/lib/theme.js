@@ -282,15 +282,16 @@ var LIGHT_THEME = {
   },
 };
 
-var themePreference = "dark";
-var systemThemePreference = "dark";
+// copilot-ledger: light mode only.
+var themePreference = "light";
+var systemThemePreference = "light";
 
-function normalizeThemePreference(mode) {
-  return mode === "light" || mode === "dark" ? mode : "system";
+function normalizeThemePreference(_mode) {
+  return "light";
 }
 
-function normalizeResolvedMode(mode) {
-  return mode === "light" ? "light" : "dark";
+function normalizeResolvedMode(_mode) {
+  return "light";
 }
 
 export function readStoredThemePreference() {

@@ -1,46 +1,90 @@
-// postMessage bridge between this iframe and a parent canvas extension.
+// Bridge between this iframe and the parent Copilot CLI canvas extension.
 //
-// Protocol (parent -> iframe):
+// The iframe is loaded from the extension's own loopback HTTP server, so we
+// communicate over fetch (iframe -> extension) and SSE (extension -> iframe).
+// `window.parent` belongs to the host app, NOT the extension; postMessage is
+// the wrong tool here.
+//
+// Protocol (extension -> iframe, via GET /api/events SSE):
 //   { type: "loadExport",   content: string, label?: string }
 //   { type: "setSelection", promptId: string | null }
 //
-// Protocol (iframe -> parent):
-//   { type: "ready" }
-//   { type: "loaded",       label?: string, prompts: number }
-//   { type: "selection",    promptId: string | null, summary?: object }
+// Protocol (iframe -> extension, via POST):
+//   POST /api/ready                         -- iframe boot, replays last load
+//   POST /api/selection {promptId, summary} -- user clicked a prompt
 //
-// All messages are origin-agnostic but only forwarded to `window.parent`.
-// The bridge is a no-op when the page is opened standalone (no parent).
+// The bridge is a no-op when there is no /api/events endpoint (standalone use).
 
-export function initBridge({ onLoadExport, onSetSelection } = {}) {
-  if (window.parent === window) {
-    return {
-      dispose() {},
-      notifyLoaded() {},
-      notifySelection() {},
-    };
+export function initBridge({ onLoadExport, onSetSelection, onSetSummaries, onSummariesPending } = {}) {
+  let source = null;
+  let disposed = false;
+
+  function endpoint(path) {
+    return new URL(path, window.location.origin).toString();
   }
 
-  function onMessage(event) {
-    const data = event.data;
-    if (!data || typeof data !== "object") return;
-    if (data.type === "loadExport" && typeof data.content === "string") {
-      onLoadExport?.(data.content, data.label);
-    } else if (data.type === "setSelection") {
-      onSetSelection?.(data.promptId ?? null);
+  function open() {
+    try {
+      source = new EventSource(endpoint("/api/events"));
+    } catch {
+      return;
     }
+    source.addEventListener("loadExport", function (ev) {
+      try {
+        const data = JSON.parse(ev.data);
+        onLoadExport?.(data.content, data.label);
+      } catch {}
+    });
+    source.addEventListener("setSelection", function (ev) {
+      try {
+        const data = JSON.parse(ev.data);
+        onSetSelection?.(data.promptId ?? null);
+      } catch {}
+    });
+    source.addEventListener("setSummaries", function (ev) {
+      try {
+        const data = ev.data === "null" ? null : JSON.parse(ev.data);
+        onSetSummaries?.(data);
+      } catch {}
+    });
+    source.addEventListener("setSummariesPending", function (ev) {
+      try {
+        const data = JSON.parse(ev.data);
+        onSummariesPending?.(!!data.pending);
+      } catch {}
+    });
+    source.addEventListener("error", function () {
+      // Browser auto-reconnects; nothing to do.
+    });
+    fetch(endpoint("/api/ready"), { method: "POST" }).catch(function () {});
   }
 
-  window.addEventListener("message", onMessage);
-  window.parent.postMessage({ type: "ready" }, "*");
+  open();
 
   return {
-    dispose() { window.removeEventListener("message", onMessage); },
+    dispose() {
+      disposed = true;
+      source?.close();
+    },
     notifyLoaded(payload) {
-      window.parent.postMessage({ type: "loaded", ...payload }, "*");
+      if (disposed) return;
+      fetch(endpoint("/api/loaded"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload || {}),
+      }).catch(function () {});
     },
     notifySelection(promptId, summary) {
-      window.parent.postMessage({ type: "selection", promptId, summary }, "*");
+      if (disposed) return;
+      fetch(endpoint("/api/selection"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ promptId: promptId ?? null, summary: summary ?? null }),
+      }).catch(function () {});
+    },
+    requestSummaries() {
+      if (disposed) return;
+      fetch(endpoint("/api/requestSummaries"), { method: "POST" }).catch(function () {});
     },
   };
 }

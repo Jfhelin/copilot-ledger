@@ -191,13 +191,23 @@ function ContextBars({ calls }) {
   );
 }
 
-export default function CostView({ events, metadata }) {
+export default function CostView({ events, metadata, selectedPromptId, onSelectPrompt, summaries, summariesPending, onRequestSummaries, canRequestSummaries }) {
   // Rich Chat-export view: when the parser has populated a fork-shape
   // costAnalysis (prompts[] + per-event components/category/etc.), delegate
   // to the dedicated 3-column ledger that supports per-prompt drilldown.
   // Other formats fall through to the generic summary below.
   if (metadata && metadata.costAnalysis && Array.isArray(metadata.costAnalysis.prompts)) {
-    return <CostViewChatExport analysis={metadata.costAnalysis} />;
+    return (
+      <CostViewChatExport
+        analysis={metadata.costAnalysis}
+        selectedPromptId={selectedPromptId}
+        onSelectPrompt={onSelectPrompt}
+        summaries={summaries}
+        summariesPending={summariesPending}
+        onRequestSummaries={onRequestSummaries}
+        canRequestSummaries={canRequestSummaries}
+      />
+    );
   }
   var analysis = useMemo(function () {
     return buildCostAnalysis(events || [], metadata || {});

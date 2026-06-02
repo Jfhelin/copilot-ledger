@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { theme } from "../lib/theme.js";
 import { estimateCost, hasModelPricing, getModelPrice } from "../lib/pricing.js";
 import { estimateImageTokens, imageDollarCost } from "../lib/imageTokenEstimate.js";
-import { buildLlmAnalysisPrompt, detectUnusedTools, aggregateSkillCarry } from "../lib/llmAnalysisExport";
+import { detectUnusedTools, aggregateSkillCarry } from "../lib/llmAnalysisExport";
 import { buildAgentThreads } from "../lib/agentThreads";
 import usePersistentState from "../hooks/usePersistentState.js";
 
@@ -3114,53 +3114,7 @@ function Kpis(props) {
   );
 }
 
-// "Copy LLM analysis prompt" button. Builds a markdown+JSON payload (see
-// `buildLlmAnalysisPrompt` in lib/llmAnalysisExport.ts) and drops it on the
-// clipboard. The user pastes the result into ChatGPT / Claude / etc. and
-// gets a structured session report back.
-function ExportPromptButton(props) {
-  var analysis = props.analysis;
-  var sessionLabel = props.sessionLabel;
-  var [status, setStatus] = useState("idle"); // idle | copied | error
-  function onClick() {
-    try {
-      var text = buildLlmAnalysisPrompt(analysis, { sessionLabel: sessionLabel });
-      navigator.clipboard.writeText(text).then(
-        function () { setStatus("copied"); setTimeout(function () { setStatus("idle"); }, 2400); },
-        function () { setStatus("error"); setTimeout(function () { setStatus("idle"); }, 3000); }
-      );
-    } catch (e) {
-      setStatus("error");
-      setTimeout(function () { setStatus("idle"); }, 3000); // eslint-disable-line
-    }
-  }
-  var label = status === "copied" ? "✓ Analysis prompt copied"
-    : status === "error" ? "Copy failed -- see console"
-    : "Copy for LLM analysis";
-  return (
-    <div style={{ marginTop: 12, display: "flex", justifyContent: "flex-end", gap: 8 }}>
-      <button
-        type="button"
-        onClick={onClick}
-        title="Copy the session wrapped in analyst instructions. Paste into ChatGPT/Claude/Copilot to get a focused report on efficiency, model fit, and what the user could have done differently."
-        style={{
-          background: status === "copied" ? "rgba(34,197,94,0.15)" : "transparent",
-          border: "1px solid " + (status === "error" ? theme.semantic.error : theme.border.default),
-          color: status === "copied" ? theme.semantic.success
-            : status === "error" ? theme.semantic.error
-            : theme.accent.primary,
-          padding: "4px 12px",
-          borderRadius: theme.radius.sm,
-          cursor: "pointer",
-          fontFamily: theme.font.mono,
-          fontSize: theme.fontSize.xs,
-        }}
-      >
-        {label}
-      </button>
-    </div>
-  );
-}
+// "Copy LLM analysis prompt" button removed in copilot-ledger.
 
 
 // two groups: user-facing calls vs 'overhead' calls (title generation,
@@ -3457,8 +3411,100 @@ function AgentThreadsRow(props) {
   );
 }
 
+// Two collapsible summary boxes (user goal + agent approach) rendered above
+// the glossary. Content is authored by the chat LLM via the canvas
+// `setSummaries` action and persisted in the iframe's localStorage by App.jsx.
+function SessionSummaries(props) {
+  var summaries = props.summaries || null;
+  var pending = !!props.pending;
+  var [userOpen, setUserOpen] = useState(true);
+  var [agentOpen, setAgentOpen] = useState(true);
+  var hasContent = summaries && (summaries.userGoal || summaries.agentApproach);
+
+  function renderBox(title, body, open, setOpen) {
+    return (
+      <div style={{
+        border: "1px solid " + theme.border.default,
+        borderRadius: theme.radius.md,
+        background: theme.bg.surface,
+        marginBottom: 8,
+        overflow: "hidden",
+      }}>
+        <button
+          type="button"
+          onClick={function () { setOpen(!open); }}
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 12px",
+            background: "transparent",
+            border: "none",
+            color: theme.text.muted,
+            fontSize: theme.fontSize.xs,
+            textTransform: "uppercase",
+            letterSpacing: 0.6,
+            fontFamily: theme.font.mono,
+            cursor: "pointer",
+            textAlign: "left",
+          }}
+        >
+          <span>{title}</span>
+          <span style={{ color: theme.text.dim }}>{open ? "▾" : "▸"}</span>
+        </button>
+        {open && (
+          <div style={{
+            padding: "0 12px 10px 12px",
+            color: theme.text.primary,
+            fontSize: theme.fontSize.sm,
+            lineHeight: 1.55,
+            whiteSpace: "pre-wrap",
+          }}>
+            {body || <span style={{ color: theme.text.dim, fontStyle: "italic" }}>Not generated yet.</span>}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <div style={{
+        display: "flex",
+        alignItems: "baseline",
+        justifyContent: "space-between",
+        marginBottom: 8,
+      }}>
+        <div style={{ color: theme.text.muted, fontSize: theme.fontSize.xs, textTransform: "uppercase", letterSpacing: 0.6 }}>
+          Session summary
+        </div>
+        {pending && (
+          <div style={{ color: theme.text.dim, fontSize: theme.fontSize.xs, fontStyle: "italic" }}>
+            Generating on next chat turn…
+          </div>
+        )}
+      </div>
+      {renderBox("What the user wanted", summaries?.userGoal, userOpen, setUserOpen)}
+      {renderBox("How the agent approached it", summaries?.agentApproach, agentOpen, setAgentOpen)}
+      {pending && !hasContent && (
+        <div style={{ color: theme.text.dim, fontSize: theme.fontSize.xs, marginTop: 4, fontStyle: "italic" }}>
+          Send any chat message to trigger generation.
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CostView(props) {
   var analysis = props.analysis;
+  var selectedPromptId = props.selectedPromptId || null;
+  var onSelectPrompt = props.onSelectPrompt || null;
+  var summaries = props.summaries || null;
+  var summariesPending = !!props.summariesPending;
+  var onRequestSummaries = props.onRequestSummaries || null;
+  var canRequestSummaries = props.canRequestSummaries !== false;
   var [openRow, setOpenRow] = useState({});
   var [showOverhead, setShowOverhead] = useState(false);
   var [unit, setUnit] = usePersistentState("agentviz.cost.unit", "credits");
@@ -3583,10 +3629,14 @@ export default function CostView(props) {
         Three different lenses on "input": context size, growth, and billing.
       </div>
 
-      <ExportPromptButton analysis={analysis} sessionLabel={props.sessionLabel || null} />
-
       <Kpis totals={analysis.totals} subagentEst={subagentEst} analysis={analysis} />
       <ModelBreakdown prompts={analysis.prompts} />
+      <SessionSummaries
+        summaries={summaries}
+        pending={summariesPending}
+        onRequest={onRequestSummaries}
+        canRequest={canRequestSummaries}
+      />
       <Glossary />
       <Legend />
       <McpReachabilityCallout reachability={analysis.mcpReachability} />
@@ -3719,18 +3769,42 @@ export default function CostView(props) {
           return (
             <React.Fragment key={pi}>
               {/* Prompt header spans all 3 columns */}
-              <div style={{
-                gridColumn: "1 / -1",
-                background: theme.bg.raised,
-                borderTop: pi > 0 ? "1px solid " + theme.border.default : "none",
-                borderBottom: "1px solid " + theme.border.default,
-                borderLeft: tColor ? "4px solid " + tColor : undefined,
-                padding: "14px 18px",
-                display: "grid",
-                gridTemplateColumns: "48px 1fr 220px auto",
-                gap: 14,
-                alignItems: "center",
-              }}>
+              <div
+                onClick={onSelectPrompt ? function () {
+                  var nextId = selectedPromptId === p.promptId ? null : p.promptId;
+                  onSelectPrompt(nextId, nextId ? {
+                    promptId: p.promptId,
+                    ordinal: displayOrdinal,
+                    label: p.label,
+                    cost: p.cost,
+                    promptTokens: p.promptTokens,
+                    output: p.output,
+                    llmCount: p.llmCount,
+                    toolCount: p.toolCount,
+                    cacheHitRate: p.cacheHitRate,
+                    threadSlot: thread ? thread.slot : null,
+                    parentOrdinal: parentOrdinal,
+                  } : null);
+                } : undefined}
+                style={{
+                  gridColumn: "1 / -1",
+                  background: selectedPromptId === p.promptId ? theme.bg.selected || theme.bg.raised : theme.bg.raised,
+                  borderTop: pi > 0 ? "1px solid " + theme.border.default : "none",
+                  borderBottom: "1px solid " + theme.border.default,
+                  borderLeft: selectedPromptId === p.promptId
+                    ? "4px solid " + (theme.accent.primary || "#58a6ff")
+                    : (tColor ? "4px solid " + tColor : undefined),
+                  boxShadow: selectedPromptId === p.promptId
+                    ? "inset 0 0 0 1px " + (theme.accent.primary || "#58a6ff")
+                    : undefined,
+                  padding: "14px 18px",
+                  display: "grid",
+                  gridTemplateColumns: "48px 1fr 220px auto",
+                  gap: 14,
+                  alignItems: "center",
+                  cursor: onSelectPrompt ? "pointer" : "default",
+                }}
+              >
                 <div style={{ fontSize: theme.fontSize.xs, color: theme.text.muted, textAlign: "center" }}>
                   <span style={{ fontSize: theme.fontSize.xxl, color: theme.text.primary, fontWeight: 700, display: "block", lineHeight: 1 }}>{displayOrdinal}</span>
                   prompt
