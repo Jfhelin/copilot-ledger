@@ -34,8 +34,14 @@ npm run dev
 # Build the cost view for embedding in the canvas
 npm run build
 
-# Tests
+# Tests (cost-view vitest suite + skill digest smoke test)
 npm test
+
+# Type-check all workspaces
+npm run typecheck
+
+# Coverage report for the cost-view lib/hooks (HTML in packages/cost-view/coverage)
+npm run coverage --workspace=@copilot-ledger/cost-view
 ```
 
 The cost view loads in three ways:

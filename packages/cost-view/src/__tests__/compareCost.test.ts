@@ -76,7 +76,7 @@ describe("compareRunsCost (synthetic minimal)", () => {
           index: 0, label: "title", cost: 0.001, output: 2, cached: 0, fresh: 50,
           cacheWrite: 0, promptTokens: 50, llmCount: 1,
           events: [{
-            kind: "llm", category: "overhead", name: "title", model: "m",
+            kind: "llm" as const, category: "overhead" as const, name: "title", model: "m",
             cost: 0.001, output: 2, cached: 0, fresh: 50, cacheWrite: 0,
             promptTokens: 50, components: { system: 50 },
             responsePreview: "Generated title text",
@@ -86,7 +86,7 @@ describe("compareRunsCost (synthetic minimal)", () => {
           index: 1, label, cost: 0.04, output: 5, cached: 0, fresh: 200,
           cacheWrite: 0, promptTokens: 200, llmCount: 1,
           events: [{
-            kind: "llm", category: "primary", name: "panel/editAgent", model: "m",
+            kind: "llm" as const, category: "primary" as const, name: "panel/editAgent", model: "m",
             cost: 0.04, output: 5, cached: 0, fresh: 200, cacheWrite: 0,
             promptTokens: 200, components: { system: 200 },
             responsePreview: "Paris.",
