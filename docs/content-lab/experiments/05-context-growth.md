@@ -1,0 +1,58 @@
+# Context Growth
+
+## LinkedIn Hook
+
+> What 23,000 tokens of context actually looks like.
+
+## Executive Summary
+
+TODO
+
+## Hypothesis
+
+TODO
+
+## Why This Matters
+
+TODO
+
+## Session Summary
+
+- Task: TODO
+- Model: TODO
+- Total credits: TODO
+- Key cost driver: TODO
+- Tool calls: TODO
+- Cache behavior: TODO
+
+## Key Findings
+
+TODO
+
+## What Happened
+
+TODO
+
+## Interpretation
+
+TODO
+
+## Practical Guidance
+
+TODO
+
+## Confidence Level
+
+TODO
+
+## Evidence
+
+TODO — link Copilot Ledger export (JSON) + screenshots.
+
+## LinkedIn Post
+
+TODO
+
+## Video Outline
+
+TODO
