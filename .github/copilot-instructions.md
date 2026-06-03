@@ -1,5 +1,19 @@
 # Copilot Ledger — repo instructions
 
+## What this project is
+
+Copilot Ledger is a project for **analyzing VS Code Copilot diagnostic logs** (exported
+chat sessions) to understand how agents actually behave — token spend, cache efficiency,
+sub-agent fan-out, tool usage, and prompt-shape anomalies. It pairs two things:
+
+- a **GitHub app canvas** that opens a visual cost view in a Copilot CLI side panel, so
+  you and the agent can discuss a log together and dig into it more deeply, and
+- a **skill** that makes it easier to analyze those logs through LLM discussion in chat
+  (it digests a large raw export into a compact form the agent can reason over).
+
+The goal is to make agent runs legible: where the time and credits went, what the cache
+bought you, which sub-agents did what, and how the conversation was shaped.
+
 Tools for understanding and improving **VS Code Copilot Chat** session efficiency.
 This is an npm-workspaces monorepo (`type: module`, Node 22). Three packages, one repo.
 
