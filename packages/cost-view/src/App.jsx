@@ -344,7 +344,29 @@ export default function App() {
             <div style={{ color: theme.text.muted, fontSize: theme.fontSize.xs, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {sourceLabel || ""}
             </div>
-            {renderRecentsDropdown(sourceLabel)}
+            <div style={{ display: "flex", gap: theme.space.sm, alignItems: "center", flexShrink: 0 }}>
+              <button
+                onClick={function () { setSession(null); setSourceLabel(null); }}
+                title="Back to file picker"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: theme.space.xs,
+                  background: "transparent",
+                  color: theme.text.muted,
+                  border: "1px solid " + theme.border.default,
+                  padding: theme.space.xs + "px " + theme.space.md + "px",
+                  borderRadius: theme.radius.md,
+                  cursor: "pointer",
+                  font: "inherit",
+                  fontSize: theme.fontSize.sm,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span aria-hidden="true">←</span> New file
+              </button>
+              {renderRecentsDropdown(sourceLabel)}
+            </div>
           </div>
         )}
         <div style={{ flex: 1, minHeight: 0, overflow: "auto", padding: theme.space.lg }}>
