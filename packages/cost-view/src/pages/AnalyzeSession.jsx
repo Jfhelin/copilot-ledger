@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { theme } from "../lib/theme.js";
+import { hrefFor } from "../lib/router.js";
 import { parseSession } from "../lib/parseSession.ts";
 import CostView from "../components/CostView.jsx";
 import { initBridge } from "../lib/bridge.js";
@@ -15,6 +16,11 @@ import { initBridge } from "../lib/bridge.js";
 //
 // In embed mode (?embed=1, set by the canvas extension) the file-picker chrome
 // is hidden, exactly as before.
+//
+// In fixed mode (used by #/reports/<id>) the viewer is pinned to a single
+// bundled export: the file picker, recents, and "switch file" affordances are
+// all hidden, and a "back to experiment" link is shown instead. The fixed
+// export is never written to the user's recents.
 
 const RECENTS_KEY = "copilot-ledger:recents";
 const RECENTS_MAX = 8;
@@ -66,7 +72,7 @@ function writeSummariesMap(map) {
   try { window.localStorage.setItem(SUMMARIES_KEY, JSON.stringify(map)); } catch {}
 }
 
-export default function AnalyzeSession({ embed = false, initialExportUrl = null }) {
+export default function AnalyzeSession({ embed = false, initialExportUrl = null, fixed = false, backTo = null, backLabel = "Back" }) {
   const [session, setSession] = useState(null);
   const [error, setError] = useState(null);
   const [sourceLabel, setSourceLabel] = useState(null);
@@ -126,14 +132,22 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null 
 
   useEffect(function loadFromUrlEffect() {
     if (!initialExportUrl) return;
+    // Guard environments without fetch (e.g. some test runners) so the effect
+    // never throws synchronously.
+    if (typeof fetch !== "function") {
+      setError("This environment cannot fetch " + initialExportUrl + ".");
+      return;
+    }
     fetch(initialExportUrl)
       .then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status + " loading " + initialExportUrl);
         return r.text();
       })
-      .then(function (text) { loadFromText(text, initialExportUrl); })
+      // A fixed report is bundled evidence, not a user upload, so keep it out
+      // of the user's recents.
+      .then(function (text) { loadFromText(text, initialExportUrl, fixed ? { skipRecent: true } : undefined); })
       .catch(function (err) { setError(String(err?.message || err)); });
-  }, [initialExportUrl, loadFromText]);
+  }, [initialExportUrl, loadFromText, fixed]);
 
   useEffect(function bridgeEffect() {
     bridgeRef.current = initBridge({
@@ -183,6 +197,32 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null 
   }
 
   function onDragOver(event) { event.preventDefault(); }
+
+  function renderBackLink() {
+    if (!backTo) return null;
+    return (
+      <a
+        href={hrefFor(backTo)}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: theme.space.xs,
+          background: "transparent",
+          color: theme.accent.primary,
+          border: "1px solid " + theme.border.default,
+          padding: theme.space.sm + "px " + theme.space.md + "px",
+          borderRadius: theme.radius.md,
+          textDecoration: "none",
+          font: "inherit",
+          fontSize: theme.fontSize.sm,
+          fontWeight: 600,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span aria-hidden="true">←</span> {backLabel}
+      </a>
+    );
+  }
 
   function renderRecentsDropdown(currentLabel) {
     // Merge currentLabel so it always appears as the selected option, even if
@@ -305,21 +345,27 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null 
               )}
             </div>
             <div style={{ display: "flex", gap: theme.space.md, alignItems: "center" }}>
-              {renderRecentsDropdown(sourceLabel)}
-              <button
-                onClick={function () { setSession(null); setSourceLabel(null); }}
-                style={{
-                  background: "transparent",
-                  color: theme.text.muted,
-                  border: "1px solid " + theme.border.default,
-                  padding: theme.space.sm + "px " + theme.space.md + "px",
-                  borderRadius: theme.radius.md,
-                  cursor: "pointer",
-                  font: "inherit",
-                }}
-              >
-                Close
-              </button>
+              {fixed ? (
+                renderBackLink()
+              ) : (
+                <>
+                  {renderRecentsDropdown(sourceLabel)}
+                  <button
+                    onClick={function () { setSession(null); setSourceLabel(null); }}
+                    style={{
+                      background: "transparent",
+                      color: theme.text.muted,
+                      border: "1px solid " + theme.border.default,
+                      padding: theme.space.sm + "px " + theme.space.md + "px",
+                      borderRadius: theme.radius.md,
+                      cursor: "pointer",
+                      font: "inherit",
+                    }}
+                  >
+                    Close
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -375,6 +421,35 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null 
             canRequestSummaries={Boolean(bridgeRef.current && sourceLabel)}
           />
         </div>
+      </div>
+    );
+  }
+
+  // Fixed reports never expose the uploader: while the bundled export loads (or
+  // if it fails) show a minimal state with the back link instead of the picker.
+  if (fixed) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          minHeight: 320,
+          alignItems: "center",
+          justifyContent: "center",
+          gap: theme.space.lg,
+          padding: theme.space.xl,
+          textAlign: "center",
+          background: theme.bg.canvas,
+          color: theme.text.primary,
+        }}
+      >
+        <div style={{ fontWeight: 800, letterSpacing: "0.08em" }}>COPILOT LEDGER</div>
+        <div style={{ color: theme.text.muted }}>
+          {error ? "Could not load this report." : "Loading report…"}
+        </div>
+        {error && <div style={{ color: theme.semantic?.error || "#cf222e", maxWidth: 520 }}>{error}</div>}
+        {renderBackLink()}
       </div>
     );
   }

@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App.jsx";
 import { assetUrl } from "../content/site.js";
 
@@ -12,6 +14,15 @@ function textOf(container) {
 
 function setLocation(path) {
   window.history.replaceState({}, "", path);
+}
+
+async function flush() {
+  // Let the fetch -> text -> parse promise chain settle.
+  await act(async function () {
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
 }
 
 describe("App shell routing", function () {
@@ -61,12 +72,62 @@ describe("App shell routing", function () {
   });
 
   it("renders an experiment detail from a nested hash route", async function () {
-    setLocation("/#/experiments/context-quality");
+    setLocation("/#/experiments/context-quality-readme");
     var mounted = await renderApp();
     var text = textOf(mounted.container);
-    expect(text).toContain("Context Quality");
     expect(text).toContain("The README was cheap. Finding it wasn't.");
+    expect(text).toContain("The user asked Copilot to read the root README");
+    expect(text).toContain("Open the fixed Copilot Ledger report");
     await act(async function () { mounted.root.unmount(); });
+  });
+
+  it("renders a fixed report without the file picker and with a back link", async function () {
+    setLocation("/#/reports/02-one-tool");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("Back to experiment");
+    // The fixed report must never expose the uploader / file switcher.
+    expect(text).not.toContain("Choose file");
+    expect(text).not.toContain("Upload or select");
+    // The back link points at the owning experiment.
+    var back = mounted.container.querySelector('a[href="#/experiments/context-quality-readme"]');
+    expect(back).not.toBeNull();
+    await act(async function () { mounted.root.unmount(); });
+  });
+
+  it("shows a not-found state for an unknown fixed report", async function () {
+    setLocation("/#/reports/does-not-exist");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("Report not found");
+    await act(async function () { mounted.root.unmount(); });
+  });
+
+  it("loads the fixed report into the viewer without uploader or switcher", async function () {
+    var json = readFileSync(
+      path.resolve(process.cwd(), "public/sessions/02-one-tool.json"),
+      "utf8",
+    );
+    var fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      text: function () { return Promise.resolve(json); },
+    });
+    try {
+      setLocation("/#/reports/02-one-tool");
+      var mounted = await renderApp();
+      await flush();
+      var text = textOf(mounted.container);
+      // The parsed report viewer is shown (its header brand), with the back
+      // link — but never the uploader, recents, or a Close/switch affordance.
+      expect(text).toContain("COPILOT LEDGER");
+      expect(text).toContain("Back to experiment");
+      expect(text).not.toContain("Choose file");
+      expect(text).not.toContain("Upload or select");
+      expect(text).not.toContain("Close");
+      await act(async function () { mounted.root.unmount(); });
+    } finally {
+      fetchSpy.mockRestore();
+    }
   });
 });
 

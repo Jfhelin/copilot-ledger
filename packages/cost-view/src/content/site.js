@@ -98,11 +98,16 @@ function emptyExperiment(extra) {
 
 export var EXPERIMENTS = [
   emptyExperiment({
-    id: "context-quality",
-    title: "Context Quality",
+    id: "context-quality-readme",
+    title: "The README was cheap. Finding it wasn't.",
     hook: "The README was cheap. Finding it wasn't.",
-    status: "Draft",
-    confidence: "Placeholder — treat as a single-session observation.",
+    status: "Published",
+    confidence: "One measured session, not a universal benchmark.",
+    // This experiment has a bespoke, fully-written page component
+    // (pages/ContextQualityReadme.jsx) rather than the generic Field layout.
+    // App.jsx routes /experiments/context-quality-readme to it directly.
+    custom: true,
+    reportRoute: "/reports/02-one-tool",
   }),
   emptyExperiment({
     id: "model-selection",
@@ -216,7 +221,7 @@ export var GALLERY_SESSIONS = [
     id: "one-tool",
     title: "One-tool example",
     description: "The smallest useful session: a single tool call, to isolate per-call setup overhead.",
-    file: null,
+    file: "sessions/02-one-tool.json",
   },
   {
     id: "large-context",
@@ -232,3 +237,24 @@ export var STATUS_TONE = {
   Planned: "muted",
   "Under investigation": "info",
 };
+
+// ── Fixed reports ─────────────────────────────────────────────────────────
+// A fixed report pins one bundled export to a stable #/reports/<id> route and
+// renders it in the read-only viewer (no file picker, no switching). This is
+// how an experiment links to its own evidence without exposing the uploader.
+//
+// To add the next one: copy the export into public/sessions/, add an entry
+// here, and link to "/reports/<id>" from the experiment page.
+export var FIXED_REPORTS = [
+  {
+    id: "02-one-tool",
+    title: "One-tool session — read the README",
+    file: "sessions/02-one-tool.json",
+    backTo: "/experiments/context-quality-readme",
+    backLabel: "Back to experiment",
+  },
+];
+
+export function findFixedReport(id) {
+  return FIXED_REPORTS.find(function (r) { return r.id === id; }) || null;
+}

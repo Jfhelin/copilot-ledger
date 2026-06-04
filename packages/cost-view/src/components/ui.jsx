@@ -189,3 +189,77 @@ export function TextLink({ to, params, children }) {
     </a>
   );
 }
+
+// Monospace preformatted block for prompts, drafts, and example snippets.
+export function Pre({ children, label }) {
+  return (
+    <div style={{ marginTop: theme.space.md }}>
+      {label && (
+        <div
+          style={{
+            fontSize: theme.fontSize.xs,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: theme.text.dim,
+            fontWeight: 700,
+            marginBottom: theme.space.sm,
+          }}
+        >
+          {label}
+        </div>
+      )}
+      <pre
+        style={{
+          margin: 0,
+          padding: theme.space.lg,
+          background: theme.bg.raised,
+          border: "1px solid " + theme.border.default,
+          borderRadius: theme.radius.lg,
+          color: theme.text.primary,
+          font: theme.font.mono,
+          fontSize: theme.fontSize.md,
+          lineHeight: 1.6,
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",
+          overflowX: "auto",
+        }}
+      >
+        {children}
+      </pre>
+    </div>
+  );
+}
+
+// A highlighted takeaway box. tone matches Badge tones.
+export function Callout({ tone, label, children }) {
+  var color = resolveToneColor(tone);
+  return (
+    <div
+      style={{
+        marginTop: theme.space.lg,
+        padding: theme.space.lg + "px " + theme.space.xl,
+        borderLeft: "3px solid " + color,
+        background: theme.accent.muted,
+        borderRadius: theme.radius.md,
+      }}
+    >
+      {label && (
+        <div
+          style={{
+            fontSize: theme.fontSize.xs,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: color,
+            fontWeight: 700,
+            marginBottom: theme.space.sm,
+          }}
+        >
+          {label}
+        </div>
+      )}
+      <div style={{ color: theme.text.primary, fontSize: theme.fontSize.lg, lineHeight: 1.55, fontWeight: 600 }}>
+        {children}
+      </div>
+    </div>
+  );
+}

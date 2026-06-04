@@ -8,6 +8,8 @@ import Observations from "./pages/Observations.jsx";
 import SessionGallery from "./pages/SessionGallery.jsx";
 import About from "./pages/About.jsx";
 import AnalyzeSession from "./pages/AnalyzeSession.jsx";
+import ContextQualityReadme from "./pages/ContextQualityReadme.jsx";
+import FixedReport from "./pages/FixedReport.jsx";
 
 // Application shell for the Copilot Behavior Lab knowledge site.
 //
@@ -36,8 +38,12 @@ function ContentForRoute({ path, params }) {
   if (path === "/gallery") return <SessionGallery />;
   if (path === "/about") return <About />;
   if (path === "/experiments") return <Experiments />;
+  if (path === "/experiments/context-quality-readme") return <ContextQualityReadme />;
   if (path.indexOf("/experiments/") === 0) {
     return <Experiments experimentId={path.slice("/experiments/".length)} />;
+  }
+  if (path.indexOf("/reports/") === 0) {
+    return <FixedReport reportId={path.slice("/reports/".length)} />;
   }
   if (path === "/analyze") {
     return <AnalyzeSession initialExportUrl={params.src || null} />;
@@ -64,7 +70,7 @@ export default function App() {
     return <AnalyzeSession embed initialExportUrl={query.exportUrl} />;
   }
 
-  var fullBleed = route.path === "/analyze";
+  var fullBleed = route.path === "/analyze" || route.path.indexOf("/reports/") === 0;
 
   return (
     <Layout currentPath={route.path} fullBleed={fullBleed}>
