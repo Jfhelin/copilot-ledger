@@ -7,7 +7,7 @@ Two artifacts, one repo:
 | Package | What it is | Who uses it |
 |---|---|---|
 | [`packages/skill`](./packages/skill) | A Copilot CLI **skill** (`copilot-chat-export`) that digests an exported chat session and reports token spend, cache efficiency, sub-agent flow, and prompt-shape anomalies | The agent, when you ask it to analyse a session |
-| [`packages/cost-view`](./packages/cost-view) | A focused **React app** that renders the same export visually — per-prompt cost breakdown, cache attribution, tool usage, multi-model projections. Includes the parser/cost-analysis library | You, in a browser or inside a canvas |
+| [`packages/cost-view`](./packages/cost-view) | A focused **React app** that hosts the **Copilot Behavior Lab** knowledge site (Home, Learn, Experiments, Observations, Session Gallery, About) and renders the report viewer under **Analyze Session** — per-prompt cost breakdown, cache attribution, tool usage, multi-model projections. Includes the parser/cost-analysis library | You, in a browser or inside a canvas |
 | [`packages/canvas-extension`](./packages/canvas-extension) | A thin **canvas extension** that opens the cost-view in a Copilot CLI side panel and round-trips a "currently selected prompt" between the canvas and the chat | You + the agent, working on the same session together |
 
 ## Why a separate repo?
@@ -46,12 +46,63 @@ npm run coverage --workspace=@copilot-ledger/cost-view
 
 The cost view loads in three ways:
 
-1. **Standalone**: open <http://127.0.0.1:3000>, drop a Copilot Chat export onto the page.
-2. **URL param**: `?export=<url>` fetches and renders.
+1. **Standalone**: open <http://127.0.0.1:3000>, navigate to **Analyze Session**, drop a Copilot Chat export onto the page.
+2. **URL param**: `?export=<url>` fetches and renders (auto-routes to Analyze Session).
 3. **Canvas / parent**: parent window sends `postMessage({type:"loadExport", content})`.
 
 See [`packages/cost-view/src/lib/bridge.js`](./packages/cost-view/src/lib/bridge.js) for the
 full `postMessage` protocol.
+
+## Copilot Behavior Lab site
+
+The cost view is wrapped in a small, dependency-free **knowledge site** with a persistent
+left-side navigation (it collapses to a hamburger menu on narrow screens). Routing is
+**hash-based** (`#/learn`, `#/experiments/<id>`, `#/analyze`, …) so deep links and refreshes
+work on GitHub Pages project subpaths without server rewrites.
+
+- **Navigation:** Home, Learn, Experiments, Observations, Session Gallery, Analyze Session, About.
+- **Viewer preserved:** the original report viewer is untouched logic, moved verbatim into
+  [`src/pages/AnalyzeSession.jsx`](./packages/cost-view/src/pages/AnalyzeSession.jsx) and
+  hosted under the **Analyze Session** route. The canvas extension still loads it with
+  `?embed=1`, which bypasses the site shell entirely — behavior is identical to before.
+- **Content is data-driven:** all editorial content lives in
+  [`src/content/site.js`](./packages/cost-view/src/content/site.js).
+
+### Add a new experiment
+
+Append one object to the `EXPERIMENTS` array in `src/content/site.js`:
+
+```js
+emptyExperiment({
+  id: "my-experiment",          // becomes #/experiments/my-experiment
+  title: "My Experiment",
+  hook: "A surprising one-line observation.",
+  status: "Draft",              // Draft | Published | Planned | Under investigation
+  executiveSummary: "…",        // fill in any of the structured fields; blanks render
+  hypothesis: "…",              // as italic "Placeholder — to be written."
+  // whyThisMatters, sessionSummary, keyFindings, whatHappened, interpretation,
+  // practicalGuidance, confidence, evidence, linkedInDraft, videoOutline
+});
+```
+
+The card (Experiments list + Home) and the detail page render automatically.
+
+### Add a new gallery session
+
+Drop the export JSON into `packages/cost-view/public/sessions/` and append one object to
+`GALLERY_SESSIONS` in `src/content/site.js`:
+
+```js
+{
+  id: "my-session",
+  title: "My example session",
+  description: "What this session demonstrates.",
+  file: "sessions/my-session.json", // null => renders a "Coming soon" card
+}
+```
+
+The card links to `#/analyze?src=<base-safe url>` and opens the existing viewer with that
+export. Use `file: null` to publish a placeholder card before the JSON exists.
 
 ## Status
 
