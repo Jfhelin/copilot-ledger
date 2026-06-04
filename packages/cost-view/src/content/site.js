@@ -14,6 +14,10 @@ export function assetUrl(relativePath) {
   return base + "/" + clean;
 }
 
+// Public GitHub repository for the Copilot Ledger project. Linked wherever the
+// tool is mentioned so readers can find the source.
+export var REPO_URL = "https://github.com/Jfhelin/copilot-ledger";
+
 // ── Top-level navigation ──────────────────────────────────────────────────
 export var NAV_ITEMS = [
   { id: "home", label: "Home", path: "/" },
