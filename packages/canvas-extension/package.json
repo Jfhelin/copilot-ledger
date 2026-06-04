@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Copilot CLI canvas extension that opens the cost view in a side panel.",
   "scripts": {
-    "install-local": "mkdir -p \"$HOME/.copilot/extensions\" && ln -sfn \"$(pwd)\" \"$HOME/.copilot/extensions/copilot-ledger-canvas\" && echo 'Installed -> ~/.copilot/extensions/copilot-ledger-canvas'",
-    "uninstall-local": "rm -f \"$HOME/.copilot/extensions/copilot-ledger-canvas\""
+    "stage": "node ./scripts/install-local.mjs",
+    "install-local": "npm --prefix ../cost-view run build && node ./scripts/install-local.mjs",
+    "uninstall-local": "node ./scripts/install-local.mjs --uninstall"
   }
 }

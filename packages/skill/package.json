@@ -5,6 +5,8 @@
   "description": "Copilot CLI skill for analysing VS Code Copilot Chat exports (token spend, cache, sub-agent flow).",
   "scripts": {
     "test": "node --test",
+    "sync": "node ./scripts/sync.mjs",
+    "sync:check": "node ./scripts/sync.mjs --check",
     "install-local": "ln -sfn \"$(pwd)\" \"$HOME/.copilot/skills/copilot-chat-export\""
   }
 }

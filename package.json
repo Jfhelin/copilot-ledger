@@ -10,6 +10,9 @@
     "dev": "npm run dev --workspace=@copilot-ledger/cost-view",
     "build": "npm run build --workspace=@copilot-ledger/cost-view",
     "test": "npm run test --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "canvas:install": "npm run install-local --workspace=@copilot-ledger/canvas-extension",
+    "canvas:uninstall": "npm run uninstall-local --workspace=@copilot-ledger/canvas-extension",
+    "skill:sync": "npm run sync --workspace=@copilot-ledger/skill"
   }
 }

@@ -34,3 +34,6 @@ yarn-error.log*
 
 # Copilot CLI extension transient state
 .copilot/
+
+# copilot-chat-export skill digest sidecars (regenerated on demand)
+.agentviz/
