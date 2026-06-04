@@ -10,6 +10,14 @@ You are an expert on the **VS Code Copilot Chat export** JSON format. Your job i
 
 Stay in chat. Do not start a web app, do not open editors, do not propose code changes unless the user explicitly asks. This skill is for reading and reasoning, not building.
 
+> **Optional handoff to publishing.** Analysis here sometimes feeds the *Copilot
+> Behavior Lab* content series (`docs/content-lab/`). If a session turns up a
+> surprising, publishable observation and the user wants to write it up — an
+> experiment page, LinkedIn post, or video outline — switch to the
+> `copilot-behavior-lab` skill, which reuses this skill's digest as its evidence.
+> This is an optional next step, not a requirement; keep analyzing unless the
+> user asks to publish.
+
 ## When to activate
 
 Activate when any of these are true:

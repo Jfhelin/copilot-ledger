@@ -1,8 +1,8 @@
 # Experiment Template
 
-This is the canonical structure for an experiment writeup. It matches the
-"GitHub Pages Structure" in the `copilot-behavior-lab` skill, so a finished
-experiment page and this template stay in sync.
+This is the canonical structure for an experiment writeup. The
+`copilot-behavior-lab` skill defers to this file as the source of truth for page
+structure, so a finished experiment page and this template stay in sync.
 
 # Title
 
