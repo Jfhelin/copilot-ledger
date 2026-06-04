@@ -1,7 +1,7 @@
 import { theme } from "../lib/theme.js";
 import { hrefFor } from "../lib/router.js";
-import { PageHeader, Section, Card, CardTitle, CardBody, CardGrid, Badge, Prose, TextLink } from "../components/ui.jsx";
-import { EXPERIMENTS, STATUS_TONE } from "../content/site.js";
+import { PageHeader, Section, Card, CardTitle, CardBody, CardGrid, Badge, Prose, TextLink, ExternalLink } from "../components/ui.jsx";
+import { EXPERIMENTS, STATUS_TONE, REPO_URL } from "../content/site.js";
 
 export default function Home() {
   var latest = EXPERIMENTS.slice(0, 4);
@@ -22,11 +22,11 @@ export default function Home() {
           claims.
         </p>
         <p>
-          <strong>Copilot Ledger</strong> is the measurement tool behind every
-          observation here. It digests an exported VS Code Copilot Chat session and
-          breaks it down into per-prompt cost, context buildup, tool usage, and cache
-          behavior. The reports are the evidence layer — you can open the same exports
-          yourself under{" "}
+          <ExternalLink href={REPO_URL}>Copilot Ledger</ExternalLink> is the
+          measurement tool behind every observation here. It digests an exported VS Code
+          Copilot Chat session and breaks it down into per-prompt cost, context buildup,
+          tool usage, and cache behavior. The reports are the evidence layer — you can
+          open the same exports yourself under{" "}
           <TextLink to="/analyze">Analyze Session</TextLink>.
         </p>
       </Prose>

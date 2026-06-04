@@ -190,6 +190,20 @@ export function TextLink({ to, params, children }) {
   );
 }
 
+// Link to an external URL (opens in a new tab). Styled like TextLink.
+export function ExternalLink({ href, children }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ color: theme.accent.primary, textDecoration: "none", fontWeight: 600 }}
+    >
+      {children}
+    </a>
+  );
+}
+
 // Monospace preformatted block for prompts, drafts, and example snippets.
 export function Pre({ children, label }) {
   return (

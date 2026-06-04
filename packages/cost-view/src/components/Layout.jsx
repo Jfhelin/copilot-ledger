@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { theme } from "../lib/theme.js";
 import { hrefFor } from "../lib/router.js";
-import { NAV_ITEMS } from "../content/site.js";
+import { NAV_ITEMS, REPO_URL } from "../content/site.js";
 
 var MOBILE_QUERY = "(max-width: 820px)";
 var SIDEBAR_WIDTH = 232;
@@ -189,7 +189,16 @@ export default function Layout({ currentPath, fullBleed, children }) {
         <Brand />
         <NavLinks currentPath={currentPath} />
         <div style={{ marginTop: "auto", color: theme.text.dim, fontSize: theme.fontSize.xs, lineHeight: 1.5 }}>
-          Powered by Copilot Ledger — the measurement tool behind these observations.
+          Powered by{" "}
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: theme.accent.primary, textDecoration: "none", fontWeight: 600 }}
+          >
+            Copilot Ledger
+          </a>{" "}
+          — the measurement tool behind these observations.
         </div>
       </aside>
       {contentRegion}

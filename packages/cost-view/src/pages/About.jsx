@@ -1,4 +1,5 @@
-import { PageHeader, Section, Prose, TextLink } from "../components/ui.jsx";
+import { PageHeader, Section, Prose, TextLink, ExternalLink } from "../components/ui.jsx";
+import { REPO_URL } from "../content/site.js";
 
 export default function About() {
   return (
@@ -16,10 +17,11 @@ export default function About() {
           and tools, how context and cache shape cost, and where credits actually go.
         </p>
         <p>
-          <strong>Copilot Ledger</strong> is the tool used to analyze session data here.
-          It is the measurement instrument behind the observations, not a product being
-          sold. Every claim on this site is meant to be traceable back to a real
-          exported session you can open under{" "}
+          <ExternalLink href={REPO_URL}>Copilot Ledger</ExternalLink> is the tool used
+          to analyze session data here. It is the measurement instrument behind the
+          observations, not a product being sold — the source is on{" "}
+          <ExternalLink href={REPO_URL}>GitHub</ExternalLink>. Every claim on this site
+          is meant to be traceable back to a real exported session you can open under{" "}
           <TextLink to="/analyze">Analyze Session</TextLink>.
         </p>
       </Prose>
