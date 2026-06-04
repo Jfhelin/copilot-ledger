@@ -104,6 +104,34 @@ Drop the export JSON into `packages/cost-view/public/sessions/` and append one o
 The card links to `#/analyze?src=<base-safe url>` and opens the existing viewer with that
 export. Use `file: null` to publish a placeholder card before the JSON exists.
 
+### Add a fixed report (pinned evidence for an experiment)
+
+A **fixed report** pins one bundled export to a stable `#/reports/<id>` route and renders it
+in the *read-only* viewer — same UI as Analyze Session, but with no file picker and no file
+switching, plus a "back to experiment" link. This is how an experiment links to its own
+evidence without exposing the uploader.
+
+1. Drop the export JSON into `packages/cost-view/public/sessions/`.
+2. Append one object to the `FIXED_REPORTS` array in `src/content/site.js`:
+
+```js
+{
+  id: "my-report",                                  // becomes #/reports/my-report
+  title: "My session — what it shows",
+  file: "sessions/my-report.json",
+  backTo: "/experiments/my-experiment",             // where the back link points
+  backLabel: "Back to experiment",
+}
+```
+
+3. Link to it from the experiment page with `hrefFor("/reports/my-report")`.
+
+The viewer is reused verbatim via its `fixed` prop (see
+[`src/pages/FixedReport.jsx`](./packages/cost-view/src/pages/FixedReport.jsx)); the bundled
+export is never written to the user's recents. The first one,
+[`#/reports/02-one-tool`](./packages/cost-view/src/pages/ContextQualityReadme.jsx), backs the
+"The README was cheap. Finding it wasn't." experiment.
+
 ## Status
 
 Early. Ports the proven CostView from AGENTVIZ + the v7 `copilot-chat-export` skill into
