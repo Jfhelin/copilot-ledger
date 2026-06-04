@@ -2,6 +2,8 @@
 
 Tools for understanding and improving **VS Code Copilot Chat** session efficiency.
 
+🔬 **Live site: [Copilot Behavior Lab →](https://jfhelin.github.io/copilot-ledger/)** — read the experiments and explore example reports without installing anything.
+
 Two artifacts, one repo:
 
 | Package | What it is | Who uses it |
@@ -54,6 +56,8 @@ See [`packages/cost-view/src/lib/bridge.js`](./packages/cost-view/src/lib/bridge
 full `postMessage` protocol.
 
 ## Copilot Behavior Lab site
+
+> **Live at [jfhelin.github.io/copilot-ledger](https://jfhelin.github.io/copilot-ledger/)** (deployed from `packages/cost-view/dist` on every push to `main`).
 
 The cost view is wrapped in a small, dependency-free **knowledge site** with a persistent
 left-side navigation (it collapses to a hamburger menu on narrow screens). Routing is
