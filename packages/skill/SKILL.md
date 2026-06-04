@@ -21,27 +21,30 @@ If you are not sure whether a file is a Copilot chat export, peek at the top-lev
 
 ## Where the user usually keeps these files
 
-When the user names a file without a full path (e.g. "look at `04-plan-implement-cart.json`"), search these locations in order before giving up. Use the first hit.
+When the user names a file without a full path (e.g. "look at `04-plan-implement-cart.json`" or "`02-one-tool.json`"), search these locations in order before giving up. Use the first hit.
 
-1. `~/Downloads/<name>`
-2. `~/CopilotLogExports/<name>`
+1. `<repo>/packages/cost-view/public/sessions/<name>` — this project's bundled sample/working exports
+2. `~/Downloads/<name>`
+3. `~/CopilotLogExports/<name>`
 
-Quick resolver:
+`<repo>` is the copilot-ledger checkout the skill is running in (the directory containing the `.github/` folder). The cost-view ships its example exports under `packages/cost-view/public/sessions/`, so a bare name like `02-one-tool.json` almost always lives there — check it first.
+
+Quick resolver (run from the repo root):
 
 ```bash
-for d in "$HOME/Downloads" "$HOME/CopilotLogExports"; do
-  [ -f "$d/<name>" ] && echo "$d/<name>" && break
+for d in "packages/cost-view/public/sessions" "$HOME/Downloads" "$HOME/CopilotLogExports"; do
+  [ -f "$d/<name>" ] && echo "$d/$name" && break
 done
 ```
 
-If neither contains the file, ask the user for the path rather than guessing further. If the user says "the latest export" or similar without naming a file, list the newest few `.json` files across both directories with `ls -lt ~/Downloads/*.json ~/CopilotLogExports/*.json 2>/dev/null | head` and let them pick.
+If none contains the file, ask the user for the path rather than guessing further. If the user says "the latest export" or similar without naming a file, list the newest few `.json` files across all three directories with `ls -lt packages/cost-view/public/sessions/*.json ~/Downloads/*.json ~/CopilotLogExports/*.json 2>/dev/null | head` and let them pick.
 
 ## Procedure (run this every time the user points at a file)
 
 1. **Resolve the absolute path** of the source file.
-2. **Ensure a digest exists and is fresh.** Run:
+2. **Ensure a digest exists and is fresh.** Run the digest script that ships next to this skill — its absolute path is `scripts/digest.mjs` under the skill's base directory (shown as "Base directory for this skill" in the skill context):
    ```bash
-   node <repo>/.github/skills/copilot-chat-export/scripts/digest.mjs <abs-source-path>
+   node "<skill-dir>/scripts/digest.mjs" <abs-source-path>
    ```
    The script writes `<source-dir>/.agentviz/<basename>.digest.json` (or prints `up to date` and exits 0 if the sidecar is already current — based on source mtime). Always run it; the cache check is cheap.
 3. **Read the digest** with `jq` or by opening the file. The digest is ≤100 KB for typical exports and answers most questions on its own.
