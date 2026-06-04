@@ -10,7 +10,9 @@
 //   { type: "setSelection", promptId: string | null }
 //
 // Protocol (iframe -> extension, via POST):
-//   POST /api/ready                         -- iframe boot, replays last load
+//   POST /api/ready                         -- iframe boot; response body carries
+//                                              the current { loadedExport, selection,
+//                                              summaries } to hydrate without a race
 //   POST /api/selection {promptId, summary} -- user clicked a prompt
 //
 // The bridge is a no-op when there is no /api/events endpoint (standalone use).
@@ -56,7 +58,25 @@ export function initBridge({ onLoadExport, onSetSelection, onSetSummaries, onSum
     source.addEventListener("error", function () {
       // Browser auto-reconnects; nothing to do.
     });
-    fetch(endpoint("/api/ready"), { method: "POST" }).catch(function () {});
+    // Hydrate from the POST response itself rather than waiting for an SSE push.
+    // The EventSource above connects asynchronously and typically registers on
+    // the server AFTER this POST is handled, so a pushed replay would be lost.
+    // Reading the state straight from our own request can't race.
+    fetch(endpoint("/api/ready"), { method: "POST" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data || disposed) return;
+        if (data.loadedExport) {
+          onLoadExport?.(data.loadedExport.content, data.loadedExport.label);
+        }
+        if (data.selection) {
+          onSetSelection?.(data.selection.promptId ?? null);
+        }
+        if (data.summaries) {
+          onSetSummaries?.(data.summaries);
+        }
+      })
+      .catch(function () {});
   }
 
   open();

@@ -27,7 +27,7 @@ let fetchMock;
 beforeEach(() => {
   FakeEventSource.instances = [];
   globalThis.EventSource = FakeEventSource;
-  fetchMock = vi.fn(() => Promise.resolve({ ok: true }));
+  fetchMock = vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve({}) }));
   globalThis.fetch = fetchMock;
 });
 
@@ -90,6 +90,41 @@ describe("initBridge", () => {
     initBridge({ onSummariesPending });
     lastSource().emit("setSummariesPending", JSON.stringify({ pending: 1 }));
     expect(onSummariesPending).toHaveBeenCalledWith(true);
+  });
+
+  it("hydrates from the /api/ready response without an SSE push (race-proof boot)", async () => {
+    const onLoadExport = vi.fn();
+    const onSetSelection = vi.fn();
+    const onSetSummaries = vi.fn();
+    fetchMock.mockImplementation((url) =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve(
+            url.endsWith("/api/ready")
+              ? {
+                  loadedExport: { content: "{}", label: "run-z" },
+                  selection: { promptId: "p7" },
+                  summaries: { userGoal: "g", agentApproach: "a" },
+                }
+              : {},
+          ),
+      }),
+    );
+
+    initBridge({ onLoadExport, onSetSelection, onSetSummaries });
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(onLoadExport).toHaveBeenCalledWith("{}", "run-z");
+    expect(onSetSelection).toHaveBeenCalledWith("p7");
+    expect(onSetSummaries).toHaveBeenCalledWith({ userGoal: "g", agentApproach: "a" });
+  });
+
+  it("ignores an empty /api/ready response", async () => {
+    const onLoadExport = vi.fn();
+    initBridge({ onLoadExport });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(onLoadExport).not.toHaveBeenCalled();
   });
 
   it("posts notifications to their endpoints with JSON bodies", () => {

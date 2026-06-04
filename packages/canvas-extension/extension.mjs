@@ -143,18 +143,17 @@ async function startServer(instanceId) {
 
     // --- iframe -> extension API ---
     if (path === "/api/ready" && req.method === "POST") {
-      // Iframe came up. Replay the last load + selection so a reload picks up
-      // where we left off without the agent having to redo anything.
-      res.writeHead(204); res.end();
-      if (state.loadedExport) {
-        broadcast(instanceId, "loadExport", state.loadedExport);
-      }
-      if (state.selection) {
-        broadcast(instanceId, "setSelection", { promptId: state.selection.promptId });
-      }
-      if (state.summaries) {
-        broadcast(instanceId, "setSummaries", state.summaries);
-      }
+      // Iframe came up. Return the current state directly in the response body so
+      // the iframe hydrates from its own request rather than an SSE push. The
+      // EventSource connection (GET /api/events) is established asynchronously and
+      // usually registers AFTER this POST lands, so a pushed replay here would
+      // broadcast to zero clients and be lost. Pulling cannot race.
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({
+        loadedExport: state.loadedExport || null,
+        selection: state.selection ? { promptId: state.selection.promptId } : null,
+        summaries: state.summaries || null,
+      }));
       return;
     }
     if (path === "/api/requestSummaries" && req.method === "POST") {
@@ -256,6 +255,7 @@ const canvas = createCanvas({
     type: "object",
     properties: {
       exportPath: { type: "string", description: "Optional path to a .json export to auto-load on open." },
+      label: { type: "string", description: "Optional human-readable label for the panel (defaults to the file path)." },
     },
     additionalProperties: false,
   },
@@ -402,10 +402,11 @@ const canvas = createCanvas({
     }
     // Auto-load if the caller provided a path on open.
     const exportPath = ctx.input?.exportPath;
+    const exportLabel = ctx.input?.label;
     if (exportPath && !inst.loadedExport) {
       try {
         const content = await readFile(exportPath, "utf8");
-        inst.loadedExport = { content, label: exportPath };
+        inst.loadedExport = { content, label: exportLabel || exportPath };
         broadcast(ctx.instanceId, "loadExport", inst.loadedExport);
       } catch (err) {
         logSafe(`open: failed to auto-load ${exportPath}: ${err?.message || err}`, { level: "warn" });
