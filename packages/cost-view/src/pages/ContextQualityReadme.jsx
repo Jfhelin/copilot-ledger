@@ -3,7 +3,7 @@ import { hrefFor } from "../lib/router.js";
 import { PageHeader, Section, Prose, Badge, Callout, Pre, TextLink } from "../components/ui.jsx";
 import { STATUS_TONE } from "../content/site.js";
 
-var REPORT_ROUTE = "/reports/02-one-tool";
+var REPORT_ROUTE = "/reports/context-quality-maprows";
 
 function OrderedList({ items }) {
   return (
@@ -55,11 +55,11 @@ export default function ContextQualityReadme() {
         <TextLink to="/experiments">← All experiments</TextLink>
       </div>
 
-      <PageHeader kicker="Experiment" title="The README was cheap. Finding it wasn't.">
+      <PageHeader kicker="Experiment" title="The answer lived in one file. Letting the agent find it cost 37% more.">
         <div style={{ display: "flex", gap: theme.space.md, alignItems: "center", marginTop: theme.space.lg, flexWrap: "wrap" }}>
           <Badge tone={STATUS_TONE.Published}>Published</Badge>
           <span style={{ color: theme.text.dim, fontSize: theme.fontSize.sm }}>
-            One measured session, not a universal benchmark.
+            One run per arm (N=1), not a universal benchmark.
           </span>
         </div>
       </PageHeader>
@@ -67,48 +67,85 @@ export default function ContextQualityReadme() {
       <Section title="Executive summary">
         <Prose>
           <p>
-            The user asked Copilot to read the root README and summarize the project in one
-            sentence. The README itself was small, but because the agent did not have it in
-            context, the harness first had to issue a <code>read_file</code> tool call and then
-            make a second model call with the README content included.
+            I asked GitHub Copilot the same question two ways: once with the relevant file
+            attached, once without. The only variable was the attachment. Letting the agent find
+            the file itself turned a single model call into <strong>six</strong> — one search,
+            four reads, and an answer — and raised the cost from <strong>8.0 credits ($0.080) to
+            12.8 credits ($0.128)</strong>, a <strong>37% increase</strong>.
           </p>
           <p>
             The cost lesson is not that tool calls are bad. The lesson is that missing context
-            can create extra agent round trips. When the user already knows which file, log,
-            error message, or code section matters, providing that context up front can reduce
-            unnecessary exploration.
+            creates extra agent round trips, and <em>each round trip re-bills the whole
+            conversation prefix</em>. When you already know which file, log, error message, or
+            symbol matters, providing it up front deletes those round trips.
           </p>
           <p>
-            In this session, including the README from the start would likely have reduced the
-            cost by roughly 10%.
+            The surprise underneath it: every run started with the <em>exact same</em> 9,680
+            tokens already cached on the very first call, in a fresh session — a shared prefix
+            cache none of us warmed.
           </p>
         </Prose>
       </Section>
 
       <Section title="Hypothesis">
         <Prose>
-          <p>Providing relevant context up front can reduce unnecessary agent work.</p>
+          <p>
+            If the developer already knows which file holds the answer, attaching it up front
+            should be cheaper than letting the agent discover it — because discovery adds extra
+            round trips, and each round trip re-bills the whole conversation prefix.
+          </p>
+        </Prose>
+      </Section>
+
+      <Section title="The prompt (identical in both arms)">
+        <Pre>
+          {"Our repository classes all call a helper called mapDatabaseRows when returning query results. How does it actually work — what does it do to the rows it gets back from SQLite?"}
+        </Pre>
+        <Prose>
+          <p style={{ marginTop: theme.space.md }}>
+            <strong>Arm A (lazy):</strong> no attachment. <strong>Arm B (attached):</strong> same
+            prompt plus <code>api/src/utils/sql.ts</code>, the file that defines the helper. Same
+            repo, same model (<code>claude-sonnet-4.5</code>).
+          </p>
         </Prose>
       </Section>
 
       <Section title="What happened">
+        <Prose><p><strong>Arm A — lazy</strong> (<code>t2.json</code>):</p></Prose>
         <OrderedList
           items={[
-            "User asked for a README summary.",
-            "The model did not yet have README.md content.",
-            "The harness requested a read_file tool call.",
-            "README.md was returned as the tool result.",
-            "A second model call included the README content.",
-            "The model produced the final answer.",
+            "p2.l0 — “Let me search for its definition” → emits a grep_search for mapDatabaseRows. (5.9 cr)",
+            "p2.l1 — grep returns the hits.",
+            "p2.l3 / l5 / l7 / l9 — four read_file calls on api/src/utils/sql.ts in small overlapping windows (one used a corrupted path and was retried).",
+            "p2.l10 — final answer: it maps snake_case columns to camelCase object keys. (1.8 cr)",
+          ]}
+        />
+        <Prose>
+          <p style={{ marginTop: theme.space.lg }}>
+            Total: 6 model calls, 5 tool calls, <strong>12.8 credits</strong>.
+          </p>
+          <p><strong>Arm B — attached</strong> (<code>t2_2.json</code>):</p>
+        </Prose>
+        <OrderedList
+          items={[
+            "p2.l0 — the file is already in context; the agent answers directly. One call, no tools, 8.0 credits.",
           ]}
         />
       </Section>
 
-      <Section title="Key finding">
+      <Section title="Key findings">
         <Callout tone="info" label="Key finding">
-          The README content was not the expensive part. The extra agent round trip was the
-          cost driver.
+          The answer was never the expensive part. The five discovery round trips were — each one
+          re-billed the ~25K-token prefix again just to read the same file.
         </Callout>
+        <BulletList
+          items={[
+            "Attaching the file was 37% cheaper (8.0 vs 12.8 credits) and removed 5 round trips.",
+            "Inlining is not free on the first call. Arm B’s single call (8.0 cr) was MORE expensive than Arm A’s first call (5.9 cr); the win comes entirely from deleting the tail.",
+            "Hop count, not hop size, dominates. Arm A fanned out into a grep plus four small overlapping reads, each re-billing the prefix at the cache-read rate. That fan-out is nondeterministic — another run might take three hops, not six.",
+            "A shared prefix cache is real. Every cold first call — across four independent fresh sessions — started with exactly 9,680 tokens already cached, despite no prior activity and a 5+ minute idle gap.",
+          ]}
+        />
       </Section>
 
       <Section title="Practical guidance">
@@ -117,36 +154,32 @@ export default function ContextQualityReadme() {
         </Prose>
         <BulletList
           items={[
-            "relevant files",
-            "specific functions",
-            "error messages",
-            "logs",
-            "stack traces",
-            "failing tests",
+            "the specific file or function",
+            "the error message or stack trace",
+            "the failing test",
+            "the relevant log lines",
             "architectural constraints",
           ]}
         />
         <Prose>
           <p style={{ marginTop: theme.space.lg }}>
             Avoid dumping the whole codebase. The goal is high-quality context, not maximum
-            context.
+            context — attaching the one file that holds the answer, not fifty.
           </p>
         </Prose>
       </Section>
 
       <Section title="Recommended developer behavior">
-        <Pre label="Instead of">Read the root README and tell me what this project does.</Pre>
-        <Pre label="Use">{"Here is the root README. Summarize what this project does in one sentence: …"}</Pre>
-        <Pre label="Or, for coding tasks">
-          {"The relevant files are src/cart/store.ts and src/components/NavBar.tsx. Use the existing cart store and do not modify backend APIs."}
-        </Pre>
+        <Pre label="Instead of">How does mapDatabaseRows work?</Pre>
+        <Pre label="Use">{"Here is api/src/utils/sql.ts. How does mapDatabaseRows transform the rows it gets back from SQLite?"}</Pre>
       </Section>
 
       <Section title="Evidence">
         <Prose>
           <p>
-            This is the actual Copilot Ledger report for the session. It opens in the same
-            read-only viewer used across the lab, pinned to this one export.
+            This is the actual Copilot Ledger report for Arm A — the lazy run. It opens in the
+            same read-only viewer used across the lab, pinned to this one export, with the search
+            → read → answer fan-out and the cold-call shared-cache hit visible per call.
           </p>
         </Prose>
         <div style={{ marginTop: theme.space.lg }}>
@@ -156,26 +189,24 @@ export default function ContextQualityReadme() {
 
       <Section title="LinkedIn draft">
         <Pre>
-{`The README was cheap. Finding it wasn't.
+{`The answer lived in one file. Letting the agent find it cost 37% more.
 
-I analyzed a small Copilot session where the user asked the agent to read the root README and summarize the project.
+I asked GitHub Copilot the same question two ways. Same prompt, same model, same repo. The only difference: in one run I attached the file that held the answer, in the other I didn't.
 
-The README content was tiny.
+Without the file, the agent didn't just answer. It:
+1. searched (grep)
+2. read the file across four overlapping windows
+3. then answered
 
-But the agent did not have it yet, so the harness had to:
-1. make an initial model call
-2. request read_file
-3. add the README as tool result
-4. make a second model call
+Six model calls instead of one. 12.8 credits instead of 8.0 — a 37% increase.
 
-That extra round trip mattered more than the README itself.
+The twist: inlining the file wasn't free either. Arm B's single call was actually MORE expensive than Arm A's first call. The savings came entirely from deleting the round trips, not from a cheaper answer.
 
-In this case, providing the README up front would likely have reduced the run cost by about 10%.
+Hop count, not hop size, is the lever.
 
-The lesson is not "avoid tools."
-The lesson is: when you already know the relevant context, give it to the agent.
+When you already know which file holds the answer, attach it. You're not saving tokens — you're saving round trips.
 
-Good context beats extra exploration.`}
+(N=1 — a single run per arm, not a benchmark.)`}
         </Pre>
       </Section>
 
@@ -185,12 +216,12 @@ Good context beats extra exploration.`}
         </Prose>
         <BulletList
           items={[
-            "Show the initial user prompt",
-            "Show the read_file tool call",
-            "Show the second model call",
-            "Highlight the cost",
-            "Explain that the README was small but the round trip added cost",
-            "End with: provide relevant context up front, but do not dump the whole codebase",
+            "Show the identical prompt in both arms",
+            "Arm A: show the grep_search, then the four read_file calls",
+            "Arm B: show the single call with the file attached",
+            "Put the two totals side by side: 12.8 vs 8.0 credits",
+            "Explain that the answer was cheap — the discovery round trips were not",
+            "End with: when you know the file, attach it; you're deleting round trips, not tokens",
           ]}
         />
       </Section>
@@ -198,8 +229,8 @@ Good context beats extra exploration.`}
       <Section title="Open the report">
         <Prose>
           <p>
-            One measured session, not a universal benchmark — open the report and follow the
-            two model calls and the single tool call yourself.
+            One run per arm (N=1), not a universal benchmark — open the report and follow the six
+            model calls and five tool calls yourself.
           </p>
         </Prose>
         <div style={{ marginTop: theme.space.lg }}>

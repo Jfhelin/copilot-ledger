@@ -103,15 +103,15 @@ function emptyExperiment(extra) {
 export var EXPERIMENTS = [
   emptyExperiment({
     id: "context-quality-readme",
-    title: "The README was cheap. Finding it wasn't.",
-    hook: "The README was cheap. Finding it wasn't.",
+    title: "The answer lived in one file. Letting the agent find it cost 37% more.",
+    hook: "The answer lived in one file. Letting the agent find it cost 37% more.",
     status: "Published",
-    confidence: "One measured session, not a universal benchmark.",
+    confidence: "One run per arm (N=1), not a universal benchmark.",
     // This experiment has a bespoke, fully-written page component
     // (pages/ContextQualityReadme.jsx) rather than the generic Field layout.
     // App.jsx routes /experiments/context-quality-readme to it directly.
     custom: true,
-    reportRoute: "/reports/02-one-tool",
+    reportRoute: "/reports/context-quality-maprows",
   }),
   emptyExperiment({
     id: "model-selection",
@@ -247,13 +247,38 @@ export var STATUS_TONE = {
 // renders it in the read-only viewer (no file picker, no switching). This is
 // how an experiment links to its own evidence without exposing the uploader.
 //
+// Fields:
+//   id        - stable route segment (#/reports/<id>)
+//   title     - descriptive name shown in the report header instead of the
+//               raw filename (e.g. "Context Quality — lazy lookup").
+//   file      - bundled export under public/ (loaded via assetUrl).
+//   summaries - OPTIONAL { userGoal, agentApproach } shown at the top of the
+//               report. Authored at publish time because a fixed report has no
+//               canvas bridge to generate them live. Populate this so the page
+//               opens with context instead of empty summary boxes.
+//   backTo / backLabel - link back to the owning experiment.
+//
 // To add the next one: copy the export into public/sessions/, add an entry
-// here, and link to "/reports/<id>" from the experiment page.
+// here (with a descriptive title and summaries), and link to "/reports/<id>"
+// from the experiment page.
 export var FIXED_REPORTS = [
   {
     id: "02-one-tool",
     title: "One-tool session — read the README",
     file: "sessions/02-one-tool.json",
+    backTo: "/experiments/context-quality-readme",
+    backLabel: "Back to experiment",
+  },
+  {
+    id: "context-quality-maprows",
+    title: "Context Quality — lazy lookup (search → read → answer)",
+    file: "sessions/t2-maprows-lazy.json",
+    summaries: {
+      userGoal:
+        "The developer asked how the `mapDatabaseRows` helper works — what it does to rows returned from SQLite — without telling the agent which file defines it. This is the lazy arm of an A/B test on whether front-loading the relevant file is cheaper than letting the agent discover it.",
+      agentApproach:
+        "With no file attached, the agent ran a grep_search for `mapDatabaseRows`, located it in api/src/utils/sql.ts, then read that file across four small overlapping windows (one via a corrupted path, which forced a retry) before answering that it maps snake_case columns to camelCase objects. That came to 6 model calls and 5 tool calls for 12.8 credits — versus 8.0 credits in 1 call when the same file was attached up front.",
+    },
     backTo: "/experiments/context-quality-readme",
     backLabel: "Back to experiment",
   },
