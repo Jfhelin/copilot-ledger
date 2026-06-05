@@ -155,16 +155,16 @@ export var EXPERIMENTS = [
   emptyExperiment({
     id: "agent-planning",
     title: "Agent Planning",
-    hook: "I thought the answer was expensive. The plan was.",
-    status: "Planned",
-    confidence: "Placeholder.",
+    hook: "The agent spent 40 credits before it wrote a single line of code.",
+    status: "Draft",
+    confidence: "Single session (N=1); planning was 38% of spend, 71% of it exploration sub-agents.",
   }),
   emptyExperiment({
     id: "tool-skill-overhead",
     title: "Tool and Skill Overhead",
-    hook: "Unused tools and skills may create setup overhead.",
+    hook: "A quarter of every call was tool definitions — and changing them mid-task cost 15 credits.",
     status: "Under investigation",
-    confidence: "Placeholder.",
+    confidence: "Single session (N=1); tool-def share measured, skill-only overhead not yet isolated.",
   }),
 ];
 
