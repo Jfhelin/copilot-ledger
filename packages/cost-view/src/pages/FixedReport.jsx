@@ -22,6 +22,8 @@ export default function FixedReport({ reportId }) {
     <AnalyzeSession
       fixed
       initialExportUrl={assetUrl(report.file)}
+      displayLabel={report.title}
+      fixedSummaries={report.summaries || null}
       backTo={report.backTo}
       backLabel={report.backLabel || "Back"}
     />

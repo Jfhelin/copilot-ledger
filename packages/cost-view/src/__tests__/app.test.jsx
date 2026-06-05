@@ -75,8 +75,8 @@ describe("App shell routing", function () {
     setLocation("/#/experiments/context-quality-readme");
     var mounted = await renderApp();
     var text = textOf(mounted.container);
-    expect(text).toContain("The README was cheap. Finding it wasn't.");
-    expect(text).toContain("The user asked Copilot to read the root README");
+    expect(text).toContain("The answer lived in one file. Letting the agent find it cost 37% more.");
+    expect(text).toContain("mapDatabaseRows");
     expect(text).toContain("Open the fixed Copilot Ledger report");
     await act(async function () { mounted.root.unmount(); });
   });
@@ -124,6 +124,35 @@ describe("App shell routing", function () {
       expect(text).not.toContain("Choose file");
       expect(text).not.toContain("Upload or select");
       expect(text).not.toContain("Close");
+      await act(async function () { mounted.root.unmount(); });
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+
+  it("bakes the authored summary and descriptive label into the maprows fixed report", async function () {
+    var json = readFileSync(
+      path.resolve(process.cwd(), "public/sessions/t2-maprows-lazy.json"),
+      "utf8",
+    );
+    var fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      text: function () { return Promise.resolve(json); },
+    });
+    try {
+      setLocation("/#/reports/context-quality-maprows");
+      var mounted = await renderApp();
+      await flush();
+      var text = textOf(mounted.container);
+      // The descriptive title is shown in the header instead of the filename.
+      expect(text).toContain("Context Quality — lazy lookup");
+      expect(text).not.toContain("t2-maprows-lazy.json");
+      // The authored summaries render at the top without any canvas bridge.
+      expect(text).toContain("mapDatabaseRows");
+      expect(text).toContain("grep_search");
+      // Still a fixed report: no uploader chrome.
+      expect(text).not.toContain("Choose file");
+      expect(text).not.toContain("Upload or select");
       await act(async function () { mounted.root.unmount(); });
     } finally {
       fetchSpy.mockRestore();
