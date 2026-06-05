@@ -74,7 +74,9 @@ measurement caution for anyone benchmarking Copilot cost.
 5. **Mode switches bust the cache (N=1, cart).** The implementation turn
    re-entered **cold at 19%** only ~1.5 min after the planning turn — too soon
    for the idle TTL. The cause was a tool-def change (Plan→Agent mode switch),
-   forcing a ~40K-token re-write worth 15.7 credits.
+   forcing a ~40K-token re-write worth 15.7 credits. See the
+   [Tool and Skill Overhead experiment](07-tool-skill-overhead.md) for the deep
+   dive on why a tool-def change is so expensive.
 
 ## What Happened
 
