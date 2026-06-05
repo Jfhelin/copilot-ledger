@@ -191,7 +191,7 @@ function ContextBars({ calls }) {
   );
 }
 
-export default function CostView({ events, metadata, selectedPromptId, onSelectPrompt, summaries, summariesPending, onRequestSummaries, canRequestSummaries }) {
+export default function CostView({ events, metadata, selectedPromptId, onSelectPrompt, selectedBucket, onSelectBucket, selectedStat, onSelectStat, summaries, summariesPending, onRequestSummaries, canRequestSummaries }) {
   // Rich Chat-export view: when the parser has populated a fork-shape
   // costAnalysis (prompts[] + per-event components/category/etc.), delegate
   // to the dedicated 3-column ledger that supports per-prompt drilldown.
@@ -202,6 +202,10 @@ export default function CostView({ events, metadata, selectedPromptId, onSelectP
         analysis={metadata.costAnalysis}
         selectedPromptId={selectedPromptId}
         onSelectPrompt={onSelectPrompt}
+        selectedBucket={selectedBucket}
+        onSelectBucket={onSelectBucket}
+        selectedStat={selectedStat}
+        onSelectStat={onSelectStat}
         summaries={summaries}
         summariesPending={summariesPending}
         onRequestSummaries={onRequestSummaries}

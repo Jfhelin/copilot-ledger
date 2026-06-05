@@ -10,9 +10,13 @@
 //
 //   Agent ─ loadExport({path|content}) ─► extension fs.read + SSE push ─► iframe parses
 //   Agent ─ selectPrompt({promptId})   ─► extension SSE push            ─► iframe highlights
+//   Agent ─ selectBox({bucket})        ─► extension SSE push            ─► iframe highlights box
+//   Agent ─ selectStat({stat})         ─► extension SSE push            ─► iframe highlights KPI card
 //   User click in iframe ─ POST /api/selection ─► extension stores selection
-//   Agent ─ getSelection()             ─► returns stored selection
-//   onUserPromptSubmitted hook         ─► injects current selection as additionalContext
+//   User click box ─ POST /api/bucket-selection ─► extension stores box selection
+//   User click KPI ─ POST /api/stat-selection ─► extension stores stat selection
+//   Agent ─ getSelection() / getBoxSelection() / getStatSelection() ─► returns stored state
+//   onUserPromptSubmitted hook         ─► injects current selection + box + stat as additionalContext
 //
 // State scope: selection + last-loaded export live in memory keyed by
 // instanceId. That's fine because both are inherently scoped to "this open
@@ -25,6 +29,20 @@ import { fileURLToPath } from "node:url";
 import { createCanvas, CanvasError, joinSession } from "@github/copilot-sdk/extension";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Component buckets the cost view draws. Kept in sync with CTX_KEYS in
+// packages/cost-view/src/components/CostViewChatExport.jsx. Used to validate
+// agent/iframe-supplied bucket keys before we store or broadcast them.
+const CTX_KEYS = ["tool_defs", "system", "history", "tool_results", "current", "images", "output"];
+const CTX_LABELS = {
+  tool_defs: "Tool defs",
+  system: "System",
+  history: "History",
+  tool_results: "Tool results",
+  current: "Current",
+  images: "Images",
+  output: "Output",
+};
 
 // Resolve the cost-view dist directory. We try, in order:
 //   1. $COPILOT_LEDGER_DIST           -- explicit override for dev
@@ -133,6 +151,8 @@ async function startServer(instanceId) {
     sseClients: new Set(),
     loadedExport: null,   // { content, label } | null
     selection: null,      // { promptId, summary } | null
+    bucketSelection: null, // { bucket, info } | null  -- selected component box
+    statSelection: null,  // { stat, info } | null  -- selected top KPI stat card
     summaries: null,      // { userGoal, agentApproach, label } | null
     summariesRequested: false, // user clicked "Ask Copilot to summarize"; nudged on next chat turn
   };
@@ -152,6 +172,8 @@ async function startServer(instanceId) {
       res.end(JSON.stringify({
         loadedExport: state.loadedExport || null,
         selection: state.selection ? { promptId: state.selection.promptId } : null,
+        bucketSelection: state.bucketSelection ? { bucket: state.bucketSelection.bucket } : null,
+        statSelection: state.statSelection ? { stat: state.statSelection.stat } : null,
         summaries: state.summaries || null,
       }));
       return;
@@ -185,6 +207,77 @@ async function startServer(instanceId) {
           state.selection
             ? `selection -> prompt #${state.selection.summary?.ordinal ?? "?"} (${state.selection.promptId})`
             : "selection cleared",
+          { level: "debug", ephemeral: true },
+        );
+        res.writeHead(204); res.end();
+      } catch (err) {
+        res.writeHead(400); res.end(String(err?.message || err));
+      }
+      return;
+    }
+    if (path === "/api/bucket-selection" && req.method === "POST") {
+      try {
+        const body = await readBody(req, 256 * 1024);
+        const parsed = body ? JSON.parse(body) : {};
+        const bucket = parsed.bucket;
+        if (bucket != null && CTX_KEYS.indexOf(String(bucket)) === -1) {
+          res.writeHead(400); res.end("invalid bucket"); return;
+        }
+        if (bucket) {
+          // Bound the stored info to keep agent context small and predictable.
+          let info = (parsed.info && typeof parsed.info === "object") ? parsed.info : null;
+          if (info) {
+            try {
+              const json = JSON.stringify(info);
+              if (json.length > 4096) info = null;
+            } catch { info = null; }
+          }
+          state.bucketSelection = { bucket: String(bucket), info };
+        } else {
+          state.bucketSelection = null;
+        }
+        logSafe(
+          state.bucketSelection
+            ? `bucket selection -> ${state.bucketSelection.bucket}`
+            : "bucket selection cleared",
+          { level: "debug", ephemeral: true },
+        );
+        // Store only; never re-broadcast (the click already updated the iframe).
+        res.writeHead(204); res.end();
+      } catch (err) {
+        res.writeHead(400); res.end(String(err?.message || err));
+      }
+      return;
+    }
+    if (path === "/api/stat-selection" && req.method === "POST") {
+      try {
+        const body = await readBody(req, 256 * 1024);
+        const parsed = body ? JSON.parse(body) : {};
+        let stat = parsed.stat;
+        if (stat != null) {
+          stat = String(stat);
+          // Stat card labels are dynamic (some conditional), so we can't enum
+          // them; just bound the length to keep agent context predictable.
+          if (stat.length === 0 || stat.length > 64) {
+            res.writeHead(400); res.end("invalid stat"); return;
+          }
+        }
+        if (stat) {
+          let info = (parsed.info && typeof parsed.info === "object") ? parsed.info : null;
+          if (info) {
+            try {
+              const json = JSON.stringify(info);
+              if (json.length > 4096) info = null;
+            } catch { info = null; }
+          }
+          state.statSelection = { stat, info };
+        } else {
+          state.statSelection = null;
+        }
+        logSafe(
+          state.statSelection
+            ? `stat selection -> ${state.statSelection.stat}`
+            : "stat selection cleared",
           { level: "debug", ephemeral: true },
         );
         res.writeHead(204); res.end();
@@ -245,11 +338,49 @@ function summarizeSelection(selection) {
   return parts.join(", ");
 }
 
+function summarizeBucketSelection(bucketSelection) {
+  if (!bucketSelection || !bucketSelection.bucket) return null;
+  const k = bucketSelection.bucket;
+  const label = CTX_LABELS[k] || k;
+  const info = bucketSelection.info || null;
+  if (!info) return `the "${label}" component box (no per-prompt metrics captured)`;
+  const m = info.metrics || {};
+  const where = info.promptOrdinal != null ? `prompt #${info.promptOrdinal}` : "a prompt";
+  const site = info.source === "context-bar"
+    ? `the context-window bar of ${where}`
+    : info.source === "prompt-cost"
+      ? `the "Cost by component" panel of ${where}`
+      : where;
+  const metricParts = [];
+  if (m.unit === "usd") {
+    if (Number.isFinite(m.cost)) metricParts.push(`$${m.cost.toFixed(4)}`);
+    if (Number.isFinite(m.tokens)) metricParts.push(`${m.tokens} tok`);
+    if (Number.isFinite(m.cachedPct)) metricParts.push(`${m.cachedPct}% cached`);
+    if (Number.isFinite(m.savings) && m.savings > 0) metricParts.push(`saved $${m.savings.toFixed(4)}`);
+  } else if (m.unit === "tokens") {
+    if (Number.isFinite(m.tokens)) metricParts.push(`${m.tokens} tokens`);
+  }
+  const metricStr = metricParts.length ? ` — last clicked in ${site}: ${metricParts.join(", ")}` : ` — last clicked in ${site}`;
+  return `the "${label}" component box (highlighted across all bars)${metricStr}`;
+}
+
+function summarizeStatSelection(statSelection) {
+  if (!statSelection || !statSelection.stat) return null;
+  const label = statSelection.stat;
+  const info = statSelection.info || null;
+  if (!info) return `the "${label}" summary stat card`;
+  const parts = [];
+  if (info.value != null) parts.push(String(info.value));
+  if (info.sub != null) parts.push(String(info.sub));
+  const valStr = parts.length ? `: ${parts.join(" · ")}` : "";
+  return `the "${label}" summary stat card${valStr}`;
+}
+
 const canvas = createCanvas({
   id: "copilot-ledger",
   displayName: "Copilot Ledger",
   description:
-    "Cost and tool-call breakdown for a VS Code Copilot Chat export. Open this canvas to discuss token spend, cache efficiency, and per-prompt outcomes; the user's current selection in the panel is automatically attached to follow-up turns. " +
+    "Cost and tool-call breakdown for a VS Code Copilot Chat export. Open this canvas to discuss token spend, cache efficiency, and per-prompt outcomes; the user's current selection in the panel is automatically attached to follow-up turns. The user can also click a component box (Tool defs / System / History / Tool results / Current / Images / Output) to highlight it everywhere — that box selection is queryable via `getBoxSelection` — and click a top summary stat card (Total cost, Billed input, Output, LLM calls, Tool calls, …), queryable via `getStatSelection`. Both are attached to follow-up turns. " +
     "IMPORTANT: at the start of every turn while this canvas is open, call `getPendingRequests` once. If it returns any items, act on each (e.g. for kind='summaries', read the export file at `exportLabel` and call `setSummaries` on the matching `instanceId`). A new export is auto-queued as a 'summaries' request on `loadExport`, so the user does not need to click anything.",
   inputSchema: {
     type: "object",
@@ -288,10 +419,14 @@ const canvas = createCanvas({
         if (!content) throw new CanvasError("canvas_input_invalid", "Provide `path` or `content`.");
         inst.loadedExport = { content, label: label || null };
         inst.selection = null;
+        inst.bucketSelection = null;
+        inst.statSelection = null;
         inst.summaries = null;
         inst.summariesRequested = true;
         broadcast(ctx.instanceId, "loadExport", inst.loadedExport);
         broadcast(ctx.instanceId, "setSelection", { promptId: null });
+        broadcast(ctx.instanceId, "setBucketSelection", null);
+        broadcast(ctx.instanceId, "setStatSelection", null);
         broadcast(ctx.instanceId, "setSummaries", null);
         broadcast(ctx.instanceId, "setSummariesPending", true);
         return { loaded: true, label: label || null, bytes: content.length };
@@ -393,6 +528,87 @@ const canvas = createCanvas({
         return { cleared: true };
       },
     },
+    {
+      name: "selectBox",
+      description:
+        "Highlight a component box (token bucket) across the context-window bars and the 'Cost by component' panels. Pass null to clear. Valid buckets: tool_defs, system, history, tool_results, current, images, output.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          bucket: { type: ["string", "null"], enum: [...CTX_KEYS, null], description: "Component bucket key to highlight, or null to clear." },
+        },
+        required: ["bucket"],
+        additionalProperties: false,
+      },
+      handler: async (ctx) => {
+        const inst = getInstance(ctx.instanceId);
+        if (!inst) throw new CanvasError("canvas_not_open", "Canvas instance is not open.");
+        const bucket = ctx.input.bucket || null;
+        if (bucket && CTX_KEYS.indexOf(bucket) === -1) {
+          throw new CanvasError("canvas_input_invalid", `Unknown bucket '${bucket}'.`);
+        }
+        // Agent-driven selection has no click-site metrics; preserve existing
+        // info only when re-selecting the same bucket.
+        if (bucket && inst.bucketSelection && inst.bucketSelection.bucket === bucket) {
+          // keep info
+        } else {
+          inst.bucketSelection = bucket ? { bucket, info: null } : null;
+        }
+        broadcast(ctx.instanceId, "setBucketSelection", bucket ? { bucket } : null);
+        return { bucket };
+      },
+    },
+    {
+      name: "getBoxSelection",
+      description: "Return the currently selected component box ({ bucket, info }) with any per-prompt metrics from the user's last click. Returns null if nothing is selected.",
+      inputSchema: { type: "object", additionalProperties: false },
+      handler: async (ctx) => {
+        const inst = getInstance(ctx.instanceId);
+        if (!inst || !inst.bucketSelection) return null;
+        return inst.bucketSelection;
+      },
+    },
+    {
+      name: "selectStat",
+      description:
+        "Highlight a top summary stat card (e.g. 'Total cost', 'Billed input', 'Output', 'LLM calls', 'Tool calls'). Pass the card's label string, or null to clear. Independent from selectBox.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          stat: { type: ["string", "null"], description: "Stat card label to highlight (e.g. 'Total cost'), or null to clear." },
+        },
+        required: ["stat"],
+        additionalProperties: false,
+      },
+      handler: async (ctx) => {
+        const inst = getInstance(ctx.instanceId);
+        if (!inst) throw new CanvasError("canvas_not_open", "Canvas instance is not open.");
+        let stat = ctx.input.stat || null;
+        if (stat != null) {
+          stat = String(stat);
+          if (stat.length === 0 || stat.length > 64) {
+            throw new CanvasError("canvas_input_invalid", "stat label must be 1-64 chars.");
+          }
+        }
+        if (stat && inst.statSelection && inst.statSelection.stat === stat) {
+          // keep info
+        } else {
+          inst.statSelection = stat ? { stat, info: null } : null;
+        }
+        broadcast(ctx.instanceId, "setStatSelection", stat ? { stat } : null);
+        return { stat };
+      },
+    },
+    {
+      name: "getStatSelection",
+      description: "Return the currently selected top stat card ({ stat, info }) with the displayed value from the user's last click. Returns null if nothing is selected.",
+      inputSchema: { type: "object", additionalProperties: false },
+      handler: async (ctx) => {
+        const inst = getInstance(ctx.instanceId);
+        if (!inst || !inst.statSelection) return null;
+        return inst.statSelection;
+      },
+    },
   ],
   open: async (ctx) => {
     let inst = getInstance(ctx.instanceId);
@@ -446,6 +662,22 @@ const session = await joinSession({
           lines.push(
             `Copilot Ledger canvas (${instanceId}) currently has selected: ${summarizeSelection(inst.selection)}`,
           );
+        }
+        if (inst.bucketSelection) {
+          const boxStr = summarizeBucketSelection(inst.bucketSelection);
+          if (boxStr) {
+            lines.push(
+              `Copilot Ledger canvas (${instanceId}) has a component box selected: ${boxStr}`,
+            );
+          }
+        }
+        if (inst.statSelection) {
+          const statStr = summarizeStatSelection(inst.statSelection);
+          if (statStr) {
+            lines.push(
+              `Copilot Ledger canvas (${instanceId}) has a summary stat card selected: ${statStr}`,
+            );
+          }
         }
         if (inst.summariesRequested && inst.loadedExport) {
           // Clear the flag eagerly; if the agent forgets to call setSummaries

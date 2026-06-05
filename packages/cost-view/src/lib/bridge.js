@@ -8,16 +8,21 @@
 // Protocol (extension -> iframe, via GET /api/events SSE):
 //   { type: "loadExport",   content: string, label?: string }
 //   { type: "setSelection", promptId: string | null }
+//   { type: "setBucketSelection", { bucket: string } | null }
+//   { type: "setStatSelection", { stat: string } | null }
 //
 // Protocol (iframe -> extension, via POST):
 //   POST /api/ready                         -- iframe boot; response body carries
 //                                              the current { loadedExport, selection,
-//                                              summaries } to hydrate without a race
+//                                              bucketSelection, statSelection, summaries }
+//                                              to hydrate without a race
 //   POST /api/selection {promptId, summary} -- user clicked a prompt
+//   POST /api/bucket-selection {bucket, info} -- user clicked a component bucket
+//   POST /api/stat-selection {stat, info}   -- user clicked a top KPI stat card
 //
 // The bridge is a no-op when there is no /api/events endpoint (standalone use).
 
-export function initBridge({ onLoadExport, onSetSelection, onSetSummaries, onSummariesPending } = {}) {
+export function initBridge({ onLoadExport, onSetSelection, onSetBucketSelection, onSetStatSelection, onSetSummaries, onSummariesPending } = {}) {
   let source = null;
   let disposed = false;
 
@@ -41,6 +46,18 @@ export function initBridge({ onLoadExport, onSetSelection, onSetSummaries, onSum
       try {
         const data = JSON.parse(ev.data);
         onSetSelection?.(data.promptId ?? null);
+      } catch {}
+    });
+    source.addEventListener("setBucketSelection", function (ev) {
+      try {
+        const data = ev.data === "null" ? null : JSON.parse(ev.data);
+        onSetBucketSelection?.(data ? (data.bucket ?? null) : null);
+      } catch {}
+    });
+    source.addEventListener("setStatSelection", function (ev) {
+      try {
+        const data = ev.data === "null" ? null : JSON.parse(ev.data);
+        onSetStatSelection?.(data ? (data.stat ?? null) : null);
       } catch {}
     });
     source.addEventListener("setSummaries", function (ev) {
@@ -72,6 +89,12 @@ export function initBridge({ onLoadExport, onSetSelection, onSetSummaries, onSum
         if (data.selection) {
           onSetSelection?.(data.selection.promptId ?? null);
         }
+        if (data.bucketSelection) {
+          onSetBucketSelection?.(data.bucketSelection.bucket ?? null);
+        }
+        if (data.statSelection) {
+          onSetStatSelection?.(data.statSelection.stat ?? null);
+        }
         if (data.summaries) {
           onSetSummaries?.(data.summaries);
         }
@@ -100,6 +123,22 @@ export function initBridge({ onLoadExport, onSetSelection, onSetSummaries, onSum
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ promptId: promptId ?? null, summary: summary ?? null }),
+      }).catch(function () {});
+    },
+    notifyBucketSelection(bucket, info) {
+      if (disposed) return;
+      fetch(endpoint("/api/bucket-selection"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bucket: bucket ?? null, info: info ?? null }),
+      }).catch(function () {});
+    },
+    notifyStatSelection(stat, info) {
+      if (disposed) return;
+      fetch(endpoint("/api/stat-selection"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stat: stat ?? null, info: info ?? null }),
       }).catch(function () {});
     },
     requestSummaries() {

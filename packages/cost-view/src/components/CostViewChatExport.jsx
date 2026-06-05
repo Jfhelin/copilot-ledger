@@ -153,8 +153,13 @@ function ToolArgsPreview(props) {
   );
 }
 
-var CTX_KEYS = ["system", "tool_defs", "history", "tool_results", "current", "images", "output"];
-var CTX_INPUT_KEYS = ["system", "tool_defs", "history", "tool_results", "current", "images"];
+// Ordered to match the request WIRE ORDER -- the sequence the model actually
+// receives, and the order Anthropic's prompt cache matches its prefix in:
+// tool definitions first, then the system prompt, then the conversation
+// (history + tool results), then the current user turn, images, and finally
+// the model's response. Keep this in sync with INPUT_KEYS in cacheAnalysis.ts.
+var CTX_KEYS = ["tool_defs", "system", "history", "tool_results", "current", "images", "output"];
+var CTX_INPUT_KEYS = ["tool_defs", "system", "history", "tool_results", "current", "images"];
 var CTX_COLORS = {
   get system()       { return theme.cost.ctxSystem; },
   get tool_defs()    { return theme.cost.ctxToolDefs; },
@@ -769,6 +774,10 @@ function StackBar(props) {
   var maxVal = props.maxVal;
   var withLabel = props.withLabel;
   var formatFn = props.formatFn;
+  // Optional bucket selection: when onSelectKey is provided the segments become
+  // clickable and the segment matching selectedKey gets a marker border.
+  var selectedKey = props.selectedKey || null;
+  var onSelectKey = props.onSelectKey || null;
   var sum = keys.reduce(function (a, k) { return a + (parts[k] || 0); }, 0);
   if (sum === 0) {
     return (
@@ -788,10 +797,19 @@ function StackBar(props) {
           if (v === 0) return null;
           var w = 100 * v / sum;
           var valStr = formatFn ? formatFn(v) : ((maxVal < 1) ? fmt$(v) : fmtT(v));
+          var isSel = selectedKey != null && selectedKey === k;
           return (
             <div key={k}
-              title={labels[k] + " · " + valStr + " (" + (100 * v / sum).toFixed(1) + "% of bar)"}
-              style={{ height: "100%", background: colors[k], width: w + "%" }} />
+              onClick={onSelectKey ? function (e) { e.stopPropagation(); onSelectKey(k); } : undefined}
+              title={labels[k] + " · " + valStr + " (" + (100 * v / sum).toFixed(1) + "% of bar)"
+                + (onSelectKey ? " · click to select" : "")}
+              style={{
+                height: "100%", background: colors[k], width: w + "%",
+                cursor: onSelectKey ? "pointer" : "default",
+                boxShadow: isSel ? "inset 0 0 0 2px " + theme.text.primary : undefined,
+                position: isSel ? "relative" : undefined,
+                zIndex: isSel ? 1 : undefined,
+              }} />
           );
         })}
       </div>
@@ -2507,10 +2525,34 @@ function computePromptCostByBucket(p) {
 
 function PromptCostBreakdown(props) {
   var p = props.prompt;
+  var ordinal = props.ordinal;
+  var selectedBucket = props.selectedBucket || null;
+  var onSelectBucket = props.onSelectBucket || null;
   var byBucket = useMemo(function () { return computePromptCostByBucket(p); }, [p]);
+  var [openBuckets, setOpenBuckets] = useState({});
   var total = CTX_KEYS.reduce(function (a, k) { return a + (byBucket[k].cost || 0); }, 0);
   if (total <= 0) return null;
   var totalSavings = CTX_KEYS.reduce(function (a, k) { return a + (byBucket[k].savings || 0); }, 0);
+  function toggleBucket(k, b, cachedPct) {
+    if (!onSelectBucket) return;
+    var next = selectedBucket === k ? null : k;
+    onSelectBucket(next, next ? {
+      bucket: k,
+      label: CTX_LABELS[k],
+      source: "prompt-cost",
+      promptId: p.promptId || null,
+      promptOrdinal: ordinal != null ? ordinal : null,
+      metrics: {
+        unit: "usd",
+        cost: b.cost,
+        tokens: (b.cachedTok || 0) + (b.newTok || 0),
+        cachedTokens: b.cachedTok || 0,
+        newTokens: b.newTok || 0,
+        cachedPct: cachedPct,
+        savings: b.savings || 0,
+      },
+    } : null);
+  }
   return (
     <div style={{
       gridColumn: "1 / -1",
@@ -2534,10 +2576,20 @@ function PromptCostBreakdown(props) {
           var v = byBucket[k].cost || 0;
           if (v <= 0) return null;
           var w = 100 * v / total;
+          var isSel = selectedBucket === k;
+          var bk = byBucket[k];
+          var ttok = bk.cachedTok + bk.newTok;
+          var cpct = ttok > 0 ? Math.round(100 * bk.cachedTok / ttok) : 0;
           return (
             <div key={k}
-              title={CTX_LABELS[k] + ": " + fmt$(v) + " (" + w.toFixed(1) + "%)"}
-              style={{ height: "100%", background: CTX_COLORS[k], width: w + "%" }} />
+              onClick={onSelectBucket ? function (e) { e.stopPropagation(); toggleBucket(k, bk, cpct); } : undefined}
+              title={CTX_LABELS[k] + ": " + fmt$(v) + " (" + w.toFixed(1) + "%)" + (onSelectBucket ? " · click to select" : "")}
+              style={{
+                height: "100%", background: CTX_COLORS[k], width: w + "%",
+                cursor: onSelectBucket ? "pointer" : "default",
+                boxShadow: isSel ? "inset 0 0 0 2px " + theme.text.primary : undefined,
+                position: isSel ? "relative" : undefined, zIndex: isSel ? 1 : undefined,
+              }} />
           );
         })}
       </div>
@@ -2625,20 +2677,31 @@ function PromptCostBreakdown(props) {
             if (b.cwTok > 0) seg.push({ label: "cache-write", tok: b.cwTok, cost: b.cwCost, color: theme.cost.cwrite });
             if (b.cachedTok > 0) seg.push({ label: "cache-read", tok: b.cachedTok, cost: b.cachedCost, color: theme.cost.cached });
           }
+          var isSel = selectedBucket === k;
+          var canExpand = seg.length > 0;
+          var open = !!openBuckets[k];
           return (
-            <details key={k}
+            <div key={k}
               style={{
                 padding: "4px 0",
                 borderTop: "1px solid " + theme.border.subtle,
+                boxShadow: isSel ? "inset 0 0 0 2px " + CTX_COLORS[k] : undefined,
+                background: isSel ? theme.bg.raised : undefined,
+                borderRadius: isSel ? 3 : undefined,
               }}>
-              <summary style={{
-                display: "grid",
-                gridTemplateColumns: "16px 130px 90px 56px minmax(140px,1fr) 2fr",
-                gap: 10, alignItems: "baseline",
-                cursor: "pointer", listStyle: "none",
-              }}>
+              <div
+                onClick={onSelectBucket ? function () { toggleBucket(k, b, cachedPct); } : undefined}
+                role={onSelectBucket ? "button" : undefined}
+                aria-pressed={onSelectBucket ? isSel : undefined}
+                title={onSelectBucket ? "Click to select this component for discussion" : undefined}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "16px 130px 90px 56px minmax(140px,1fr) 2fr 18px",
+                  gap: 10, alignItems: "baseline",
+                  cursor: onSelectBucket ? "pointer" : "default", listStyle: "none",
+                }}>
                 <span style={{ display: "inline-block", width: 10, height: 10, background: CTX_COLORS[k], borderRadius: 1 }} />
-                <span style={{ color: theme.text.primary, fontWeight: 500 }}>{CTX_LABELS[k]}</span>
+                <span style={{ color: theme.text.primary, fontWeight: isSel ? 700 : 500 }}>{CTX_LABELS[k]}</span>
                 <span style={{ color: theme.text.primary, fontVariantNumeric: "tabular-nums" }}>{fmt$(b.cost)}</span>
                 <span style={{ color: theme.text.muted, fontVariantNumeric: "tabular-nums" }}>{pct.toFixed(0)}%</span>
                 <span style={{ color: theme.text.secondary, fontVariantNumeric: "tabular-nums" }}>{cacheText}</span>
@@ -2646,10 +2709,21 @@ function PromptCostBreakdown(props) {
                   style={{
                     color: theme.text.muted,
                     overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    cursor: b.tooltip ? "help" : "pointer",
+                    cursor: b.tooltip ? "help" : "inherit",
                   }}>{b.sample}</span>
-              </summary>
-              {seg.length > 0 ? (
+                {canExpand ? (
+                  <button type="button"
+                    onClick={function (e) { e.stopPropagation(); setOpenBuckets(function (prev) { var n = Object.assign({}, prev); n[k] = !prev[k]; return n; }); }}
+                    title={open ? "Hide receipt" : "Show receipt"}
+                    aria-label={open ? "Hide receipt" : "Show receipt"}
+                    style={{
+                      background: "transparent", border: "none", padding: 0, margin: 0,
+                      color: theme.text.muted, cursor: "pointer", fontSize: theme.fontSize.xs,
+                      lineHeight: 1, justifySelf: "center",
+                    }}>{open ? "▾" : "▸"}</button>
+                ) : <span />}
+              </div>
+              {canExpand && open ? (
                 <div style={{
                   marginLeft: 26, marginTop: 6, paddingBottom: 4,
                   display: "flex", flexDirection: "column", gap: 3,
@@ -2686,7 +2760,7 @@ function PromptCostBreakdown(props) {
                   <div style={{ fontStyle: "italic", opacity: 0.6, marginTop: 2 }}>(est.)</div>
                 </div>
               ) : null}
-            </details>
+            </div>
           );
         })}
       </div>
@@ -2737,6 +2811,8 @@ function PromptNewMini(props) {
 function Kpis(props) {
   var t = props.totals;
   var sa = props.subagentEst || {};
+  var selectedStat = props.selectedStat || null;
+  var onSelectStat = props.onSelectStat || null;
   var notes = [];
   if (sa.overheadCount > 0) {
     notes.push({
@@ -3076,12 +3152,30 @@ function Kpis(props) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(" + items.length + ", 1fr)", gap: 12, marginBottom: 28 }}>
       {items.map(function (k, i) {
+        var statKey = k.l;
+        var isSel = onSelectStat && selectedStat != null && selectedStat === statKey;
         return (
-          <div key={i} style={{
+          <div key={i}
+            onClick={onSelectStat ? function () {
+              var next = selectedStat === statKey ? null : statKey;
+              onSelectStat(next, next ? {
+                key: statKey,
+                label: statKey,
+                source: "kpi",
+                value: (typeof k.v === "string" || typeof k.v === "number") ? String(k.v) : null,
+                sub: (typeof k.m === "string") ? k.m : null,
+              } : null);
+            } : undefined}
+            role={onSelectStat ? "button" : undefined}
+            aria-pressed={onSelectStat ? !!isSel : undefined}
+            title={onSelectStat ? "Click to select this stat for discussion" : undefined}
+            style={{
             background: theme.bg.surface,
-            border: "1px solid " + (k.warn ? theme.cost.missBorder : theme.border.default),
+            border: "1px solid " + (isSel ? theme.text.primary : (k.warn ? theme.cost.missBorder : theme.border.default)),
+            boxShadow: isSel ? "inset 0 0 0 1px " + theme.text.primary : undefined,
             borderRadius: theme.radius.md, padding: "12px 14px",
             minWidth: 0,
+            cursor: onSelectStat ? "pointer" : "default",
           }}>
             <div style={{ color: theme.text.muted, fontSize: theme.fontSize.xs, textTransform: "uppercase", letterSpacing: 0.6 }}>{k.l}</div>
             <div title={k.vTitle || undefined} style={{ fontSize: theme.fontSize.xl, fontWeight: 600, color: k.warn ? theme.cost.missText : theme.text.primary, marginTop: 4, fontVariantNumeric: "tabular-nums", cursor: k.vTitle ? "help" : "default" }}>{k.v}</div>
@@ -3501,6 +3595,10 @@ export default function CostView(props) {
   var analysis = props.analysis;
   var selectedPromptId = props.selectedPromptId || null;
   var onSelectPrompt = props.onSelectPrompt || null;
+  var selectedBucket = props.selectedBucket || null;
+  var onSelectBucket = props.onSelectBucket || null;
+  var selectedStat = props.selectedStat || null;
+  var onSelectStat = props.onSelectStat || null;
   var summaries = props.summaries || null;
   var summariesPending = !!props.summariesPending;
   var onRequestSummaries = props.onRequestSummaries || null;
@@ -3629,7 +3727,7 @@ export default function CostView(props) {
         Three different lenses on "input": context size, growth, and billing.
       </div>
 
-      <Kpis totals={analysis.totals} subagentEst={subagentEst} analysis={analysis} />
+      <Kpis totals={analysis.totals} subagentEst={subagentEst} analysis={analysis} selectedStat={selectedStat} onSelectStat={onSelectStat} />
       <ModelBreakdown prompts={analysis.prompts} />
       <SessionSummaries
         summaries={summaries}
@@ -3845,7 +3943,7 @@ export default function CostView(props) {
                 <div><PromptNewMini prompt={p} /></div>
                 <div style={{ fontSize: theme.fontSize.lg, fontWeight: 600, color: theme.text.primary, fontVariantNumeric: "tabular-nums", textAlign: "right" }}>{fmt$(p.cost)}</div>
               </div>
-              <PromptCostBreakdown prompt={p} />
+              <PromptCostBreakdown prompt={p} ordinal={displayOrdinal} selectedBucket={selectedBucket} onSelectBucket={onSelectBucket} />
 
               {p.events.map(function (ev, ei) {
                 var isLLM = ev.kind === "llm";
@@ -4184,7 +4282,19 @@ export default function CostView(props) {
                               current: Math.max(0, (ev.components.current || 0) - newImgInCur),
                               images: vis,
                             });
-                            return <StackBar parts={parts} keys={CTX_KEYS} colors={CTX_COLORS} labels={CTX_LABELS} maxVal={maxCtx} withLabel />;
+                            return <StackBar parts={parts} keys={CTX_KEYS} colors={CTX_COLORS} labels={CTX_LABELS} maxVal={maxCtx} withLabel
+                              selectedKey={selectedBucket}
+                              onSelectKey={onSelectBucket ? function (k) {
+                                var next = selectedBucket === k ? null : k;
+                                onSelectBucket(next, next ? {
+                                  bucket: k,
+                                  label: CTX_LABELS[k],
+                                  source: "context-bar",
+                                  promptId: p.promptId || null,
+                                  promptOrdinal: displayOrdinal != null ? displayOrdinal : null,
+                                  metrics: { unit: "tokens", tokens: parts[k] || 0 },
+                                } : null);
+                              } : undefined} />;
                           })()
                         : <span style={{ color: theme.text.ghost, fontSize: theme.fontSize.xs, fontStyle: "italic" }}>→ result lands in next LLM call</span>}
                     </div>
