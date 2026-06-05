@@ -3,6 +3,7 @@ import { theme } from "../lib/theme.js";
 import { estimateCost, hasModelPricing, getModelPrice } from "../lib/pricing.js";
 import { estimateImageTokens, imageDollarCost } from "../lib/imageTokenEstimate.js";
 import { detectUnusedTools, aggregateSkillCarry } from "../lib/llmAnalysisExport";
+import { computeUnusedToolDefsCost } from "../lib/setupOverhead.js";
 import { buildAgentThreads } from "../lib/agentThreads";
 import usePersistentState from "../hooks/usePersistentState.js";
 
@@ -3071,12 +3072,16 @@ function Kpis(props) {
     items.push({ l: "⚠ Unexpected misses", v: "" + t.unexpectedMissCount, d: "wasted ~" + fmt$(t.unexpectedMissCost), warn: true });
   }
   // Setup overhead: tools and skills that were attached to every call but
-  // never invoked / opened. Cost is computed at the cached-input rate
-  // (these prefix tokens hit cache on calls 2..N), which honestly reflects
-  // what the user is actually paying for the dead weight. Unused MCP servers
-  // are intentionally excluded -- they ship zero tool defs to the model, so
-  // they add zero LLM tokens. The standalone MCP reachability callout below
-  // surfaces them separately.
+  // never invoked / opened. The UNUSED-TOOLS portion is priced from the
+  // tool_defs bucket's own cache behavior (cache-write on first appearance /
+  // re-warm, cache-read thereafter), attributed per call by the unused share of
+  // that call's offered tool defs -- so a tool added mid-session only costs on
+  // the calls where it was present, and the expensive cache-write it triggered
+  // is not hidden behind a flat cache-read rate. Skills live in the system
+  // prefix (not tool_defs) and are still estimated at the blended cached rate.
+  // Unused MCP servers are intentionally excluded -- they ship zero tool defs
+  // to the model, so they add zero LLM tokens. The standalone MCP reachability
+  // callout below surfaces them separately.
   var setup = (function () {
     var analysis = props.analysis;
     if (!analysis || !Array.isArray(analysis.prompts)) return null;
@@ -3089,11 +3094,10 @@ function Kpis(props) {
     var skillsUnused = skillCarry.unusedCount || 0;
     var totalUnused = toolsUnused + skillsUnused;
     if (totalUnused === 0) return null;
-    var wastedTokPerCall = (unusedTools.unusedTokensPerCall || 0) + (skillCarry.unusedTokensPerCall || 0);
     var calls = unusedTools.callsWithDefs || 0;
-    var wastedTokTotal = wastedTokPerCall * calls;
     // Per-token cached input rate, derived from observed cached spend. Falls
-    // back to ~10% of the fresh rate (Anthropic / OpenAI cache discount).
+    // back to ~10% of the fresh rate (Anthropic / OpenAI cache discount). Used
+    // only for the skills estimate (skills are not in the tool_defs bucket).
     var perTokCached = 0;
     if (t.cached > 0 && t.cachedCost > 0) {
       perTokCached = t.cachedCost / t.cached;
@@ -3101,11 +3105,17 @@ function Kpis(props) {
       var freshTokK = Math.max(0, (t.promptTokens || 0) - (t.cached || 0) - (t.cacheWrite || 0));
       if (freshTokK > 0 && t.freshCost > 0) perTokCached = (t.freshCost / freshTokK) * 0.1;
     }
-    var wastedCost = wastedTokTotal * perTokCached;
-    var toolsTokPerCall = unusedTools.unusedTokensPerCall || 0;
+    // Unused tool defs: cache-aware, per-call, tool_defs-bucket-specific.
+    var toolDefsDead = { writeCost: 0, readCost: 0, totalCost: 0, unusedTokensPerCall: 0 };
+    try {
+      toolDefsDead = computeUnusedToolDefsCost(analysis.prompts, unusedTools.unused);
+    } catch (_) { /* keep zeros on any pricing/shape gap */ }
+    var toolsCost = toolDefsDead.totalCost;
+    var toolsTokPerCall = toolDefsDead.unusedTokensPerCall || unusedTools.unusedTokensPerCall || 0;
     var skillsTokPerCall = skillCarry.unusedTokensPerCall || 0;
-    var toolsCost = toolsTokPerCall * calls * perTokCached;
     var skillsCost = skillsTokPerCall * calls * perTokCached;
+    var wastedCost = toolsCost + skillsCost;
+    var wastedTokPerCall = toolsTokPerCall + skillsTokPerCall;
     var toolsTotal = (unusedTools.offeredAll && unusedTools.offeredAll.size) || 0;
     var skillsTotal = skillCarry.skillCount || 0;
     var lines = [];
@@ -3133,11 +3143,20 @@ function Kpis(props) {
       </>
     );
     var unusedToolList = unusedTools.unused.slice(0, 12).join(", ") + (unusedTools.unused.length > 12 ? ", ..." : "");
+    var splitNote = "";
+    if (toolsCost > 0) {
+      splitNote = "Unused tool defs cost ~" + fmt$(toolDefsDead.writeCost)
+        + " one-time/re-warm cache-writes + ~" + fmt$(toolDefsDead.readCost)
+        + " recurring cache-reads. ";
+    }
     var title = "Tools and skills attached to every LLM call but never invoked or opened. "
-      + "These ship in the (cache-discounted) system prefix on every call. "
+      + "Unused tool defs are priced from the tool_defs bucket's own cache split "
+      + "(cache-write on first appearance / re-warm, cache-read thereafter), so the "
+      + "estimate does not over-promise the savings of dropping them. "
+      + splitNote
       + "Disable them in your config to reduce per-call overhead. "
       + (toolsUnused > 0 ? ("Unused tools: " + unusedToolList + ". ") : "")
-      + ("Estimated " + fmtT(wastedTokPerCall) + " wasted tok / call × " + calls + " calls.");
+      + ("~" + fmtT(wastedTokPerCall) + " wasted tok / call \u00D7 " + calls + " calls.");
     return {
       l: "Setup overhead",
       v: wastedCost > 0 ? "~" + fmt$(wastedCost) : "" + totalUnused,
