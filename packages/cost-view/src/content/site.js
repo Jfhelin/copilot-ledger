@@ -114,6 +114,17 @@ export var EXPERIMENTS = [
     reportRoute: "/reports/context-quality-maprows",
   }),
   emptyExperiment({
+    id: "cache-behavior",
+    title: "The first call was already warm. The cheap part was everything after it.",
+    hook: "The first call was already warm. The cheap part was everything after it.",
+    status: "Published",
+    confidence: "Shared-cache hit N=4; per-call curve and sub-agent reuse N=1.",
+    // Bespoke page: pages/CacheBehavior.jsx. App.jsx routes
+    // /experiments/cache-behavior to it directly.
+    custom: true,
+    reportRoute: "/reports/cache-curve",
+  }),
+  emptyExperiment({
     id: "model-selection",
     title: "Model Selection",
     hook: "The biggest cost lever is often model selection.",
@@ -280,6 +291,19 @@ export var FIXED_REPORTS = [
         "With no file attached, the agent ran a grep_search for `mapDatabaseRows`, located it in api/src/utils/sql.ts, then read that file across four small overlapping windows (one via a corrupted path, which forced a retry) before answering that it maps snake_case columns to camelCase objects. That came to 6 model calls and 5 tool calls for 12.8 credits — versus 8.0 credits in 1 call when the same file was attached up front.",
     },
     backTo: "/experiments/context-quality-readme",
+    backLabel: "Back to experiment",
+  },
+  {
+    id: "cache-curve",
+    title: "Cache behavior — the per-call hit-rate curve",
+    file: "sessions/t2-maprows-lazy.json",
+    summaries: {
+      userGoal:
+        "The same lazy-lookup run, re-framed to study the prompt cache rather than context quality. The question here is not what the agent answered, but how the cache warmed up call by call: what the first request already found cached, and how quickly later calls reached near-total reuse.",
+      agentApproach:
+        "Across 6 model calls on claude-sonnet-4.5, the cache hit rate climbs 40.3% → 93.4% → 98.7% → 98.3% → 99.1% → 98.9%. The first call already reuses a shared 9,680-token prefix (tool defs + system) before paying a one-time 5.4-credit cache-creation write; every call after that re-reads the warm prefix and only pays for the new tool result (229–442 tokens). Select call 1 to see the shared hit, then step through 2–6 to watch reuse approach 99%.",
+    },
+    backTo: "/experiments/cache-behavior",
     backLabel: "Back to experiment",
   },
 ];
