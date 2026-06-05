@@ -17,7 +17,7 @@ The file numbers under `experiments/` (`01`–`08`) are just stable IDs, **not**
 the publishing order. Publish in this order instead:
 
 1. Context Quality — The README was cheap. Finding it wasn't.
-2. Agent Planning — I thought the answer was expensive. The plan was.
+2. Agent Planning — 40 credits spent before a single line of code (38% of the run).
 3. Cache Behavior — Your "cold" session isn't cold (~9,700 tokens pre-cached).
 4. Tool & Skill Overhead — A quarter of every call is tool defs; changing them
    busts the cache. *(Seeded, N=1, under investigation — publish after a second
