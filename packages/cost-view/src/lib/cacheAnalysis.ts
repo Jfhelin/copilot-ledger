@@ -107,8 +107,14 @@ export interface PromptAnalysis {
   unexpectedMissCost: number;
 }
 
+// Ordered to match the request WIRE ORDER (the sequence the model actually
+// receives, and the order Anthropic's prompt cache matches its prefix in):
+// tool definitions, then the system prompt, then the conversation messages
+// (history + tool results), then the current user turn. This ordering is load
+// bearing: `newPerBucket` lays the cached prefix down over these buckets in
+// this exact order (see the prefix fill in analyzeSessionCalls).
 const INPUT_KEYS: (keyof ComponentBreakdown)[] = [
-  "system", "tool_defs", "history", "tool_results", "current",
+  "tool_defs", "system", "history", "tool_results", "current",
 ];
 
 const MIN_PRIOR_PT_FOR_MISS_DIAG = 1000;
@@ -185,8 +191,6 @@ function sortKeys(value: unknown): unknown {
 export function analyzeSessionCalls(
   prompts: { calls: CallInput[]; cacheWriteSum: number }[],
 ): { prompt: PromptAnalysis; calls: CallAnalysis[] }[] {
-  const prevComponentsByModel = new Map<string, ComponentBreakdown>();
-  const prevCharsByModel = new Map<string, ComponentBreakdown>();
   const prevPtByModel = new Map<string, number>();
   const prevToolsByModel = new Map<string, ToolDef[]>();
   let prevModelGlobal: string | null = null;
@@ -230,33 +234,36 @@ export function analyzeSessionCalls(
         unexpectedMissTokens += u.prompt_tokens;
       }
 
-      // Per-bucket new attribution: diff this call's content against the
-      // previous same-model call's content, then scale to actual newTotal.
-      // We prefer raw character counts (`componentChars`) because they're
-      // stable across calls -- the scaled token `components` jitter as the
-      // per-call rescaling factor changes, which made unchanged buckets like
-      // `system` falsely appear to "grow" and get billed-as-new.
-      const prevComps = prevComponentsByModel.get(call.model);
-      const prevChars = prevCharsByModel.get(call.model);
-      const useChars = !!(call.componentChars && prevChars);
-      const estNew: ComponentBreakdown = emptyComponents();
-      for (const k of INPUT_KEYS) {
-        if (useChars) {
-          const cur = call.componentChars![k] ?? 0;
-          const prev = prevChars![k] ?? 0;
-          estNew[k] = Math.max(0, cur - prev);
-        } else {
-          const cur = call.components[k] ?? 0;
-          const prev = prevComps ? (prevComps[k] ?? 0) : 0;
-          estNew[k] = prevComps ? Math.max(0, cur - prev) : cur;
+      // Per-bucket new attribution via WIRE-ORDER PREFIX FILL.
+      // Anthropic prompt caching is positional: `cached_tokens` always
+      // represents a contiguous prefix of the request, matched in wire order
+      // (tool defs -> system -> messages). Rather than smear the cache hit
+      // proportionally across buckets, we lay the cached prefix down over the
+      // buckets in that exact order (INPUT_KEYS) and treat everything past the
+      // cache cut as new. This makes a cold first call correctly show its hit
+      // confined to the front of the tool-defs (the shared, service-side warm
+      // prefix) instead of appearing to cache part of every bucket.
+      let totalInSum = 0;
+      for (const k of INPUT_KEYS) totalInSum += call.components[k] ?? 0;
+      const scaled: ComponentBreakdown = emptyComponents();
+      if (totalInSum <= 0) {
+        // No per-bucket sizing available; attribute all new tokens to tool_defs.
+        scaled.tool_defs = newTotal;
+      } else {
+        // Scale the estimated bucket sizes so they sum to the exact
+        // prompt_tokens, then walk them in wire order, consuming the cached
+        // prefix first. Whatever each bucket has left past the cache cut is new.
+        const sf = u.prompt_tokens / totalInSum;
+        let remainingCached = u.cached_tokens;
+        for (const k of INPUT_KEYS) {
+          const size = (call.components[k] ?? 0) * sf;
+          const cachedHere = Math.min(remainingCached, size);
+          remainingCached -= cachedHere;
+          scaled[k] = Math.max(0, Math.round(size - cachedHere));
         }
       }
-      const estTotal = INPUT_KEYS.reduce((a, k) => a + estNew[k], 0) || 1;
-      const scaled: ComponentBreakdown = emptyComponents();
-      for (const k of INPUT_KEYS) {
-        scaled[k] = Math.round(estNew[k] * newTotal / estTotal);
-      }
-      // Fix rounding drift onto the largest bucket
+      // Fix rounding drift onto the largest new bucket so the split sums
+      // exactly to newTotal (fresh + cache_write).
       const drift = newTotal - INPUT_KEYS.reduce((a, k) => a + scaled[k], 0);
       if (drift !== 0) {
         let kmax: keyof ComponentBreakdown = "tool_defs";
@@ -282,8 +289,6 @@ export function analyzeSessionCalls(
       });
 
       // advance baselines
-      prevComponentsByModel.set(call.model, { ...call.components });
-      if (call.componentChars) prevCharsByModel.set(call.model, { ...call.componentChars });
       prevPtByModel.set(call.model, u.prompt_tokens);
       prevToolsByModel.set(call.model, call.tools);
       prevModelGlobal = call.model;

@@ -77,10 +77,19 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
   const [error, setError] = useState(null);
   const [sourceLabel, setSourceLabel] = useState(null);
   const [selectedPromptId, setSelectedPromptId] = useState(null);
+  const [selectedBucket, setSelectedBucket] = useState(null);
+  const [selectedStat, setSelectedStat] = useState(null);
   const [recents, setRecents] = useState(readRecents);
   const [summariesMap, setSummariesMap] = useState(readSummariesMap);
   const [summariesPending, setSummariesPending] = useState(false);
   const bridgeRef = useRef(null);
+  // Mirror sourceLabel into a ref so the bridge callbacks can read the latest
+  // value without listing sourceLabel as a bridgeEffect dependency. Re-running
+  // bridgeEffect tears down and re-creates the bridge, which re-POSTs
+  // /api/ready and replays the loaded export -- that replay is exactly what
+  // used to snap the user back out of the file picker when they hit "New file".
+  const sourceLabelRef = useRef(null);
+  useEffect(function () { sourceLabelRef.current = sourceLabel; }, [sourceLabel]);
 
   const currentSummaries = useMemo(function () {
     if (!sourceLabel) return null;
@@ -122,6 +131,8 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
       setSession(parsed);
       setSourceLabel(label || null);
       setSelectedPromptId(null);
+      setSelectedBucket(null);
+      setSelectedStat(null);
       setError(null);
       if (!(options && options.skipRecent)) pushRecent(label, text);
       bridgeRef.current?.notifyLoaded({ label, prompts: parsed.metadata?.costAnalysis?.prompts?.length || 0 });
@@ -153,23 +164,35 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
     bridgeRef.current = initBridge({
       onLoadExport: function (content, label) { loadFromText(content, label || "(from canvas)"); },
       onSetSelection: function (promptId) { setSelectedPromptId(promptId); },
+      onSetBucketSelection: function (bucket) { setSelectedBucket(bucket); },
+      onSetStatSelection: function (stat) { setSelectedStat(stat); },
       onSetSummaries: function (summaries) {
         setSummariesPending(false);
         // The extension echoes the canvas's loaded-export label, so this is
         // reliably keyable. If somehow missing, fall back to sourceLabel.
         if (!summaries) return;
-        const label = summaries.label || sourceLabel;
+        const label = summaries.label || sourceLabelRef.current;
         if (!label) return;
         storeSummaries(label, summaries);
       },
       onSummariesPending: function (pending) { setSummariesPending(pending); },
     });
     return function () { bridgeRef.current?.dispose(); };
-  }, [loadFromText, storeSummaries, sourceLabel]);
+  }, [loadFromText, storeSummaries]);
 
   const onSelectPrompt = useCallback(function (promptId, summary) {
     setSelectedPromptId(promptId);
     bridgeRef.current?.notifySelection(promptId, summary);
+  }, []);
+
+  const onSelectBucket = useCallback(function (bucket, info) {
+    setSelectedBucket(bucket);
+    bridgeRef.current?.notifyBucketSelection(bucket, info);
+  }, []);
+
+  const onSelectStat = useCallback(function (stat, info) {
+    setSelectedStat(stat);
+    bridgeRef.current?.notifyStatSelection(stat, info);
   }, []);
 
   const onRequestSummaries = useCallback(function () {
@@ -351,7 +374,7 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
                 <>
                   {renderRecentsDropdown(sourceLabel)}
                   <button
-                    onClick={function () { setSession(null); setSourceLabel(null); }}
+                    onClick={function () { setSession(null); setSourceLabel(null); setSelectedPromptId(null); setSelectedBucket(null); setSelectedStat(null); }}
                     style={{
                       background: "transparent",
                       color: theme.text.muted,
@@ -386,7 +409,7 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
             </div>
             <div style={{ display: "flex", gap: theme.space.sm, alignItems: "center", flexShrink: 0 }}>
               <button
-                onClick={function () { setSession(null); setSourceLabel(null); }}
+                onClick={function () { setSession(null); setSourceLabel(null); setSelectedPromptId(null); setSelectedBucket(null); setSelectedStat(null); }}
                 title="Back to file picker"
                 style={{
                   display: "inline-flex",
@@ -415,6 +438,10 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
             metadata={session.metadata}
             selectedPromptId={selectedPromptId}
             onSelectPrompt={onSelectPrompt}
+            selectedBucket={selectedBucket}
+            onSelectBucket={onSelectBucket}
+            selectedStat={selectedStat}
+            onSelectStat={onSelectStat}
             summaries={currentSummaries}
             summariesPending={summariesPending}
             onRequestSummaries={onRequestSummaries}

@@ -66,10 +66,23 @@ agent→iframe messages and POST endpoints for iframe→extension. Canvas action
 `loadExport`, `getPendingRequests`, `setSummaries`, `selectPrompt`, `getSelection`,
 `clearSelection`.
 
-When iterating on canvas UI: edit → `npm run build` → reload the extension → reopen
-the canvas. The extension serves the freshly built `dist/`, so each reopen picks up
-changes. Extension in-memory state (loaded export, summaries) is keyed by instance and
-is lost if the extension process restarts.
+When iterating on canvas UI: edit → `npm run canvas:sync` → reload the extension →
+open the canvas with a **new `instanceId`**.
+
+Two gotchas that look like "my change didn't take":
+
+- **The installed extension serves its *own* copy of `dist/`.** `canvas:install`/
+  `canvas:sync` copy the freshly built `dist/` into
+  `~/.copilot/extensions/copilot-ledger-canvas/dist/`. A bare `npm run build` only
+  updates the in-repo `packages/cost-view/dist/` and is **not** what the running
+  canvas serves. Use `npm run canvas:sync` (build + stage) — or `npm run
+  canvas:install` for a full reinstall — then `extensions_reload`.
+- **Reopening the same `instanceId` only *focuses* the existing panel**; the iframe
+  keeps the old bundle in memory. To load a fresh build, open with a new
+  `instanceId` (the old panels can be closed).
+
+Extension in-memory state (loaded export, summaries) is keyed by instance and is lost
+if the extension process restarts.
 
 ## The export format
 
