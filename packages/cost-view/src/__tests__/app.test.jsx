@@ -71,6 +71,17 @@ describe("App shell routing", function () {
     await act(async function () { mounted.root.unmount(); });
   });
 
+  it("renders the bespoke cache-behavior experiment page from a hash route", async function () {
+    setLocation("/#/experiments/cache-behavior");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("The first call was already warm.");
+    // Measured numbers from the article appear on the page.
+    expect(text).toContain("9,680");
+    expect(text).toContain("Open the cache curve in Copilot Ledger");
+    await act(async function () { mounted.root.unmount(); });
+  });
+
   it("renders an experiment detail from a nested hash route", async function () {
     setLocation("/#/experiments/context-quality-readme");
     var mounted = await renderApp();
@@ -153,6 +164,34 @@ describe("App shell routing", function () {
       // Still a fixed report: no uploader chrome.
       expect(text).not.toContain("Choose file");
       expect(text).not.toContain("Upload or select");
+      await act(async function () { mounted.root.unmount(); });
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+
+  it("bakes the cache-focused summary and label into the cache-curve fixed report", async function () {
+    var json = readFileSync(
+      path.resolve(process.cwd(), "public/sessions/t2-maprows-lazy.json"),
+      "utf8",
+    );
+    var fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      text: function () { return Promise.resolve(json); },
+    });
+    try {
+      setLocation("/#/reports/cache-curve");
+      var mounted = await renderApp();
+      await flush();
+      var text = textOf(mounted.container);
+      // The descriptive, cache-focused title is shown instead of the filename.
+      expect(text).toContain("Cache behavior");
+      expect(text).not.toContain("t2-maprows-lazy.json");
+      // The authored cache summary renders at the top without any canvas bridge.
+      expect(text).toContain("cache hit rate");
+      // Back link points to the cache experiment, and no uploader chrome.
+      expect(text).toContain("Back to experiment");
+      expect(text).not.toContain("Choose file");
       await act(async function () { mounted.root.unmount(); });
     } finally {
       fetchSpy.mockRestore();
