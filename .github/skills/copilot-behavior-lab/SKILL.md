@@ -126,6 +126,41 @@ Map digest conditions to confidence — do not eyeball it:
 If a finding isn't reproducible, mark it **Under investigation / single
 observation / needs more testing**. Do not force a conclusion.
 
+### 6. Publish the evidence export as a fixed report
+
+The experiment page links to its session so readers can inspect it in the
+Copilot Ledger viewer. Publish it as a **fixed report** — a read-only, pinned
+view — never as a bare uploader link. A fixed report deliberately:
+
+- **Strips the loader.** No file picker, no recents dropdown, no "switch /
+  new file" affordance. The reader cannot navigate to a different run; they see
+  exactly the evidence the page is about. (This is the `fixed` viewer mode.)
+- **Shows a descriptive name, not a filename.** The header reads e.g.
+  *"Context Quality — lazy lookup (search → read → answer)"*, not
+  `t2-maprows-lazy.json`.
+- **Opens with the summary populated.** The two top boxes — *what the user
+  wanted* and *how the agent approached it* — are authored at publish time, so
+  the page never opens with empty "Not generated yet" boxes. (A fixed report has
+  no canvas bridge to generate them live.)
+
+To publish one (all in `packages/cost-view/`):
+
+1. Copy the export into `public/sessions/` with a descriptive, kebab-case name
+   (e.g. `t2-maprows-lazy.json`), not the raw capture name.
+2. Add an entry to `FIXED_REPORTS` in `src/content/site.js` with:
+   - `id` — stable `#/reports/<id>` route segment,
+   - `title` — the descriptive name shown in the header,
+   - `file` — the `sessions/<name>.json` you just copied,
+   - `summaries: { userGoal, agentApproach }` — 2–4 sentences each, pulled from
+     your analysis. **Always populate this.**
+   - `backTo` / `backLabel` — link back to the owning experiment.
+3. Link the experiment page to `/reports/<id>` in its Evidence section.
+4. `npm run build` (or `npm run canvas:sync` if the canvas should serve it too)
+   and verify the report opens with the summary shown and no uploader chrome.
+
+Every number in the `summaries` must trace back to the digest — same rule as the
+page body. Do not invent figures to fill the boxes.
+
 ## Core positioning
 
 > Copilot Behavior Lab helps developers understand how AI coding agents think,

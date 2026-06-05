@@ -72,7 +72,7 @@ function writeSummariesMap(map) {
   try { window.localStorage.setItem(SUMMARIES_KEY, JSON.stringify(map)); } catch {}
 }
 
-export default function AnalyzeSession({ embed = false, initialExportUrl = null, fixed = false, backTo = null, backLabel = "Back" }) {
+export default function AnalyzeSession({ embed = false, initialExportUrl = null, fixed = false, backTo = null, backLabel = "Back", fixedSummaries = null, displayLabel = null }) {
   const [session, setSession] = useState(null);
   const [error, setError] = useState(null);
   const [sourceLabel, setSourceLabel] = useState(null);
@@ -92,9 +92,12 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
   useEffect(function () { sourceLabelRef.current = sourceLabel; }, [sourceLabel]);
 
   const currentSummaries = useMemo(function () {
+    // A fixed report carries its summaries inline (authored at publish time);
+    // there is no canvas bridge to generate them on the fly.
+    if (fixed && fixedSummaries) return fixedSummaries;
     if (!sourceLabel) return null;
     return summariesMap[sourceLabel] || null;
-  }, [summariesMap, sourceLabel]);
+  }, [fixed, fixedSummaries, summariesMap, sourceLabel]);
 
   const storeSummaries = useCallback(function (label, summaries) {
     if (!label) return;
@@ -361,9 +364,9 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
           >
             <div style={{ fontWeight: 800, letterSpacing: "0.06em" }}>
               COPILOT LEDGER
-              {sourceLabel && (
+              {(displayLabel || sourceLabel) && (
                 <span style={{ color: theme.text.dim, marginLeft: theme.space.md, fontWeight: 500 }}>
-                  · {sourceLabel}
+                  · {displayLabel || sourceLabel}
                 </span>
               )}
             </div>

@@ -3,6 +3,7 @@
 ## Strong Observations
 
 - The README was cheap. Finding it wasn't.
+- Your "cold" Copilot session isn't cold — ~9,700 tokens are cached before you type.
 - I thought the answer was expensive. The plan was.
 - Caveman Prompting barely moved the needle in a real coding-agent session.
 - The most expensive token is the one the agent did not need to generate.
