@@ -282,7 +282,35 @@ function summarizeToolArgs(ev) {
 // Per-tool human summary for tool-call row headers. Picks the most useful
 // single field for known tools (file basename, query text, todo counts, etc.)
 // and falls back to the first key:value of the args for unknown tools.
-function inferWorkspaceRoot(analysis) {
+// Pick the best authoritative workspace root from VS Code-injected
+// <workspace_info> folders. Chooses the folder that prefixes the most observed
+// file paths (tie-break: longest folder, so a nested root beats its parent).
+// Falls back to the longest folder when none match (e.g. no path-bearing tool
+// calls yet). Returns "" when no folders are available.
+function pickWorkspaceRootFromFolders(folders, paths) {
+  if (!Array.isArray(folders) || folders.length === 0) return "";
+  var norm = [];
+  folders.forEach(function (f) {
+    if (typeof f === "string" && f) norm.push(f.replace(/[\\/]+$/, ""));
+  });
+  if (norm.length === 0) return "";
+  var best = "";
+  var bestCount = -1;
+  norm.forEach(function (root) {
+    var withSlash = root + "/";
+    var count = 0;
+    paths.forEach(function (p) {
+      if (p === root || p.indexOf(withSlash) === 0) count += 1;
+    });
+    if (count > bestCount || (count === bestCount && root.length > best.length)) {
+      best = root;
+      bestCount = count;
+    }
+  });
+  return best;
+}
+
+export function inferWorkspaceRoot(analysis) {
   if (!analysis || !analysis.prompts) return "";
   var paths = [];
   var keys = ["filePath", "path", "file", "uri", "directory", "dir", "cwd", "workspaceFolder", "rootPath"];
@@ -300,6 +328,16 @@ function inferWorkspaceRoot(analysis) {
       });
     });
   });
+
+  // Prefer the authoritative workspace root injected by VS Code into the
+  // request context (<workspace_info>). It is exact, so file paths strip to a
+  // clean workspace-relative form (e.g. "api/src/utils/sql.ts") without the
+  // project folder name -- and it is immune to outlier/corrupted paths that
+  // would otherwise drag the longest-common-prefix heuristic one level too
+  // shallow and leave the project folder name in the displayed path.
+  var authoritative = pickWorkspaceRootFromFolders(analysis.workspaceFolders, paths);
+  if (authoritative) return authoritative;
+
   if (paths.length < 2) return "";
   // Tally every prefix candidate (every parent directory of every path).
   // Pick the longest prefix that covers >= 80% of paths AND has at least
@@ -324,7 +362,7 @@ function inferWorkspaceRoot(analysis) {
   return best;
 }
 
-function stripRoot(p, root) {
+export function stripRoot(p, root) {
   if (!p || typeof p !== "string") return p;
   if (!root) return p;
   if (p === root) return ".";

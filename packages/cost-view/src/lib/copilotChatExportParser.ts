@@ -728,10 +728,24 @@ function extractEnvironment(messages: RawMessage[]): EnvironmentInfo | null {
     }
     const wsM = /<workspace_info>([\s\S]*?)<\/workspace_info>/i.exec(text);
     if (wsM) {
-      const lines = wsM[1].split("\n");
-      for (const line of lines) {
-        const fm = /^\s*[-*]\s+(\S.*?)\s*$/.exec(line);
-        if (fm && !folders.includes(fm[1])) folders.push(fm[1]);
+      const body = wsM[1];
+      // Newer format: `<workspaceFolder path="/abs/path">` (one per root). This
+      // is the authoritative absolute workspace root injected by VS Code.
+      const wfRe = /<workspaceFolder\b[^>]*?\bpath\s*=\s*(?:"([^"]*)"|'([^']*)')/gi;
+      let wf: RegExpExecArray | null;
+      while ((wf = wfRe.exec(body)) !== null) {
+        const p = wf[1] ?? wf[2] ?? "";
+        if (p && !folders.includes(p)) folders.push(p);
+      }
+      // Fallback for the older bullet-list workspace_info format. Only consulted
+      // when no <workspaceFolder> tags were present so we don't pick up
+      // unrelated bullet lines (e.g. task JSON) from the newer format.
+      if (folders.length === 0) {
+        const lines = body.split("\n");
+        for (const line of lines) {
+          const fm = /^\s*[-*]\s+(\S.*?)\s*$/.exec(line);
+          if (fm && !folders.includes(fm[1])) folders.push(fm[1]);
+        }
       }
     }
   }
@@ -1218,6 +1232,11 @@ export interface CostAnalysisPrompt {
 
 export interface CostAnalysis {
   prompts: CostAnalysisPrompt[];
+  /** Absolute workspace root folder(s) injected by VS Code into the request
+   *  context (`<workspace_info>`). Used to render tool-call file paths as clean
+   *  workspace-relative paths (without the project folder name). Empty when the
+   *  export carried no workspace info. */
+  workspaceFolders?: string[];
   /** Session-level shape of model-visible tool definitions, unioned by tool
    *  name across all primary calls. Router-usage stats are computed from
    *  every `toolCall` log entry in the session. */
@@ -2156,8 +2175,24 @@ export function parseCopilotChatExport(text: string): ParsedSession | null {
   const totalDenom = cumCached + cumFresh + cumCwrite;
   const declaredMcpServers = extractDeclaredMcpServers(root.mcpServers);
   const allVisibleToolNames = Array.from(sessionUniqueTools.keys());
+  // Collect the authoritative workspace root(s) from the VS Code-injected
+  // environment context. Deduped and normalized (no trailing slash) so the
+  // CostView can strip absolute tool-call paths to a workspace-relative form.
+  const workspaceFolders: string[] = [];
+  for (const cbp of classifiedByPrompt) {
+    for (const cls of cbp.classified) {
+      const env = cls.environment;
+      if (!env || !Array.isArray(env.workspaceFolders)) continue;
+      for (const folder of env.workspaceFolders) {
+        if (typeof folder !== "string") continue;
+        const norm = folder.replace(/[\\/]+$/, "");
+        if (norm && !workspaceFolders.includes(norm)) workspaceFolders.push(norm);
+      }
+    }
+  }
   const costAnalysis: CostAnalysis = {
     prompts: costPrompts,
+    workspaceFolders,
     toolDefinitionShape: analyzeToolDefinitionShape(
       Array.from(sessionUniqueTools.values()),
       sessionActualCalls,
