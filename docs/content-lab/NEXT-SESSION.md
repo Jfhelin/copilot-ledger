@@ -22,6 +22,67 @@ React page + route in the cost-view SPA that actually ships on GitHub Pages.
 GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 `docs/content-lab/*.md` files are editorial sources and are NOT published.
 
+## Session 2026-06-07 (privacy remediation + measured floor data) — START HERE
+
+**Shipped (PR #19, branch `jfhelin/project-state-review`):**
+- **Scrubbed the 3 already-published exports** (`t2-maprows-lazy`, `02-one-tool`,
+  `hi-116-tools-deferred`) of internal identifiers using **exactly
+  length-preserving** fakes — proven invisible to the cost math (byte sizes
+  unchanged, JSON valid, zero residual markers, 184 tests + build green).
+  `subagent-example.json` was already clean.
+- **Added a pre-publish privacy gate** to the `copilot-behavior-lab` skill (§6):
+  a "scrub the export before it becomes public" checklist (what to scan for, the
+  length-preserving rule, verification steps, git-history caveat). This is the
+  permanent guard against recurrence — read it before bundling any export.
+- Removed the now-resolved open privacy item from this doc; corrected the
+  cart-export note (length-preserving scrub means bundling it as a *real
+  interactive report* is now viable, not a constraint).
+
+**Measured floor data (NEW — digested real exports from `~/CopilotLogExports/`):**
+
+| Run (in `~/CopilotLogExports/`) | Model | Sent tool-def tok* | Tool-def share | Flat catalog → sent (grouping saved)* |
+| --- | --- | ---: | ---: | --- |
+| `01-hello-80.json` (trivial) | 4o-mini | 9,686 | **35.6%** | 22,137 → 9,686 (saved 12,451) |
+| `readme-cold-nocontext.json` | 4o-mini | 18,663 | **35.8%** | 32,641 → 18,663 (saved 13,978) |
+| `03-workiq-316-tools.json` | sonnet-4.6 | 59,475 | **34.6%** | 485,860 → 59,475 (**saved 426,385**) |
+
+*\*Units: the absolute token columns are `rollups.toolDefs.approxTokensTotal` /
+`catalogIfFlatApproxTokens` — **session totals summed across all LLM calls**, not
+per-call. Per call, the 320-tool run sends ~9,600 schema tokens vs ~81K if flat
+(see #07's decoupling table, the `workiq` row). The **share** column is per-call
+equivalent (a ratio) and is the robust headline.*
+
+Three findings, each potentially article-grade:
+1. **Tool defs are a stable ~⅓ of prompt tokens** (34.6–35.8% share) across wildly
+   different runs — even a "hello" run ships ~9,700 tok of tool schemas per call
+   (matches #08's "~9,680-token shared block").
+2. **The deferred-tool index is real and huge** — and this is **already #07's
+   core finding**, not new. The same 320-tool capture is #07's `workiq` row
+   (~9,600 sent vs ~81K flat per call, ~8x compression). What this session adds is
+   only confirmation + the now-exposed `rollups.toolDefs` session-total fields.
+3. Together with #09 (skills catalog = a separate ⅓ of the *system prompt*), the
+   fixed floor = **cache (#08) + tool defs (#07) + skills catalog (#09)** —
+   "what a turn costs before you type anything."
+
+**Publishing-plan implications (now written into `publishing-plan.md`):**
+- **"Fixed Floor" framing added** — #08 → #07 → #09 grouped and moved to the front
+  of the launch order (they tell one story: the cost before you type).
+- **No new #10.** The deferred-tool-index story is fully owned by #07 (capture,
+  pinned report, LinkedIn post, video already done) — a separate page would
+  duplicate it. Earlier draft note proposing #10 was withdrawn after re-reading #07.
+- **#09 is the one gap in the trilogy:** still needs its clean install/uninstall
+  A/B to move Draft→publishable (now feasible post-cleanup; recipe below).
+- Length-preserving scrub unblocks shipping #05 + the floor runs as **real fixed
+  reports**, not just static charts.
+
+**⚠️ Two caveats before the next capture:**
+- The global plugin surface currently shows **`work-iq` still installed** (`ls
+  ~/.copilot/installed-plugins/`) — NOT `microsoft-365-agents-toolkit` as the #09
+  field note claims. Verify/clean before any "clean" capture or the "after" won't
+  be clean.
+- `01-hello-80` / `readme-cold-nocontext` used **gpt-4o-mini**; capture the floor
+  on the model you actually use (sonnet-4.6) so credits are representative.
+
 ## What shipped this session (on the open PR branch)
 
 - Added **inline SVG charts to the two published pages** (#01 Context Quality,
