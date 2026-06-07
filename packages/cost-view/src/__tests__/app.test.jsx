@@ -104,6 +104,18 @@ describe("App shell routing", function () {
     await act(async function () { mounted.root.unmount(); });
   });
 
+  it("renders the bespoke installed-skill-overhead experiment page from a hash route", async function () {
+    setLocation("/#/experiments/installed-skill-overhead");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("Its skills cost every call.");
+    // Measured numbers from the article appear on the page.
+    expect(text).toContain("20,167");
+    expect(text).toContain("9,107");
+    expect(text).toContain("Open the cleaned floor in Copilot Ledger");
+    await act(async function () { mounted.root.unmount(); });
+  });
+
   it("renders an experiment detail from a nested hash route", async function () {
     setLocation("/#/experiments/context-quality-readme");
     var mounted = await renderApp();
