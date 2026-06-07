@@ -99,6 +99,59 @@ defensible saving, run a controlled before/after:
 - Expected direction from the seed: ~2,900 fewer system-prompt tokens, a smaller
   first-call cold write, and a lower per-call floor for the rest of the session.
 
+## Field Note — the move, executed (2026-06-07, author's machine)
+
+This is the *action* the experiment recommends, carried out and measured against
+the global plugin cache (not yet a fresh-session export A/B — see caveat). The
+author's machine had 8 installed plugins; the system-prompt skills catalog held
+**22 skills from internal plugins**. Five **data-pulling** plugins were relocated
+from the global cache (`~/.copilot/installed-plugins/`) into a single internal
+repo (`octodemo/internalChatModes/.github/skills/`), so their catalog entries now
+load *only* when that repo is the workspace. The plugins were then uninstalled
+globally.
+
+**Global skills catalog, before → after the move:**
+
+| | Skills | ~tok (name+desc) | ~tok in live system prompt |
+| --- | ---: | ---: | ---: |
+| Before | 22 | ~1,950 | ~2,900 |
+| After  | 4  | ~632   | ~940 |
+| **Removed from every unrelated session** | **18** | **~1,318** | **~1,950** |
+
+Moved (18 skills): `kusto-table-query` (4), `customer-prep` (1), `roadmap-explorer`
+(3), `copilot-plugins/workiq` (1), `workiq-productivity` (9). Their MCP
+dependency (`workiq`) was added to the repo's `.vscode/mcp.json`; the `kusto` and
+`revenue` servers were already present there.
+
+**What stayed global, and whether it is safe in a *published* raw export:**
+
+- `microsoft-365-agents-toolkit` — 4 skills (~632 tok). Microsoft's **public**
+  M365 agent-building dev tooling. Kept (dev tooling, not data). **Publish-safe:**
+  no MCP server, no internal hosts; its "internal" strings are generic template
+  examples ("search internal HR docs").
+- `filing-research` — an **agent**, not a skill (no `<skill>` catalog cost). SEC
+  10-K / annual-report research over **public SEC EDGAR** data. **Publish-safe.**
+- `qubot` — an **agent**, not a skill. ⚠️ **Internal.** It is an analyst for
+  GitHub's **internal data warehouse** and ships a catalog of internal schemas
+  (`data.githubapp.com/warehouse/...`, Salesforce CRM, the Hydro event bus,
+  Proxima stamps, C360, ML lead-store pipelines). Its *system-prompt footprint* is
+  only a one-line agent description that names the warehouse (Kusto/Trino), but if
+  it is ever **invoked** in a captured session it pulls those internal schema docs
+  into context. **Not publish-safe as-is** — uninstall it (or scrub that line, and
+  never publish an export where qubot was active) before bundling a raw export.
+
+This is also why experiment 05 stayed editorial: the raw cart export embeds this
+same installed-skills catalog in every request snapshot, so it could not be
+bundled without either leaking internal tool descriptions or doctoring the exact
+token numbers the report visualizes.
+
+**Caveat (still N=1, not yet a clean A/B):** these token figures are measured from
+the plugin cache and the system-prompt catalog, not from a controlled
+before/after export. The remaining step is to capture a fresh trivial session now
+(post-move) as `skills-after.json` and diff it against a pre-move export to turn
+the ~1,950-token estimate into a measured `promptTokens` / `cacheCreationTokens` /
+credits delta.
+
 ## Interpretation
 
 The mechanism is discoverability: the model can only invoke a skill it has been
@@ -125,6 +178,16 @@ sessions, not a universal constant — and it shrinks if you uninstall plugins.
   fixed prefix.
 - **Keep task-specific plugins task-specific.** If a plugin is only useful for one
   kind of work, install it in (or scope it to) that context rather than globally.
+- **Relocate, don't just delete.** Moving a plugin's skill folders into a specific
+  repo's `.github/skills/` (and its MCP servers into that repo's MCP config) keeps
+  the capability where it's relevant while removing its rent from every other
+  session. The author moved 5 internal data plugins into one repo this way.
+- **Before publishing a raw export, audit agents too — not just skills.** A skill
+  contributes a `<skill>` catalog line; an installed *agent* contributes a one-line
+  description and can pull large internal references into context if invoked. On
+  the author's machine the `qubot` agent (GitHub internal data-warehouse schemas)
+  was the one item that made a raw export unsafe to publish, even though it added
+  almost nothing to the system prompt when idle.
 - **Remember it's a floor, not a spike.** The saving is small per call but paid on
   every call; it compounds most on long sessions (ties to experiment 05).
 
