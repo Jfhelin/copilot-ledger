@@ -1,7 +1,7 @@
 # Next Session — Handoff
 
 A standing "pick up here" note for the Copilot Behavior Lab content program.
-Update it at the end of each working session. Last updated: 2026-06-07.
+Update it at the end of each working session. Last updated: 2026-06-08.
 
 ## Program status at a glance
 
@@ -9,9 +9,10 @@ Update it at the end of each working session. Last updated: 2026-06-07.
 | --- | --- | --- | --- | --- | --- |
 | 01 | Context Quality | ✅ full | ✅ live on Pages | Published | — |
 | 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
+| 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
 | 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
 | 07 | Tool & Skill Overhead | ✅ seeded (N=1) | — | Under investigation | needs cleanup A/B capture |
-| 05 | Context Growth | ✅ full (N=1) | — | Draft | optional deploy (7.5 MB export) |
+| 09 | Installed Skill Overhead | ✅ seeded (N=1) | — | Draft | needs install/uninstall A/B capture |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |
 | 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
@@ -23,12 +24,46 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 
 ## What shipped this session (on the open PR branch)
 
-- Wrote **#05 Context Growth** end-to-end (editorial, N=1) from the cart run — the
-  last experiment fully writeable from data already on disk. Headline: the prefix
-  tripled (19.5K → 64.2K tokens) and never shrank; re-reading the grown context
-  was the single largest cost line (42.4 / 106.6 cr = 40%), and the per-call
-  re-read floor rose ~1.5 → ~1.9 cr as history grew. Editorial-only by choice
-  (7.5 MB export); deploying as a pinned report is an optional follow-up.
+- **Deployed #05 Context Growth** as a bespoke Pages page (PR #19):
+  `pages/ContextGrowth.jsx` with two inline-SVG charts (the 34-call growth curve
+  and the 42.4 / 33.7 / 30.5 cost-bucket bar), routed in `App.jsx`, flipped to
+  `Published` + `custom` in `site.js`, with an app routing test. Also tightened
+  the editorial to soften the "monotonic / never shrank" framing (p0/p1 are
+  separate sub-agent windows; the monotonic curve is the main thread p2→p3).
+- **Decided NOT to bundle the 7.5 MB cart export** as an interactive report.
+  Reason: the export embeds the full installed-skills catalog in every request
+  snapshot's system prompt. Scrubbing the internal-plugin entries (`workiq`,
+  `revenue`, `kusto` references, ~2,000 hits) would change `promptTokens` and the
+  system-block sizes — corrupting the exact 19.5K→64.2K numbers the report exists
+  to visualize. Bundling would be either a privacy leak or doctored data, so #05
+  stays editorial + static charts. (Repo is PUBLIC; the demo app itself is
+  `octodemo/octocat_supply`, GitHub's public demo — no secrets, no demo scripts
+  in the export — but the skills catalog is the user's own internal tooling.)
+- **Seeded #09 Installed Skill Overhead** (`experiments/09-installed-skill-overhead.md`
+  + `site.js` Draft entry). The disclosure above turned into its own experiment:
+  the skills catalog was **54% of the system prompt (~5,128 tok)**, and 22
+  internal-plugin skills were **~2,934 tok = 31% of the system prompt** — on a
+  React task. Important correction baked in: this is the **skills catalog in the
+  system prompt**, NOT MCP tool schemas. The active tool catalog
+  (`metadata.tools`) held 28–56 generic tools and ZERO internal-MCP schemas, so
+  installed-but-disabled MCP servers did NOT inflate the payload — installed
+  plugins/skills did, via their name+description entries.
+
+## Clean-rerun recipe (to capture #09's A/B, and a cleaner #05/#07 baseline)
+
+To get a capture without the internal-skill disclosure (and to measure the #09
+saving), do a before/after on the same trivial prompt ("Reply with just OK."),
+same model/mode/repo, fresh sessions:
+- **Uninstall plugins:** `github-revenue`, `work-iq`, `copilot-plugins/workiq`
+  (disabling-but-installed may not help — the catalog is injected on install).
+- **Disable MCP servers (defensive):** `workiq`, `revenue`, `kusto-mcp`.
+- **Keep (public, safe to ship):** Azure MCP, `github`, `github-agentic-workflows`,
+  `github-remote`, `playwright`, Bicep, pylance.
+- Export both as `skills-before.json` / `skills-after.json` into
+  `~/CopilotLogExports/`, then diff system-prompt tokens (`messages[0]`, role=0),
+  `<skill>` block count, first-call `promptTokens` / `cacheCreationTokens` /
+  `cacheHitRate` / `credits`, and `toolDefsApproxTokens` (should stay ~flat — that
+  isolates skills from tools).
 
 ## Highest-value next steps (in order)
 
@@ -47,6 +82,10 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
      (catches skill instruction text), `cacheHitRate`, `credits`.
    - Write the result into `07` with the lumping caveat stated up front. A
      per-category split would need a 3-step staircase (a later follow-up).
+   - **#09 is the skills-only sibling:** the same capture, diffed on system-prompt
+     tokens / `<skill>` count, isolates the *skill catalog* half (uninstall the 3
+     internal plugins). Doing #07's cleanup A/B and #09's install/uninstall A/B in
+     one sitting is efficient — they share the before/after method.
 
 2. **Compaction run — turns #08's reasoned guidance into measured evidence.**
    We have NO captured compaction event yet; #08's compaction guidance is

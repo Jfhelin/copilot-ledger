@@ -169,6 +169,13 @@ export var EXPERIMENTS = [
     status: "Under investigation",
     confidence: "Decoupling curve across six captures (catalog 23–320); the 15.7-credit churn event is a single session (N=1); skill-instruction overhead not yet isolated.",
   }),
+  emptyExperiment({
+    id: "installed-skill-overhead",
+    title: "A third of my system prompt was skills I never used.",
+    hook: "A third of my Copilot system prompt was skills I never used — and I paid to re-read them on every call.",
+    status: "Draft",
+    confidence: "Seed measurement only (N=1): the skills catalog was 54% of the system prompt and installed-but-unused plugins were ~31% (~2,934 tok); the controlled before/after is not yet captured.",
+  }),
 ];
 
 export function findExperiment(id) {
