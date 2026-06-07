@@ -10,7 +10,7 @@ Update it at the end of each working session. Last updated: 2026-06-07 (skills A
 | 01 | Context Quality | ✅ full | ✅ live on Pages | Published | — |
 | 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
-| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ fixed report `skill-overhead-cleaned` | **Measured — editorial done** | optional bespoke page; ready to publish post |
+| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ bespoke page + fixed report | **Measured — editorial done** | ready to publish post |
 | 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
 | 07 | Tool & Skill Overhead | ✅ seeded (N=1) | ✅ fixed report `tool-overhead-120` | Under investigation | needs cleanup A/B capture |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |

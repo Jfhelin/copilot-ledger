@@ -175,6 +175,10 @@ export var EXPERIMENTS = [
     hook: "I uninstalled one Copilot plugin. Removing its tool schemas barely moved the wire. Removing its skills cut tokens on every call.",
     status: "Draft",
     confidence: "Measured before/after staircase (N=3 captures, one machine). The clean skill-only step (no tool change) cut the skill catalog ≈1,110 tok and billed prompt 1,197 — a ~1:1 isolation; sent tool schemas held flat at ~9,107 throughout. Catalog tokens are char/4 approximations; prompt_tokens and tool-def counts are exact. The earlier step also removed an MCP server, so its larger drop is not skill-only.",
+    // Bespoke page: pages/InstalledSkillOverhead.jsx with inline charts.
+    // App.jsx routes /experiments/installed-skill-overhead to it directly.
+    custom: true,
+    reportRoute: "/reports/skill-overhead-cleaned",
   }),
 ];
 
@@ -339,7 +343,7 @@ export var FIXED_REPORTS = [
       agentApproach:
         "VS Code answered in a single claude-sonnet-4.5 call. Of the original 37-skill catalog (~5,146 tokens, the dirty baseline), only 14 skills remain (~1,917 tokens) — and zero of them come from installed plugins; they are 2 workspace project skills plus 12 VS Code built-in/extension skills. The billed prompt fell from 25,367 to 20,167 tokens versus the dirty baseline. The sent full-schema tool block held flat at 23 schemas / ~9,107 tokens across all three captures: the clean final step changed only skills (≈1,110 fewer catalog tokens, 1,197 fewer billed prompt tokens — near 1:1), while the virtualized tool schemas never moved. The turn cost 4.3 credits at a 48% cache hit. Open the system box to see the shrunken skill catalog, and compare the tool_defs box to the 120-tools report — same 23 sent.",
     },
-    backTo: "/experiments/tool-skill-overhead",
+    backTo: "/experiments/installed-skill-overhead",
     backLabel: "Back to experiment (Installed Skill Overhead)",
   },
 ];
