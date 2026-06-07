@@ -123,22 +123,30 @@ Moved (18 skills): `kusto-table-query` (4), `customer-prep` (1), `roadmap-explor
 dependency (`workiq`) was added to the repo's `.vscode/mcp.json`; the `kusto` and
 `revenue` servers were already present there.
 
-**What stayed global, and whether it is safe in a *published* raw export:**
+**The two internal *agents* were also relocated** (a second pass — agents have a
+tiny system-prompt footprint, one description line each, but can pull large
+internal references into context when invoked, so they matter for export hygiene):
 
-- `microsoft-365-agents-toolkit` — 4 skills (~632 tok). Microsoft's **public**
-  M365 agent-building dev tooling. Kept (dev tooling, not data). **Publish-safe:**
-  no MCP server, no internal hosts; its "internal" strings are generic template
-  examples ("search internal HR docs").
-- `filing-research` — an **agent**, not a skill (no `<skill>` catalog cost). SEC
-  10-K / annual-report research over **public SEC EDGAR** data. **Publish-safe.**
-- `qubot` — an **agent**, not a skill. ⚠️ **Internal.** It is an analyst for
-  GitHub's **internal data warehouse** and ships a catalog of internal schemas
-  (`data.githubapp.com/warehouse/...`, Salesforce CRM, the Hydro event bus,
-  Proxima stamps, C360, ML lead-store pipelines). Its *system-prompt footprint* is
-  only a one-line agent description that names the warehouse (Kusto/Trino), but if
-  it is ever **invoked** in a captured session it pulls those internal schema docs
-  into context. **Not publish-safe as-is** — uninstall it (or scrub that line, and
-  never publish an export where qubot was active) before bundling a raw export.
+- `filing-research` — SEC 10-K / annual-report research over **public SEC EDGAR**
+  data. Its agent file was moved into the repo's `.github/agents/` (its
+  `markitdown` MCP dep added to `.vscode/mcp.json`; Playwright was already there),
+  then uninstalled globally. **Publish-safe** regardless.
+- `qubot` — ⚠️ an analyst for GitHub's **internal data warehouse**, shipping a
+  552K / 70+ file catalog of internal schemas (`data.githubapp.com/warehouse/...`,
+  Salesforce CRM, the Hydro event bus, Proxima stamps, C360, ML lead-store) and
+  bundling MCP servers wired to **internal production endpoints**
+  (`gh-analytics…kusto.windows.net`, `trino-adhoc.warehouse.service.github.net`).
+  Because it is a *maintained upstream repo* (`github/qubot`), it was **not** copied
+  into the internal repo (that would fork it by copy and scatter internal data);
+  instead it was cloned to its own folder (`~/Code/GitHub/github/qubot`, staying
+  git-updatable) and uninstalled as a global plugin. **It was the one item that
+  made a raw export unsafe to publish** — removing it from the global surface is
+  what clears the path to a clean export.
+
+**What now stays global:** only `microsoft-365-agents-toolkit` — 4 skills
+(~632 tok), Microsoft's **public** M365 agent-building dev tooling, no MCP server,
+no internal hosts (its "internal" strings are generic template examples like
+"search internal HR docs"). **Publish-safe**, and kept by choice as dev tooling.
 
 This is also why experiment 05 stayed editorial: the raw cart export embeds this
 same installed-skills catalog in every request snapshot, so it could not be
