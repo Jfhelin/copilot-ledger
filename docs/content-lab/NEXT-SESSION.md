@@ -1,7 +1,7 @@
 # Next Session — Handoff
 
 A standing "pick up here" note for the Copilot Behavior Lab content program.
-Update it at the end of each working session. Last updated: 2026-06-08.
+Update it at the end of each working session. Last updated: 2026-06-07.
 
 ## Program status at a glance
 
@@ -21,37 +21,6 @@ Update it at the end of each working session. Last updated: 2026-06-08.
 React page + route in the cost-view SPA that actually ships on GitHub Pages.
 GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 `docs/content-lab/*.md` files are editorial sources and are NOT published.
-
-## ⚠️ Open privacy item — audit ALREADY-PUBLISHED exports (do before next publish)
-
-We discovered (via the #09 work) that an installed plugin's skills/agents catalog
-is embedded in every request snapshot's system prompt, and that our own internal
-plugins (workiq / revenue / kusto / qubot, plus internal hosts like
-`gh-analytics…kusto.windows.net`, `trino-adhoc.warehouse.service.github.net`,
-`*.githubapp.com`, Salesforce/Odometer) leak into exports. **The exports already
-bundled and live on Pages were captured BEFORE we cleaned the global plugin
-surface, so they still contain that internal data.** Quick marker scan (not a full
-audit) of `packages/cost-view/public/sessions/`:
-
-| Bundled export | Internal-marker hits | In a live FIXED_REPORT? |
-| --- | ---: | --- |
-| `t2-maprows-lazy.json` (1.0 MB) | ~273 | check site.js |
-| `02-one-tool.json` (321 K) | ~97 | yes (line ~249) |
-| `hi-116-tools-deferred.json` (303 K) | ~58 | check site.js |
-| `subagent-example.json` (2.3 K) | 0 (clean) | yes (line ~231) |
-
-**To do (a future session, not now):**
-1. Full audit of each bundled export for internal hosts, tool/skill descriptions,
-   Salesforce/Odometer/Kusto/Trino endpoints, account data, and any demo-script or
-   proprietary content — not just the marker keywords above.
-2. Decide per file: scrub-and-rebundle (risks changing the token numbers the
-   reports visualize — same dilemma as #05), replace with a clean re-capture on the
-   now-trimmed machine, or unpublish the report.
-3. Re-capture candidates: with the global plugin surface now clean (only
-   `microsoft-365-agents-toolkit` remains), fresh exports of the same scenarios
-   should be internal-data-free — likely the cleanest fix.
-4. Until resolved, do NOT bundle any new raw export, and treat the 3 flagged files
-   as known-leaky.
 
 ## What shipped this session (on the open PR branch)
 
