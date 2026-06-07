@@ -23,6 +23,17 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 
 ## What shipped this session (on the open PR branch)
 
+- Added **inline SVG charts to the two published pages** (#01 Context Quality,
+  #08 Cache Behavior) so each headline lands visually before the reader opens the
+  full report. New dependency-free, theme-tokened component
+  `packages/cost-view/src/components/charts.jsx` (`BarChart`, `StackedBar`,
+  `LineChart`) with vitest coverage in `__tests__/charts.test.jsx`. #08 gained a
+  cache-hit curve (40→99%), a per-call credits-collapse bar, and a sub-agent vs
+  cold-start bar; #01 gained the 12.8-vs-8.0-cr headline bar and a stacked
+  round-trip comparison (6 calls vs 1). No new deps; numbers reuse existing
+  measured values. Charts are additive — prose, tables, and the report button are
+  unchanged.
+
 - Wrote **#05 Context Growth** end-to-end (editorial, N=1) from the cart run — the
   last experiment fully writeable from data already on disk. Headline: the prefix
   tripled (19.5K → 64.2K tokens) and never shrank; re-reading the grown context

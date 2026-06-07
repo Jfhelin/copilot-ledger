@@ -1,6 +1,7 @@
 import { theme } from "../lib/theme.js";
 import { hrefFor } from "../lib/router.js";
 import { PageHeader, Section, Prose, Badge, Callout, Pre, TextLink } from "../components/ui.jsx";
+import { BarChart, LineChart } from "../components/charts.jsx";
 import { STATUS_TONE } from "../content/site.js";
 
 var REPORT_ROUTE = "/reports/cache-curve";
@@ -136,6 +137,34 @@ export default function CacheBehavior() {
             ["p2.l10", "98.9%", "1.8", "the final answer"],
           ]}
         />
+        <LineChart
+          ariaLabel="Cache hit rate climbing from 40.3% on call 1 to ~99% by call 3 and staying there"
+          points={[
+            { label: "1", value: 40.3 },
+            { label: "2", value: 93.4 },
+            { label: "3", value: 98.7 },
+            { label: "4", value: 98.3 },
+            { label: "5", value: 99.1 },
+            { label: "6", value: 98.9 },
+          ]}
+          yMin={0}
+          yMax={100}
+          valueSuffix="%"
+          caption="Cache hit rate per model call. It clears 90% by call 2 and plateaus near 99% — only the first call pays the cold price."
+        />
+        <BarChart
+          ariaLabel="Credits per call collapsing from 5.9 on call 1 to roughly 1.1–1.8 afterward"
+          max={6}
+          data={[
+            { label: "Call 1 · p2.l0", value: 5.9, display: "5.9 cr", color: theme.cost.cwrite, sublabel: "cold write" },
+            { label: "Call 2 · p2.l2", value: 1.6, display: "1.6 cr", color: theme.accent.primary },
+            { label: "Call 3 · p2.l4", value: 1.1, display: "1.1 cr", color: theme.accent.primary },
+            { label: "Call 4 · p2.l6", value: 1.2, display: "1.2 cr", color: theme.accent.primary },
+            { label: "Call 5 · p2.l8", value: 1.1, display: "1.1 cr", color: theme.accent.primary },
+            { label: "Call 6 · p2.l10", value: 1.8, display: "1.8 cr", color: theme.accent.primary },
+          ]}
+          caption="Credits per call. The cost cliff is at call one (the cache write); every later call only bills the new tool result."
+        />
         <Prose>
           <p style={{ marginTop: theme.space.lg }}>
             After call one, only the new tool result each turn (229–442 tokens) was uncached. The
@@ -168,6 +197,15 @@ export default function CacheBehavior() {
             ["p0.l2", "Sub-agent first call", "97.7%", "455", "1.7"],
             ["p3.l0", "Cold main start", "19.1%", "39,952", "15.7"],
           ]}
+        />
+        <BarChart
+          ariaLabel="Sub-agent first calls cost 0.9 and 1.7 credits versus a 15.7 credit cold main start"
+          data={[
+            { label: "Sub-agent · p1.l0", value: 0.9, display: "0.9 cr", sublabel: "98.2% hit", color: theme.semantic.success },
+            { label: "Sub-agent · p0.l2", value: 1.7, display: "1.7 cr", sublabel: "97.7% hit", color: theme.semantic.success },
+            { label: "Cold main · p3.l0", value: 15.7, display: "15.7 cr", sublabel: "19.1% hit", color: theme.cost.missAccent },
+          ]}
+          caption="A sub-agent lands on an already-warm prefix; a cold main start has to write a 40K-token prefix from scratch."
         />
         <Prose>
           <p style={{ marginTop: theme.space.lg }}>
