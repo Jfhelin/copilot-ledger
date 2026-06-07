@@ -32,13 +32,20 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
   separate sub-agent windows; the monotonic curve is the main thread p2→p3).
 - **Decided NOT to bundle the 7.5 MB cart export** as an interactive report.
   Reason: the export embeds the full installed-skills catalog in every request
-  snapshot's system prompt. Scrubbing the internal-plugin entries (`workiq`,
-  `revenue`, `kusto` references, ~2,000 hits) would change `promptTokens` and the
-  system-block sizes — corrupting the exact 19.5K→64.2K numbers the report exists
-  to visualize. Bundling would be either a privacy leak or doctored data, so #05
-  stays editorial + static charts. (Repo is PUBLIC; the demo app itself is
-  `octodemo/octocat_supply`, GitHub's public demo — no secrets, no demo scripts
-  in the export — but the skills catalog is the user's own internal tooling.)
+  snapshot's system prompt. At the time we thought scrubbing the internal-plugin
+  entries (`workiq`, `revenue`, `kusto` references, ~2,000 hits) would change
+  `promptTokens` and the system-block sizes — corrupting the exact 19.5K→64.2K
+  numbers the report exists to visualize — so #05 stayed editorial + static
+  charts. (Repo is PUBLIC; the demo app itself is `octodemo/octocat_supply`,
+  GitHub's public demo — no secrets, no demo scripts in the export — but the
+  skills catalog is the user's own internal tooling.)
+  **Update (2026-06-07):** that dilemma is resolved — a **length-preserving**
+  scrub (each internal token replaced with a fake of identical character length)
+  leaves every char-derived number untouched, as proven on the three already-
+  published exports (byte sizes unchanged, all reports' numbers identical). So
+  bundling the cart export as a real interactive report is now viable if we want
+  it; #05 staying static is a choice, no longer a constraint. See the publishing
+  skill's "scrub the export" checklist for the procedure.
 - **Seeded #09 Installed Skill Overhead** (`experiments/09-installed-skill-overhead.md`
   + `site.js` Draft entry). The disclosure above turned into its own experiment:
   the skills catalog was **54% of the system prompt (~5,128 tok)**, and 22
