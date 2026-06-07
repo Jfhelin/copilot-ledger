@@ -1,7 +1,7 @@
 # Next Session — Handoff
 
 A standing "pick up here" note for the Copilot Behavior Lab content program.
-Update it at the end of each working session. Last updated: 2026-06-07.
+Update it at the end of each working session. Last updated: 2026-06-07 (skills A/B).
 
 ## Program status at a glance
 
@@ -10,9 +10,9 @@ Update it at the end of each working session. Last updated: 2026-06-07.
 | 01 | Context Quality | ✅ full | ✅ live on Pages | Published | — |
 | 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
+| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ fixed report `skill-overhead-cleaned` | **Measured — editorial done** | optional bespoke page; ready to publish post |
 | 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
-| 07 | Tool & Skill Overhead | ✅ seeded (N=1) | — | Under investigation | needs cleanup A/B capture |
-| 09 | Installed Skill Overhead | ✅ seeded (N=1) | — | Draft | needs install/uninstall A/B capture |
+| 07 | Tool & Skill Overhead | ✅ seeded (N=1) | ✅ fixed report `tool-overhead-120` | Under investigation | needs cleanup A/B capture |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |
 | 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
@@ -22,7 +22,49 @@ React page + route in the cost-view SPA that actually ships on GitHub Pages.
 GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 `docs/content-lab/*.md` files are editorial sources and are NOT published.
 
-## Session 2026-06-07 (privacy remediation + measured floor data) — START HERE
+## Session 2026-06-07 (#09 measured — the skills A/B is done) — START HERE
+
+**#09 Installed Skill Overhead is now MEASURED and rewritten** (was Draft/N=1):
+
+- Captured a clean **3-step before/after staircase** on a trivial `hi` prompt
+  (claude-sonnet-4.5, same `octocat_supply` workspace), in `~/CopilotLogExports/`:
+  `hi_116.json` (dirty, 23 global-plugin skills) → `hi_skillCleaned.json` (5) →
+  `hi_skillCleaned3.json` (**0** global-plugin skills). Skill catalog ≈5,146 →
+  ≈3,027 → ≈1,917 tok; billed `prompt_tokens` 25,367 → 21,364 → 20,167.
+- **The clean causal point is pass 2** (`hi_skillCleaned`→`3`): tool catalog/deferred/
+  sent all unchanged, skill catalog ≈−1,110 ≈ billed prompt −1,197 (near 1:1). Pass 1
+  also removed the `workiq` MCP server (enabled tools 120→56), so its larger −4,003
+  is NOT skill-only — the rewrite now states this explicitly (rubber-duck caught the
+  over-attribution; fixed).
+- **Cross-link to #07 is the spine:** sent full-schema tool block held flat at
+  ~9,107 across all three even as the flat tool catalog fell 36,020→16,545. Tools
+  virtualized; skills not. #09 stays a **separate page** (not merged into #07) per
+  the chosen "twin" framing.
+- **The relocation is real and executed:** the M365 toolkit (4 skills) + `microsoft-foundry`
+  were moved from global (`~/.copilot/installed-plugins/work-iq`, `~/.agents/skills/`)
+  into `octodemo/internalChatModes/.github/skills/`. Both global dirs are now EMPTY
+  (0 global-plugin skills). The earlier 18 internal data skills were moved in a prior
+  session. **NOTE:** the relocated skills are untracked in `internalChatModes` — commit
+  them there to make it durable.
+- **Published a fixed report:** `skill-overhead-cleaned` (scrubbed `hi_skillCleaned3`,
+  `jfhelin`→`appuser` length-preserving, byte-identical, 190 tests + build green).
+  Linked from #09's Evidence; `site.js` EXPERIMENTS + FIXED_REPORTS updated.
+
+**Remaining floor (the only skills left after the move):** 14 skills = 2 project
+(workspace-scoped) + 5 VS Code built-in Copilot (~904 tok, irreducible) + 7 VS Code
+extension (GitHub-PR ×6 + evals ×1, ~700 tok, removable by disabling those
+extensions). Also flagged: **3 duplicate GitHub MCP servers** worth collapsing to 1.
+
+**Next for #09/#07:**
+- Optional: a 4th capture in a repo with NO project skills to show the pure 12-skill
+  / ~1,604-tok global floor (vs the 14 here that include 2 octocat project skills).
+- #07's cleanup A/B (the `cleanup-before/after` capture) is still the open item to
+  move #07 from "Under investigation" → measured; the skills half is now done.
+- Optional: disable the GitHub-PR + evals VS Code extensions and re-capture to push
+  the floor toward the ~904-tok irreducible built-in minimum.
+
+
+## Session 2026-06-07 (privacy remediation + measured floor data) — earlier
 
 **Shipped (PR #19, branch `jfhelin/project-state-review`):**
 - **Scrubbed the 3 already-published exports** (`t2-maprows-lazy`, `02-one-tool`,
