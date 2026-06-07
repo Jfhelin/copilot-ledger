@@ -148,9 +148,9 @@ export var EXPERIMENTS = [
   emptyExperiment({
     id: "context-growth",
     title: "Context Growth",
-    hook: "What 23,000 tokens of context actually looks like.",
-    status: "Planned",
-    confidence: "Placeholder.",
+    hook: "Context only grows. Re-reading it was 40% of my Copilot session.",
+    status: "Draft",
+    confidence: "Single session (N=1); prefix tripled 19.5K\u219264.2K tokens, and re-reads were 40% of credits \u2014 a direction, not a benchmark.",
   }),
   emptyExperiment({
     id: "agent-planning",
