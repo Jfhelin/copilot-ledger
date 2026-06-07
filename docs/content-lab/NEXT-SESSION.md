@@ -1,7 +1,7 @@
 # Next Session — Handoff
 
 A standing "pick up here" note for the Copilot Behavior Lab content program.
-Update it at the end of each working session. Last updated: 2026-06-05.
+Update it at the end of each working session. Last updated: 2026-06-07.
 
 ## Program status at a glance
 
@@ -11,7 +11,7 @@ Update it at the end of each working session. Last updated: 2026-06-05.
 | 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
 | 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
 | 07 | Tool & Skill Overhead | ✅ seeded (N=1) | — | Under investigation | needs cleanup A/B capture |
-| 05 | Context Growth | stub | — | Planned | writeable from existing data |
+| 05 | Context Growth | ✅ full (N=1) | — | Draft | optional deploy (7.5 MB export) |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |
 | 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
@@ -23,23 +23,16 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 
 ## What shipped this session (on the open PR branch)
 
-- Published **#08 Cache Behavior** end-to-end: bespoke page
-  (`pages/CacheBehavior.jsx`), `cache-behavior` experiment + `cache-curve`
-  fixed report in `site.js`, reusing the bundled `sessions/t2-maprows-lazy.json`.
-  (Merged earlier via PR #14.)
-- Seeded **#07 Tool & Skill Overhead** (editorial, N=1) from the cart run.
-- Seeded **#06 Agent Planning** (editorial, N=1) from the cart run.
+- Wrote **#05 Context Growth** end-to-end (editorial, N=1) from the cart run — the
+  last experiment fully writeable from data already on disk. Headline: the prefix
+  tripled (19.5K → 64.2K tokens) and never shrank; re-reading the grown context
+  was the single largest cost line (42.4 / 106.6 cr = 40%), and the per-call
+  re-read floor rose ~1.5 → ~1.9 cr as history grew. Editorial-only by choice
+  (7.5 MB export); deploying as a pinned report is an optional follow-up.
 
 ## Highest-value next steps (in order)
 
-1. **#05 Context Growth — write it from existing data (no capture needed).**
-   The cart run's prefix climbs ~20K → ~64K tokens across the implement turn —
-   a ready-made "what 23K+ tokens of context looks like" curve. This is the last
-   experiment fully writeable from data already on disk.
-   - Source: `~/CopilotLogExports/04-plan-implement-cart.json`.
-   - Pull `timeline[].promptTokens` across `p3.l*` for the growth curve.
-
-2. **#07 skill half — the cleanup A/B (needs a capture).**
+1. **#07 skill half — the cleanup A/B (needs a capture).**
    Designed and agreed: a **2-step before/after** that measures the *total*
    savings of dropping unused tools AND skills together (we deliberately do NOT
    split tool vs skill — a skill can register its own tools, so the honest unit
@@ -55,16 +48,23 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
    - Write the result into `07` with the lumping caveat stated up front. A
      per-category split would need a 3-step staircase (a later follow-up).
 
-3. **Compaction run — turns #08's reasoned guidance into measured evidence.**
+2. **Compaction run — turns #08's reasoned guidance into measured evidence.**
    We have NO captured compaction event yet; #08's compaction guidance is
    explicitly flagged as "reasoned from the cache mechanism, not separately
-   measured." Capture a long session, trigger `/compact`, then keep working for
-   several more calls. Measure: the summarization call's own cost, the first
-   post-compaction call's cache hit / cache-creation tokens, prefix size before
-   vs after, and steady-state credits before vs after → compute the break-even N.
+   measured." This is also the missing measurement behind **#05's** advice to
+   "compact deliberately." Capture a long session, trigger `/compact`, then keep
+   working for several more calls. Measure: the summarization call's own cost, the
+   first post-compaction call's cache hit / cache-creation tokens, prefix size
+   before vs after, and steady-state credits before vs after → compute the
+   break-even N.
 
-4. **Capture-dependent stubs:** #02 Model Selection (same prompt, two models),
+3. **Capture-dependent stubs:** #02 Model Selection (same prompt, two models),
    #03 Prompt Precision (precise vs vague), #04 Caveman Prompting (with/without).
+
+4. **Optional deploys (no new capture):** #05, #06, #07 are editorial-only because
+   the cart export is 7.5 MB. To deploy any as a pinned report, decide whether to
+   bundle the export or keep numbers as static tables. #05's context-window bar
+   would visualize the growth call-by-call if deployed.
 
 ## Key measured findings to reuse (so we don't re-derive)
 
