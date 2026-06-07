@@ -93,6 +93,17 @@ describe("App shell routing", function () {
     await act(async function () { mounted.root.unmount(); });
   });
 
+  it("renders the bespoke agent-planning experiment page from a hash route", async function () {
+    setLocation("/#/experiments/agent-planning");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("They both read the same seven files");
+    // Measured numbers from the article appear on the page.
+    expect(text).toContain("94%");
+    expect(text).toContain("context loan");
+    await act(async function () { mounted.root.unmount(); });
+  });
+
   it("renders an experiment detail from a nested hash route", async function () {
     setLocation("/#/experiments/context-quality-readme");
     var mounted = await renderApp();

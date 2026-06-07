@@ -11,6 +11,7 @@ import AnalyzeSession from "./pages/AnalyzeSession.jsx";
 import ContextQualityReadme from "./pages/ContextQualityReadme.jsx";
 import CacheBehavior from "./pages/CacheBehavior.jsx";
 import ContextGrowth from "./pages/ContextGrowth.jsx";
+import AgentPlanning from "./pages/AgentPlanning.jsx";
 import FixedReport from "./pages/FixedReport.jsx";
 
 // Application shell for the Copilot Behavior Lab knowledge site.
@@ -43,6 +44,7 @@ function ContentForRoute({ path, params }) {
   if (path === "/experiments/context-quality-readme") return <ContextQualityReadme />;
   if (path === "/experiments/cache-behavior") return <CacheBehavior />;
   if (path === "/experiments/context-growth") return <ContextGrowth />;
+  if (path === "/experiments/agent-planning") return <AgentPlanning />;
   if (path.indexOf("/experiments/") === 0) {
     return <Experiments experimentId={path.slice("/experiments/".length)} />;
   }
