@@ -157,10 +157,13 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "agent-planning",
-    title: "Agent Planning",
-    hook: "The agent spent 40 credits before it wrote a single line of code.",
-    status: "Draft",
-    confidence: "Single session (N=1); planning was 38% of spend, 71% of it exploration sub-agents.",
+    title: "The agent spawned two sub-agents to plan. They both read the same seven files.",
+    hook: "The agent spawned two sub-agents to plan. They both read the same seven files.",
+    status: "Published",
+    confidence: "Single session (N=1) plus a modeled comparison; planning was 38% of spend, the two sub-agents 71% of it, with 94% file overlap \u2014 a direction, not a benchmark.",
+    // Bespoke page: pages/AgentPlanning.jsx. App.jsx routes
+    // /experiments/agent-planning to it directly.
+    custom: true,
   }),
   emptyExperiment({
     id: "tool-skill-overhead",

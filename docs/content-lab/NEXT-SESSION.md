@@ -10,9 +10,9 @@ Update it at the end of each working session. Last updated: 2026-06-07 (#09 publ
 | 01 | Context Quality | ✅ full | ✅ live on Pages | Published | — |
 | 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
-| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published (page) — LinkedIn post pending | — |
-| 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
+| 06 | Agent Planning | ✅ full (N=1 + model) | ✅ bespoke page | Published | — (reframed: "sub-agents are a context loan") |
 | 07 | Tool & Skill Overhead | ✅ seeded (N=1) | ✅ fixed report `tool-overhead-120` | Under investigation | needs cleanup A/B capture |
+| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published (page) — LinkedIn post pending | — |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |
 | 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
