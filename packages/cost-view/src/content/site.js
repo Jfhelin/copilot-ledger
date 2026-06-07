@@ -147,10 +147,13 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "context-growth",
-    title: "Context Growth",
+    title: "Context only grows. Re-reading it was 40% of my Copilot session.",
     hook: "Context only grows. Re-reading it was 40% of my Copilot session.",
-    status: "Draft",
+    status: "Published",
     confidence: "Single session (N=1); prefix tripled 19.5K\u219264.2K tokens, and re-reads were 40% of credits \u2014 a direction, not a benchmark.",
+    // Bespoke page: pages/ContextGrowth.jsx. App.jsx routes
+    // /experiments/context-growth to it directly.
+    custom: true,
   }),
   emptyExperiment({
     id: "agent-planning",
@@ -165,6 +168,13 @@ export var EXPERIMENTS = [
     hook: "I added a 100-tool MCP server to Copilot. The bytes on the wire barely moved.",
     status: "Under investigation",
     confidence: "Decoupling curve across six captures (catalog 23–320); the 15.7-credit churn event is a single session (N=1); skill-instruction overhead not yet isolated.",
+  }),
+  emptyExperiment({
+    id: "installed-skill-overhead",
+    title: "A third of my system prompt was skills I never used.",
+    hook: "A third of my Copilot system prompt was skills I never used — and I paid to re-read them on every call.",
+    status: "Draft",
+    confidence: "Seed measurement only (N=1): the skills catalog was 54% of the system prompt and installed-but-unused plugins were ~31% (~2,934 tok); the controlled before/after is not yet captured.",
   }),
 ];
 

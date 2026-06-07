@@ -143,10 +143,59 @@ view — never as a bare uploader link. A fixed report deliberately:
   the page never opens with empty "Not generated yet" boxes. (A fixed report has
   no canvas bridge to generate them live.)
 
+#### Before you copy: scrub the export (it becomes public)
+
+A published export is **world-readable** — committed to a public repo and served
+on GitHub Pages as raw JSON. Every `request` snapshot carries the full system
+prompt, which embeds the live **skills/agents catalog**, tool definitions,
+`mcpServers` blocks, and **absolute file paths**. That is exactly where internal
+data leaks. **Never copy an export into `public/sessions/` without reviewing it
+first.** This applies to any log file or export you push, not just fixed reports.
+
+Scan for, at minimum:
+
+- **Internal system / product codenames** in skill/agent descriptions (CRM,
+  data-warehouse, analytics, admin-tool names; internal acronyms/metrics).
+- **Internal skill marketplaces / plugin names** in the `<skill>`/`<agent>`
+  catalog and in `<file>` paths.
+- **Usernames / machine identifiers** — `/Users/<handle>/…` absolute paths
+  (often hundreds of hits; the handle is PII).
+- **Hostnames / endpoints / connection strings** in `mcpServers` (internal URLs,
+  non-public clusters).
+- **Secrets** — tokens, keys, passwords (distinguish a real value from a mere
+  env-var *name* or safety boilerplate).
+- **Customer / PII / revenue data** — names, emails, $ figures, account data.
+
+Quick first pass (tune the alternation to the run's own tooling):
+
+```sh
+f=packages/cost-view/public/sessions/<name>.json
+grep -ohE "/Users/[A-Za-z0-9._-]+|<your-internal-terms-here>" "$f" \
+  | sort | uniq -c | sort -rn
+```
+
+If you find internal data, **replace it with fake data using EXACTLY
+length-preserving substitutions** (same character count per token). The parser
+char-counts the `<skill>`/system blocks and scales them to the real
+`prompt_tokens`, so equal-length swaps keep every displayed number identical and
+the scrub is invisible to the cost math. Then verify, before committing:
+
+- **byte size unchanged** vs the original (`wc -c` — proves only intended
+  substrings changed),
+- **JSON still parses**,
+- a **residual scan returns zero** internal markers,
+- `npm test --workspace=@copilot-ledger/cost-view` and `npm run build` are green.
+
+Caveat: scrubbing the working copy does **not** purge git history — if a real
+export was already committed publicly, the old blob persists in prior commits and
+full removal needs a history rewrite. Best to scrub **before** the first push.
+
 To publish one (all in `packages/cost-view/`):
 
 1. Copy the export into `public/sessions/` with a descriptive, kebab-case name
-   (e.g. `t2-maprows-lazy.json`), not the raw capture name.
+   (e.g. `t2-maprows-lazy.json`), not the raw capture name. **Scrub it per the
+   checklist above before this copy** — the moment it lands in `public/` it is
+   publishable.
 2. Add an entry to `FIXED_REPORTS` in `src/content/site.js` with:
    - `id` — stable `#/reports/<id>` route segment,
    - `title` — the descriptive name shown in the header,

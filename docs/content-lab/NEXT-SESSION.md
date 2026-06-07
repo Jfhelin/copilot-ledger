@@ -9,9 +9,10 @@ Update it at the end of each working session. Last updated: 2026-06-07.
 | --- | --- | --- | --- | --- | --- |
 | 01 | Context Quality | ✅ full | ✅ live on Pages | Published | — |
 | 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
+| 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
 | 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
 | 07 | Tool & Skill Overhead | ✅ seeded (N=1) | — | Under investigation | needs cleanup A/B capture |
-| 05 | Context Growth | ✅ full (N=1) | — | Draft | optional deploy (7.5 MB export) |
+| 09 | Installed Skill Overhead | ✅ seeded (N=1) | — | Draft | needs install/uninstall A/B capture |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |
 | 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
@@ -20,6 +21,67 @@ Update it at the end of each working session. Last updated: 2026-06-07.
 React page + route in the cost-view SPA that actually ships on GitHub Pages.
 GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 `docs/content-lab/*.md` files are editorial sources and are NOT published.
+
+## Session 2026-06-07 (privacy remediation + measured floor data) — START HERE
+
+**Shipped (PR #19, branch `jfhelin/project-state-review`):**
+- **Scrubbed the 3 already-published exports** (`t2-maprows-lazy`, `02-one-tool`,
+  `hi-116-tools-deferred`) of internal identifiers using **exactly
+  length-preserving** fakes — proven invisible to the cost math (byte sizes
+  unchanged, JSON valid, zero residual markers, 184 tests + build green).
+  `subagent-example.json` was already clean.
+- **Added a pre-publish privacy gate** to the `copilot-behavior-lab` skill (§6):
+  a "scrub the export before it becomes public" checklist (what to scan for, the
+  length-preserving rule, verification steps, git-history caveat). This is the
+  permanent guard against recurrence — read it before bundling any export.
+- Removed the now-resolved open privacy item from this doc; corrected the
+  cart-export note (length-preserving scrub means bundling it as a *real
+  interactive report* is now viable, not a constraint).
+
+**Measured floor data (NEW — digested real exports from `~/CopilotLogExports/`):**
+
+| Run (in `~/CopilotLogExports/`) | Model | Sent tool-def tok* | Tool-def share | Flat catalog → sent (grouping saved)* |
+| --- | --- | ---: | ---: | --- |
+| `01-hello-80.json` (trivial) | 4o-mini | 9,686 | **35.6%** | 22,137 → 9,686 (saved 12,451) |
+| `readme-cold-nocontext.json` | 4o-mini | 18,663 | **35.8%** | 32,641 → 18,663 (saved 13,978) |
+| `03-workiq-316-tools.json` | sonnet-4.6 | 59,475 | **34.6%** | 485,860 → 59,475 (**saved 426,385**) |
+
+*\*Units: the absolute token columns are `rollups.toolDefs.approxTokensTotal` /
+`catalogIfFlatApproxTokens` — **session totals summed across all LLM calls**, not
+per-call. Per call, the 320-tool run sends ~9,600 schema tokens vs ~81K if flat
+(see #07's decoupling table, the `workiq` row). The **share** column is per-call
+equivalent (a ratio) and is the robust headline.*
+
+Three findings, each potentially article-grade:
+1. **Tool defs are a stable ~⅓ of prompt tokens** (34.6–35.8% share) across wildly
+   different runs — even a "hello" run ships ~9,700 tok of tool schemas per call
+   (matches #08's "~9,680-token shared block").
+2. **The deferred-tool index is real and huge** — and this is **already #07's
+   core finding**, not new. The same 320-tool capture is #07's `workiq` row
+   (~9,600 sent vs ~81K flat per call, ~8x compression). What this session adds is
+   only confirmation + the now-exposed `rollups.toolDefs` session-total fields.
+3. Together with #09 (skills catalog = a separate ⅓ of the *system prompt*), the
+   fixed floor = **cache (#08) + tool defs (#07) + skills catalog (#09)** —
+   "what a turn costs before you type anything."
+
+**Publishing-plan implications (now written into `publishing-plan.md`):**
+- **"Fixed Floor" framing added** — #08 → #07 → #09 grouped and moved to the front
+  of the launch order (they tell one story: the cost before you type).
+- **No new #10.** The deferred-tool-index story is fully owned by #07 (capture,
+  pinned report, LinkedIn post, video already done) — a separate page would
+  duplicate it. Earlier draft note proposing #10 was withdrawn after re-reading #07.
+- **#09 is the one gap in the trilogy:** still needs its clean install/uninstall
+  A/B to move Draft→publishable (now feasible post-cleanup; recipe below).
+- Length-preserving scrub unblocks shipping #05 + the floor runs as **real fixed
+  reports**, not just static charts.
+
+**⚠️ Two caveats before the next capture:**
+- The global plugin surface currently shows **`work-iq` still installed** (`ls
+  ~/.copilot/installed-plugins/`) — NOT `microsoft-365-agents-toolkit` as the #09
+  field note claims. Verify/clean before any "clean" capture or the "after" won't
+  be clean.
+- `01-hello-80` / `readme-cold-nocontext` used **gpt-4o-mini**; capture the floor
+  on the model you actually use (sonnet-4.6) so credits are representative.
 
 ## What shipped this session (on the open PR branch)
 
@@ -40,6 +102,53 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
   was the single largest cost line (42.4 / 106.6 cr = 40%), and the per-call
   re-read floor rose ~1.5 → ~1.9 cr as history grew. Editorial-only by choice
   (7.5 MB export); deploying as a pinned report is an optional follow-up.
+- **Deployed #05 Context Growth** as a bespoke Pages page (PR #19):
+  `pages/ContextGrowth.jsx` with two inline-SVG charts (the 34-call growth curve
+  and the 42.4 / 33.7 / 30.5 cost-bucket bar), routed in `App.jsx`, flipped to
+  `Published` + `custom` in `site.js`, with an app routing test. Also tightened
+  the editorial to soften the "monotonic / never shrank" framing (p0/p1 are
+  separate sub-agent windows; the monotonic curve is the main thread p2→p3).
+- **Decided NOT to bundle the 7.5 MB cart export** as an interactive report.
+  Reason: the export embeds the full installed-skills catalog in every request
+  snapshot's system prompt. At the time we thought scrubbing the internal-plugin
+  entries (`workiq`, `revenue`, `kusto` references, ~2,000 hits) would change
+  `promptTokens` and the system-block sizes — corrupting the exact 19.5K→64.2K
+  numbers the report exists to visualize — so #05 stayed editorial + static
+  charts. (Repo is PUBLIC; the demo app itself is `octodemo/octocat_supply`,
+  GitHub's public demo — no secrets, no demo scripts in the export — but the
+  skills catalog is the user's own internal tooling.)
+  **Update (2026-06-07):** that dilemma is resolved — a **length-preserving**
+  scrub (each internal token replaced with a fake of identical character length)
+  leaves every char-derived number untouched, as proven on the three already-
+  published exports (byte sizes unchanged, all reports' numbers identical). So
+  bundling the cart export as a real interactive report is now viable if we want
+  it; #05 staying static is a choice, no longer a constraint. See the publishing
+  skill's "scrub the export" checklist for the procedure.
+- **Seeded #09 Installed Skill Overhead** (`experiments/09-installed-skill-overhead.md`
+  + `site.js` Draft entry). The disclosure above turned into its own experiment:
+  the skills catalog was **54% of the system prompt (~5,128 tok)**, and 22
+  internal-plugin skills were **~2,934 tok = 31% of the system prompt** — on a
+  React task. Important correction baked in: this is the **skills catalog in the
+  system prompt**, NOT MCP tool schemas. The active tool catalog
+  (`metadata.tools`) held 28–56 generic tools and ZERO internal-MCP schemas, so
+  installed-but-disabled MCP servers did NOT inflate the payload — installed
+  plugins/skills did, via their name+description entries.
+
+## Clean-rerun recipe (to capture #09's A/B, and a cleaner #05/#07 baseline)
+
+To get a capture without the internal-skill disclosure (and to measure the #09
+saving), do a before/after on the same trivial prompt ("Reply with just OK."),
+same model/mode/repo, fresh sessions:
+- **Uninstall plugins:** `github-revenue`, `work-iq`, `copilot-plugins/workiq`
+  (disabling-but-installed may not help — the catalog is injected on install).
+- **Disable MCP servers (defensive):** `workiq`, `revenue`, `kusto-mcp`.
+- **Keep (public, safe to ship):** Azure MCP, `github`, `github-agentic-workflows`,
+  `github-remote`, `playwright`, Bicep, pylance.
+- Export both as `skills-before.json` / `skills-after.json` into
+  `~/CopilotLogExports/`, then diff system-prompt tokens (`messages[0]`, role=0),
+  `<skill>` block count, first-call `promptTokens` / `cacheCreationTokens` /
+  `cacheHitRate` / `credits`, and `toolDefsApproxTokens` (should stay ~flat — that
+  isolates skills from tools).
 
 ## Highest-value next steps (in order)
 
@@ -58,6 +167,10 @@ GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
      (catches skill instruction text), `cacheHitRate`, `credits`.
    - Write the result into `07` with the lumping caveat stated up front. A
      per-category split would need a 3-step staircase (a later follow-up).
+   - **#09 is the skills-only sibling:** the same capture, diffed on system-prompt
+     tokens / `<skill>` count, isolates the *skill catalog* half (uninstall the 3
+     internal plugins). Doing #07's cleanup A/B and #09's install/uninstall A/B in
+     one sitting is efficient — they share the before/after method.
 
 2. **Compaction run — turns #08's reasoned guidance into measured evidence.**
    We have NO captured compaction event yet; #08's compaction guidance is
