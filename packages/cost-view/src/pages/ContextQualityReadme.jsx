@@ -1,6 +1,7 @@
 import { theme } from "../lib/theme.js";
 import { hrefFor } from "../lib/router.js";
 import { PageHeader, Section, Prose, Badge, Callout, Pre, TextLink } from "../components/ui.jsx";
+import { BarChart, StackedBar } from "../components/charts.jsx";
 import { STATUS_TONE } from "../content/site.js";
 
 var REPORT_ROUTE = "/reports/context-quality-maprows";
@@ -85,6 +86,15 @@ export default function ContextQualityReadme() {
             cache none of us warmed.
           </p>
         </Prose>
+        <BarChart
+          ariaLabel="Arm A lazy run cost 12.8 credits versus 8.0 credits for Arm B with the file attached, a 37% increase"
+          max={14}
+          data={[
+            { label: "Arm A — lazy (6 calls)", value: 12.8, display: "12.8 cr", color: theme.semantic.warning },
+            { label: "Arm B — file attached (1 call)", value: 8.0, display: "8.0 cr", color: theme.semantic.success },
+          ]}
+          caption="Same prompt, same model, same repo. The only variable was the attachment — letting the agent discover the file cost 37% more."
+        />
       </Section>
 
       <Section title="Hypothesis">
@@ -131,6 +141,37 @@ export default function ContextQualityReadme() {
             "p2.l0 — the file is already in context; the agent answers directly. One call, no tools, 8.0 credits.",
           ]}
         />
+        <StackedBar
+          ariaLabel="Arm A is six stacked call costs totalling 12.8 credits; Arm B is a single 8.0 credit call"
+          label="Arm A — lazy (6 model calls)"
+          totalDisplay="12.8 cr"
+          total={12.7}
+          max={12.7}
+          segments={[
+            { label: "search (p2.l0)", value: 5.9, display: "5.9 cr", color: theme.cost.cwrite },
+            { label: "read (p2.l2)", value: 1.6, display: "1.6 cr", color: theme.cost.cached },
+            { label: "read (p2.l4)", value: 1.1, display: "1.1 cr", color: theme.cost.cached },
+            { label: "read (p2.l6)", value: 1.2, display: "1.2 cr", color: theme.cost.cached },
+            { label: "read (p2.l8)", value: 1.1, display: "1.1 cr", color: theme.cost.cached },
+            { label: "answer (p2.l10)", value: 1.8, display: "1.8 cr", color: theme.cost.output },
+          ]}
+        />
+        <StackedBar
+          ariaLabel="Arm B is a single 8.0 credit answer call"
+          label="Arm B — file attached (1 model call)"
+          totalDisplay="8.0 cr"
+          total={8.0}
+          max={12.7}
+          segments={[
+            { label: "answer (p2.l0)", value: 8.0, display: "8.0 cr", color: theme.cost.output },
+          ]}
+        />
+        <Prose>
+          <p style={{ marginTop: theme.space.md, fontSize: theme.fontSize.sm, color: theme.text.dim }}>
+            Hop count, not hop size: Arm B’s single call was actually more expensive than Arm A’s
+            first call. The 37% gap is the five discovery round trips, each re-billing the prefix.
+          </p>
+        </Prose>
       </Section>
 
       <Section title="Key findings">
