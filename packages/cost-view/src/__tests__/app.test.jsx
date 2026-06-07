@@ -82,6 +82,17 @@ describe("App shell routing", function () {
     await act(async function () { mounted.root.unmount(); });
   });
 
+  it("renders the bespoke context-growth experiment page from a hash route", async function () {
+    setLocation("/#/experiments/context-growth");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("Context only grows.");
+    // Measured numbers from the article appear on the page.
+    expect(text).toContain("64,202");
+    expect(text).toContain("42.4");
+    await act(async function () { mounted.root.unmount(); });
+  });
+
   it("renders an experiment detail from a nested hash route", async function () {
     setLocation("/#/experiments/context-quality-readme");
     var mounted = await renderApp();

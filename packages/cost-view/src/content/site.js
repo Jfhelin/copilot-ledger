@@ -147,10 +147,13 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "context-growth",
-    title: "Context Growth",
+    title: "Context only grows. Re-reading it was 40% of my Copilot session.",
     hook: "Context only grows. Re-reading it was 40% of my Copilot session.",
-    status: "Draft",
+    status: "Published",
     confidence: "Single session (N=1); prefix tripled 19.5K\u219264.2K tokens, and re-reads were 40% of credits \u2014 a direction, not a benchmark.",
+    // Bespoke page: pages/ContextGrowth.jsx. App.jsx routes
+    // /experiments/context-growth to it directly.
+    custom: true,
   }),
   emptyExperiment({
     id: "agent-planning",

@@ -11,9 +11,12 @@
 > extended-thinking output is under-counted). The numbers are a directional,
 > single-session observation, not a benchmark.
 
-In one "plan, then implement a shopping cart" session, the conversation the agent
-carried grew from **~19,500 tokens on its first model call to ~64,200 on its last**
-— it more than **tripled**, and it never shrank. Inside the implementation turn
+In one "plan, then implement a shopping cart" session, the conversation the main
+agent carried grew from **~19,500 tokens early on to ~64,200 on its last call** —
+it more than **tripled**, and within the main thread it never shrank. (Two
+exploration sub-agents, `p0` and `p1`, ran in their *own* windows, so the
+session-wide call sequence isn't a single smooth line — the monotonic growth is
+the main conversation, `p2 → p3`.) Inside the implementation turn
 alone, the prefix climbed **49,401 → 64,202 tokens** across 20 model calls. In
 this run — with no compaction — every file read and every edit stayed in that
 prefix and was re-sent on every later call. The surprise: even at a **94% cache
@@ -57,10 +60,13 @@ long session" concrete instead of abstract.
 
 ## Key Findings
 
-1. **Context only grows (N=1).** Across the whole session the prefix went from
-   **19,551 tokens** (the first model call) to **64,202** (the last) — a **3.3×**
-   increase. It never decreased: there was no compaction, so every tool result
-   stayed in the window for the rest of the run.
+1. **Context only grows in the main thread (N=1).** Across the main conversation
+   the prefix went from **19,551 tokens** (`p1.l0`, the lowest point) to **64,202**
+   (`p3.l39`, the last call) — a **3.3×** increase. Within the main thread it never
+   decreased: there was no compaction, so every tool result stayed in the window
+   for the rest of the run. (The two exploration sub-agents, `p0`/`p1`, carry their
+   own windows and so dip independently — the monotonic curve is the main thread,
+   clearest within the implement turn `p3`.)
 2. **The implementation turn's prefix grew 30% mid-turn.** Within `p3`, the prompt
    climbed **49,401 → 64,202 tokens** over 20 calls (**+14,801**), purely from the
    files it read and the edits it made accreting into history.
@@ -82,10 +88,13 @@ long session" concrete instead of abstract.
 
 The session ran on one model, in two phases. Context accumulated the whole way.
 
-**Where the prefix started.** The first model call of the run was an exploration
-sub-agent at **19,551 tokens** — almost all of it the shared system prompt
-(~9,680, see experiment 08) plus ~4,000 tokens of tool definitions, with only
-~5,800 tokens of actual conversation. That is the floor a fresh agent starts from.
+**Where the prefix started.** The lowest-prefix call in the run was a fresh
+exploration sub-agent at **19,551 tokens** (`p1.l0`) — almost all of it the shared
+system prompt (~9,680, see experiment 08) plus ~4,000 tokens of tool definitions,
+with only ~5,800 tokens of actual conversation. That is the floor a fresh agent
+starts from. (Sub-agents `p0` and `p1` were both spawned by the planning turn `p2`
+and ran in their own windows, so the session's call sequence isn't one smooth line;
+the clean growth curve is the main thread, sharpest within `p3` below.)
 
 **The implementation turn (`p3`) — the growth curve.** After planning, a
 Plan→Agent mode switch expanded the toolset (tool defs ~4,600 → ~14,600 tokens)
@@ -228,10 +237,10 @@ consistent (cache-read 42.4 + cache-write 33.7 + output 30.5 = 106.6; planning
 > The agent spent *more* re-reading what it already knew than producing new
 > output.
 >
-> Why? The conversation the agent carries only grows. It started its first call at
-> ~19,500 tokens and finished at ~64,200 — more than triple, and it never shrank.
-> Every file it read and every edit it made stayed in the prefix and got re-sent
-> on every later call.
+> Why? The conversation the main agent carries only grows. It bottomed out around
+> ~19,500 tokens early on and finished at ~64,200 — more than triple, and within
+> the main thread it never shrank. Every file it read and every edit it made stayed
+> in the prefix and got re-sent on every later call.
 >
 > Caching helps — re-reads run at ~10% of fresh price. But 10% of a prefix that
 > keeps growing is a bill that keeps growing too. Two calls did the exact same
@@ -256,9 +265,9 @@ consistent (cache-read 42.4 + cache-write 33.7 + output 30.5 = 106.6; planning
 **0–10s** — "Context only grows — and re-reading it was 40% of my Copilot
 session." Show the session total: 106.6 credits.
 
-**10–30s** — Open the cart run in Copilot Ledger. Point at the first model call
-(~19,500 tokens) and the last (~64,200). The conversation more than tripled and
-never shrank.
+**10–30s** — Open the cart run in Copilot Ledger. Point at the main thread's lowest
+call (~19,500 tokens) and its last (~64,200). The conversation more than tripled
+and, in the main thread, never shrank.
 
 **30–75s** — Step through the implementation turn and watch the context-window bar
 grow, 49K → 64K. Then put the cost split on screen: re-read 42.4 cr vs output 30.5
