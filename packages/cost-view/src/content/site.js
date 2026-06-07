@@ -162,9 +162,9 @@ export var EXPERIMENTS = [
   emptyExperiment({
     id: "tool-skill-overhead",
     title: "Tool and Skill Overhead",
-    hook: "A quarter of every call was tool definitions — and changing them mid-task cost 15 credits.",
+    hook: "I added a 100-tool MCP server to Copilot. The bytes on the wire barely moved.",
     status: "Under investigation",
-    confidence: "Single session (N=1); tool-def share measured, skill-only overhead not yet isolated.",
+    confidence: "Decoupling curve across six captures (catalog 23–320); the 15.7-credit churn event is a single session (N=1); skill-instruction overhead not yet isolated.",
   }),
 ];
 
@@ -304,6 +304,19 @@ export var FIXED_REPORTS = [
         "Across 6 model calls on claude-sonnet-4.5, the cache hit rate climbs 40.3% → 93.4% → 98.7% → 98.3% → 99.1% → 98.9%. The first call already reuses a shared 9,680-token prefix (tool defs + system) before paying a one-time 5.4-credit cache-creation write; every call after that re-reads the warm prefix and only pays for the new tool result (229–442 tokens). Select call 1 to see the shared hit, then step through 2–6 to watch reuse approach 99%.",
     },
     backTo: "/experiments/cache-behavior",
+    backLabel: "Back to experiment",
+  },
+  {
+    id: "tool-overhead-120",
+    title: "Tool Overhead — 120 tools enabled, 23 sent",
+    file: "sessions/hi-116-tools-deferred.json",
+    summaries: {
+      userGoal:
+        "The developer typed a one-word \"hi\" with 120 tools enabled in VS Code, purely to see what the editor sends to the model along with the message. The question isn't the reply — it's whether the full enabled-tool catalog rides over the wire as schemas, or whether VS Code trims it first.",
+      agentApproach:
+        "VS Code answered in a single claude-sonnet-4.5 call but sent only 23 of the 120 enabled tools as full schemas; the other 97 were advertised name-only in a deferred index (loaded on demand via tool_search) and never expanded. The 23 sent schemas were ~9,107 tokens — about 33% of the 25,367-token prompt — versus ~35,571 tokens if all 120 had been sent flat, a ~3.9x compression. The turn cost 6.4 credits at a 38% cache hit. Open the tool_defs box to see the sent block, and note the 97 deferred tools that cost almost nothing.",
+    },
+    backTo: "/experiments/tool-skill-overhead",
     backLabel: "Back to experiment",
   },
 ];

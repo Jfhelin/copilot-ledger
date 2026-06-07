@@ -396,6 +396,22 @@ interface ClassifiedCall {
   historyMsgs: { role: "user" | "assistant"; chars: number; tokens: number; preview: string }[];
   toolResultMsgs: { chars: number; tokens: number; preview: string; full: string; truncated: boolean; label: string; toolCallId?: string }[];
   totalTools: number;
+  /** The catalog tools actually sent to the model as full schemas this call
+   *  (i.e. NOT deferred behind `tool_search`). Equals `metadata.tools` minus
+   *  the `<availableDeferredTools>` set. Drives the tool_defs bucket sizing and
+   *  every "model-visible tools" derivation. */
+  directTools: ToolDef[];
+  /** Total enabled tools VS Code logged in `metadata.tools` (direct + deferred).
+   *  This is the IDE catalog, NOT what went over the wire. */
+  catalogToolsCount: number;
+  /** Catalog tools that were deferred (advertised name-only, schema loaded on
+   *  demand). `totalTools + deferredToolsCount === catalogToolsCount`. */
+  deferredToolsCount: number;
+  /** Size of the `<availableDeferredTools>` index the model actually saw. May
+   *  exceed `deferredToolsCount` by a few names not present in the IDE catalog. */
+  deferredIndexCount: number;
+  /** Sample of deferred tool names (capped) for display/tooltip. */
+  deferredToolNames: string[];
   toolGroups: { source: string; tools: { name: string; chars: number; tokens: number; description?: string; paramSummary?: string }[]; chars: number; tokens: number }[];
   /** Image attachments referenced by this call's request messages. The export
    * carries only a CDN URL, mediaType, and detail level -- no byte size,
@@ -779,6 +795,50 @@ function fnv1aHex(s: string): string {
   return (h >>> 0).toString(16).padStart(8, "0");
 }
 
+const DEFERRED_BLOCK_RE = /<availableDeferredTools\b[^>]*>([\s\S]*?)<\/availableDeferredTools>/g;
+
+/**
+ * Extract the set of "deferred" (virtualized) tool names a request advertised
+ * to the model without sending their full schemas.
+ *
+ * When the enabled tool count crosses VS Code's virtual-tools threshold
+ * (`github.copilot.chat.virtualTools.threshold`, default 128), Copilot does NOT
+ * serialize every tool schema into the wire `tools` param. Instead it sends a
+ * small set of full schemas (the "direct" tools) plus a NAME-ONLY index of the
+ * rest inside an `<availableDeferredTools>` block in the environment/system
+ * context, and instructs the model to call `tool_search` to load a deferred
+ * tool's schema before invoking it.
+ *
+ * The export's `metadata.tools` is VS Code's full enabled CATALOG (direct +
+ * deferred), so sizing the tool_defs bucket from it over-counts grouped runs by
+ * ~6x. This helper lets `classifyCall` keep only the directly-sent schemas in
+ * the tool_defs accounting and surface the deferred index separately.
+ *
+ * Defensive by design: only scans system (role 0) and user/environment (role 1)
+ * messages -- never assistant (2) or tool-result (3) messages, which could
+ * quote the block as discussion -- and treats only whitespace-free lines as
+ * tool names (the block's "Available deferred tools (must be loaded ...)"
+ * header contains spaces and is skipped).
+ */
+function extractDeferredToolNames(messages: RawMessage[]): Set<string> {
+  const out = new Set<string>();
+  for (const msg of messages) {
+    if (msg.role !== 0 && msg.role !== 1) continue;
+    const text = messageText(msg);
+    if (text.indexOf("<availableDeferredTools") < 0) continue;
+    DEFERRED_BLOCK_RE.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = DEFERRED_BLOCK_RE.exec(text)) !== null) {
+      for (const line of m[1].split("\n")) {
+        const name = line.trim();
+        if (!name || /\s/.test(name)) continue;
+        out.add(name);
+      }
+    }
+  }
+  return out;
+}
+
 function classifyCall(log: RawLog): ClassifiedCall {
   const messages = log.requestMessages?.messages ?? [];
   // Find the LAST user message -- that's "current prompt"; earlier user
@@ -831,16 +891,31 @@ function classifyCall(log: RawLog): ClassifiedCall {
     }
   });
 
-  // Tool definitions
+  // Tool definitions. `metadata.tools` is VS Code's full enabled CATALOG. When
+  // virtual-tools grouping is active (>128 tools), only a subset is sent as full
+  // schemas ("direct"); the rest are advertised name-only via
+  // `<availableDeferredTools>` and loaded on demand through `tool_search`. We
+  // size the tool_defs bucket from the DIRECT schemas only -- the deferred names
+  // are already counted in the message/system text bucket where the index block
+  // physically lives, so counting their full catalog schemas here would double-
+  // count and massively inflate tool_defs for grouped runs.
   const tools = log.metadata?.tools ?? [];
+  const deferredSet = extractDeferredToolNames(messages);
+  const directTools: ToolDef[] = [];
+  const deferredToolNames: string[] = [];
   const toolDefBuckets = new Map<string, { tools: { name: string; chars: number; tokens: number; description?: string; paramSummary?: string }[]; chars: number }>();
   let toolDefChars = 0;
   for (const tool of tools) {
+    const fn = (tool as { function?: { name?: string; description?: string; parameters?: unknown } }).function;
+    const name = (tool as { name?: string }).name ?? fn?.name ?? "(unnamed)";
+    if (deferredSet.has(name)) {
+      deferredToolNames.push(name);
+      continue;
+    }
+    directTools.push(tool);
     const json = JSON.stringify(tool);
     const len = json.length;
     toolDefChars += len;
-    const fn = (tool as { function?: { name?: string; description?: string; parameters?: unknown } }).function;
-    const name = (tool as { name?: string }).name ?? fn?.name ?? "(unnamed)";
     const description = fn?.description ?? (tool as { description?: string }).description ?? "";
     const paramSummary = summarizeToolParameters(fn?.parameters ?? (tool as { parameters?: unknown }).parameters);
     const group = classifyToolGroup(name);
@@ -849,6 +924,10 @@ function classifyCall(log: RawLog): ClassifiedCall {
     b.tools.push({ name, chars: len, tokens: 0, description, paramSummary });
     b.chars += len;
   }
+  // `deferredSet` may contain a few names not in the IDE catalog; reconcile so
+  // direct + deferredToolsCount === catalog exactly, and track the index size
+  // (what the model actually sees advertised) separately.
+  const deferredIndexCount = deferredSet.size;
 
   // Estimate tokens then scale
   const realPt = log.metadata?.usage?.prompt_tokens ?? 0;
@@ -946,7 +1025,12 @@ function classifyCall(log: RawLog): ClassifiedCall {
     currentParts: extractCurrentParts(currentText),
     historyMsgs,
     toolResultMsgs,
-    totalTools: tools.length,
+    totalTools: directTools.length,
+    directTools,
+    catalogToolsCount: tools.length,
+    deferredToolsCount: deferredToolNames.length,
+    deferredIndexCount,
+    deferredToolNames: deferredToolNames.slice(0, 60),
     toolGroups,
     images,
     chatMode,
@@ -1078,6 +1162,16 @@ export interface CostAnalysisCall {
    * introduced them). Per-image estimate via `imageTokenEstimate`. */
   visionTokensTotal: number;
   totalTools: number;
+  /** Total enabled tools in VS Code's catalog (`metadata.tools`). When virtual-
+   *  tools grouping is active this is much larger than `totalTools` (the schemas
+   *  actually sent). `totalTools + deferredToolsCount === catalogToolsCount`. */
+  catalogToolsCount: number;
+  /** Catalog tools deferred behind `tool_search` (advertised name-only). */
+  deferredToolsCount: number;
+  /** Size of the `<availableDeferredTools>` index the model saw this call. */
+  deferredIndexCount: number;
+  /** Sample of deferred tool names (capped) for display/tooltip. */
+  deferredToolNames: string[];
   toolGroups: ClassifiedCall["toolGroups"];
   /** Classification of the model-visible tool definitions on this call as
    *  direct vs router/grouped vs possible-router vs unknown. Router-usage
@@ -1668,6 +1762,10 @@ export function parseCopilotChatExport(text: string): ParsedSession | null {
           imageTokensEst: 0,
           visionTokensTotal: 0,
           totalTools: 0,
+          catalogToolsCount: 0,
+          deferredToolsCount: 0,
+          deferredIndexCount: 0,
+          deferredToolNames: [],
           toolGroups: [],
           toolDefinitionShape: analyzeToolDefinitionShape([], []),
           historyMsgs: [],
@@ -1773,11 +1871,13 @@ export function parseCopilotChatExport(text: string): ParsedSession | null {
         continue;
       }
       const usage = callUsage(log);
-      // Union this call's model-visible tool definitions into the session-
-      // level set, keyed by tool name (first occurrence wins). Only primary
+      // Union this call's model-visible (directly-sent) tool definitions into
+      // the session-level set, keyed by tool name (first occurrence wins).
+      // Deferred/virtualized tools are excluded -- they aren't sent as schemas,
+      // so they don't belong in the shape/reachability analysis. Only primary
       // calls are interesting for the shape report, but adding overhead calls
       // is harmless because their tools tend to be a subset.
-      for (const tool of (log.metadata?.tools ?? [])) {
+      for (const tool of cls.directTools) {
         const name = (tool as { function?: { name?: string }; name?: string })?.function?.name
           ?? (tool as { name?: string })?.name
           ?? "(unnamed)";
@@ -1999,7 +2099,7 @@ export function parseCopilotChatExport(text: string): ParsedSession | null {
           if (producedToolCalls.length > 0) return null;
           if (out_t <= 0) return null;
           const exposed: string[] = [];
-          const rawTools = log.metadata?.tools ?? [];
+          const rawTools = cls.directTools;
           for (const t of rawTools) {
             const n = (t as { function?: { name?: string }; name?: string })?.function?.name
               ?? (t as { name?: string })?.name
@@ -2043,8 +2143,12 @@ export function parseCopilotChatExport(text: string): ParsedSession | null {
         imageTokensEst,
         visionTokensTotal,
         totalTools: cls.totalTools,
+        catalogToolsCount: cls.catalogToolsCount,
+        deferredToolsCount: cls.deferredToolsCount,
+        deferredIndexCount: cls.deferredIndexCount,
+        deferredToolNames: cls.deferredToolNames,
         toolGroups: cls.toolGroups,
-        toolDefinitionShape: analyzeToolDefinitionShape(log.metadata?.tools ?? [], producedActualCalls),
+        toolDefinitionShape: analyzeToolDefinitionShape(cls.directTools, producedActualCalls),
         historyMsgs: cls.historyMsgs,
         toolResultMsgs: cls.toolResultMsgs,
         images: cls.images,

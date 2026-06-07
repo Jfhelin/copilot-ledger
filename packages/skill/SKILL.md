@@ -184,7 +184,9 @@ prefix-carry form above is what subsequent requests see.
 {
   session: {
     digestVersion, generatedAt, sourceFile, sourceSizeBytes, sourceMtimeMs,
-    exportedAt, totalPromptsClaimed, totalLogEntriesClaimed
+    exportedAt, totalPromptsClaimed, totalLogEntriesClaimed,
+    workspaceFolders,         // absolute workspace root(s) from VS Code's <workspace_info>
+    workspaceRoot             // the chosen root used to strip file paths (null if none found)
   }
   rollups: {
     prompts, requests, toolCalls,
@@ -216,10 +218,12 @@ prefix-carry form above is what subsequent requests see.
       }
     },
     toolDefs: {
-      approxTokensTotal,        // sum across requests of ceil(JSON.stringify(metadata.tools).length / 4)
-      approxShareOfPromptTokens, // approxTokensTotal / promptTokens — share of input budget spent re-sending schemas
-      approxFullPriceUsd,       // worst-case: all tool-def tokens billed as fresh input
-      note
+      approxTokensTotal,        // sum across requests of ceil(JSON.stringify(directTools).length / 4) — only the schemas actually SENT (the "direct" tools)
+      approxShareOfPromptTokens, // approxTokensTotal / promptTokens — share of input budget spent re-sending sent schemas
+      approxFullPriceUsd,       // worst-case: all sent tool-def tokens billed as fresh input
+      catalogIfFlatApproxTokens, // worst case if the FULL enabled catalog were sent flat every call (grouping off)
+      groupingSavedApproxTokens, // catalogIfFlatApproxTokens − approxTokensTotal — tokens saved by virtual-tools grouping
+      note                      // explains direct-vs-deferred (virtual tools / <availableDeferredTools> / tool_search)
     },
     toolCallPayloads: {         // output-side mirror of toolDefs
       approxTokensTotal,        // ceil(totalToolArgsChars / 4) — bytes emitted into tool-call args
@@ -272,7 +276,7 @@ prefix-carry form above is what subsequent requests see.
     priced, priceMatch        // priced=false means no rate found, costs will be 0
   }]
   tools:  [{ name, calls, errors, firstRef }]
-  files:  [{ path, reads, writes, lists, firstRef }]
+  files:  [{ path, rawPath, reads, writes, lists, firstRef }]  // path is workspace-relative ("./src/x.ts") when a workspace root was found; rawPath holds the original absolute path only when stripping changed it
   mcpServers: [{ label, command, type, version }]
   prompts: [{
     ord, ref, promptId, promptText, promptPreview, logCount,
@@ -297,7 +301,12 @@ prefix-carry form above is what subsequent requests see.
       withoutCacheUsd, cacheSavingsUsd,
       credits, creditsWithoutCache, cacheSavingsCredits,   // USD * 100, rounded to 0.1 credit
       messageCount, toolCallsAdvertised,
-      toolDefsCount, toolDefsJsonBytes, toolDefsApproxTokens,
+      toolDefsCount,            // tool schemas actually SENT this call (direct tools)
+      toolDefsCatalogCount,     // full enabled catalog (metadata.tools) — direct + deferred
+      toolDefsDeferredCount,    // catalog tools advertised name-only (deferred behind tool_search), not sent as schemas
+      toolDefsDeferredIndexCount, // raw size of the <availableDeferredTools> index (may include unknown names)
+      toolDefsJsonBytes, toolDefsApproxTokens, // bytes/tokens of the SENT (direct) schemas
+      toolDefsCatalogIfFlatApproxTokens,       // worst case if the whole catalog were sent flat this call
       toolDefsApproxFullPriceUsd, toolDefsApproxFullPriceCredits,
       assistantTextPreview     // truncated to 240 chars
     },
@@ -385,6 +394,8 @@ Per-prompt `credits` and per-timeline `credits` are **rounded to 0.1 credit** in
 ### Tool-definition accounting
 
 Tool schemas re-sent on every request are often the largest single line item after the conversation prefix. The schema doc above covers the fields (`rollups.toolDefs.*` and per-request `timeline[*].toolDefs*`). The one tip not in the schema: **compare `rollups.toolDefs.approxFullPriceUsd` against `rollups.cost.totalUsd` to gauge what the cache is buying you** on tool defs specifically. Token counts are 4-char-per-token approximations (±20%).
+
+**Sent vs catalog (virtual tools).** `metadata.tools` is the full *enabled catalog*, not the wire payload. When the enabled tool count crosses VS Code's virtual-tools threshold (`github.copilot.chat.virtualTools.threshold`, default 128), Copilot sends only a small *direct* subset as full schemas and advertises the rest *name-only* in an `<availableDeferredTools>` block, loading them on demand via `tool_search`. The digest sizes the tool-defs bucket from the **sent (direct)** tools only — `toolDefsCount` is what was sent, `toolDefsCatalogCount` is the catalog, `toolDefsDeferredCount` is what was deferred. Use `rollups.toolDefs.groupingSavedApproxTokens` (catalog-if-flat minus sent) to report what grouping saved. Do **not** quote the catalog count as "tools sent" — that over-counts grouped runs ~6x.
 
 ## Drilling into the raw file
 

@@ -302,10 +302,17 @@ describeReal("compareRunsCost (real fixtures: caveman vs polite)", () => {
     // Fixed share should be very high (>80%) for these tiny questions
     expect(r.a.fixedShare).toBeGreaterThan(0.80);
     expect(r.b.fixedShare).toBeGreaterThan(0.80);
-    // We expect at least the noise + tool_defs recommendations to fire
+    // We expect the noise + tiny-user-text recommendations to fire.
     const recIds = r.recommendations.map(x => x.id);
     expect(recIds).toContain("noise_dominated_by_overhead");
-    expect(recIds).toContain("attack_tool_defs");
+    // These fixtures are GROUPED runs (catalog ~272 tools, but ~250 deferred
+    // behind tool_search -> only ~22 full schemas actually sent). The parser
+    // now sizes the tool_defs bucket from the directly-sent schemas, not the
+    // full IDE catalog, so tool defs are NOT the dominant line item here and
+    // the "trim tool definitions" recommendation correctly does NOT fire.
+    // (Before the wire-vs-catalog fix this wrongly fired off the inflated
+    // 272-schema catalog.)
+    expect(recIds).not.toContain("attack_tool_defs");
   });
 });
 

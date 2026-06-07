@@ -96,6 +96,162 @@ function previewArgs(args, max = 240) {
   return s;
 }
 
+// Plain text of a request message (content is a string or an array of parts
+// with a `.text` field). Mirrors the cost-view parser's `messageText`.
+function rawMessageText(msg) {
+  const c = msg?.content;
+  if (typeof c === "string") return c;
+  if (Array.isArray(c)) {
+    let out = "";
+    for (const p of c) if (p && typeof p.text === "string") out += p.text;
+    return out;
+  }
+  return "";
+}
+
+const DEFERRED_BLOCK_RE =
+  /<availableDeferredTools\b[^>]*>([\s\S]*?)<\/availableDeferredTools>/g;
+
+// Extract the set of "deferred" (virtualized) tool names a request advertised
+// to the model WITHOUT sending their full schemas. When the enabled tool count
+// crosses VS Code's virtual-tools threshold (default 128), Copilot sends only a
+// small set of full schemas (the "direct" tools) plus a NAME-ONLY index of the
+// rest inside an <availableDeferredTools> block, with the model told to call
+// tool_search to load a deferred tool before invoking it. `metadata.tools` is
+// the full enabled CATALOG (direct + deferred), so sizing tool-defs from it
+// over-counts grouped runs ~6x. Defensive: only scans system (role 0) and
+// user/environment (role 1) messages -- never assistant/tool-result, which
+// could quote the block -- and treats only whitespace-free lines as names (the
+// block's "Available deferred tools (...)" header contains spaces).
+function extractDeferredToolNames(messages) {
+  const out = new Set();
+  if (!Array.isArray(messages)) return out;
+  for (const msg of messages) {
+    if (msg?.role !== 0 && msg?.role !== 1) continue;
+    const text = rawMessageText(msg);
+    if (text.indexOf("<availableDeferredTools") < 0) continue;
+    DEFERRED_BLOCK_RE.lastIndex = 0;
+    let m;
+    while ((m = DEFERRED_BLOCK_RE.exec(text)) !== null) {
+      for (const line of m[1].split("\n")) {
+        const name = line.trim();
+        if (!name || /\s/.test(name)) continue;
+        out.add(name);
+      }
+    }
+  }
+  return out;
+}
+
+function toolDefName(t) {
+  return t?.function?.name ?? t?.name ?? "(unnamed)";
+}
+
+// Extract the authoritative absolute workspace root folder(s) VS Code injects
+// into the request context via <workspace_info>. The newer format carries one
+// <workspaceFolder path="/abs/path"> per root; the older format is a bullet
+// list. Returns an array of absolute paths (deduped happens at the call site).
+const WORKSPACE_INFO_RE = /<workspace_info>([\s\S]*?)<\/workspace_info>/gi;
+const WORKSPACE_FOLDER_RE =
+  /<workspaceFolder\b[^>]*?\bpath\s*=\s*(?:"([^"]*)"|'([^']*)')/gi;
+function extractWorkspaceFolders(messages) {
+  const out = [];
+  if (!Array.isArray(messages)) return out;
+  for (const msg of messages) {
+    if (msg?.role !== 0 && msg?.role !== 1) continue;
+    const text = rawMessageText(msg);
+    if (text.indexOf("<workspace_info") < 0) continue;
+    WORKSPACE_INFO_RE.lastIndex = 0;
+    let wi;
+    while ((wi = WORKSPACE_INFO_RE.exec(text)) !== null) {
+      const body = wi[1];
+      WORKSPACE_FOLDER_RE.lastIndex = 0;
+      let wf;
+      let matched = false;
+      while ((wf = WORKSPACE_FOLDER_RE.exec(body)) !== null) {
+        const p = wf[1] ?? wf[2] ?? "";
+        if (p) {
+          out.push(p);
+          matched = true;
+        }
+      }
+      // Fallback: older bullet-list format, only when no <workspaceFolder> tags.
+      if (!matched) {
+        for (const line of body.split("\n")) {
+          const fm = /^\s*[-*]\s+(\S.*?)\s*$/.exec(line);
+          if (fm) out.push(fm[1]);
+        }
+      }
+    }
+  }
+  return out;
+}
+
+// Pick the workspace root that best covers the observed absolute paths. Mirrors
+// the cost-view canvas: prefer an authoritative <workspace_info> folder; fall
+// back to a robust longest-prefix heuristic (>=80% coverage, >=4 segments deep)
+// that resists outlier paths from memory/session tools.
+function pickWorkspaceRootFromFolders(folders, paths) {
+  const norm = [];
+  for (const f of folders) {
+    if (typeof f === "string" && f) norm.push(f.replace(/[\\/]+$/, ""));
+  }
+  if (norm.length === 0) return "";
+  let best = "";
+  let bestCount = -1;
+  for (const root of norm) {
+    const withSlash = root + "/";
+    let count = 0;
+    for (const p of paths) if (p === root || p.indexOf(withSlash) === 0) count += 1;
+    if (count > bestCount || (count === bestCount && root.length > best.length)) {
+      best = root;
+      bestCount = count;
+    }
+  }
+  return best;
+}
+
+function inferWorkspaceRootHeuristic(paths) {
+  if (paths.length < 2) return "";
+  const counts = new Map();
+  for (const p of paths) {
+    const segs = p.split(/[\\/]+/);
+    for (let i = 4; i < segs.length; i++) {
+      const pref = segs.slice(0, i + 1).join("/");
+      counts.set(pref, (counts.get(pref) || 0) + 1);
+    }
+  }
+  const threshold = Math.ceil(paths.length * 0.8);
+  let best = "";
+  for (const [pref, n] of counts) {
+    if (n >= threshold && pref.length > best.length) best = pref;
+  }
+  return best;
+}
+
+function computeWorkspaceRoot(folders, paths) {
+  const authoritative = pickWorkspaceRootFromFolders(folders, paths);
+  if (authoritative) return authoritative;
+  return inferWorkspaceRootHeuristic(paths);
+}
+
+// Render an absolute path as workspace-relative ("./sub/file.ts") when it lives
+// under the workspace root, stripping the project folder name. Leaves paths
+// untouched when there is no root or the path is outside it.
+function stripRoot(p, root) {
+  if (!p || typeof p !== "string") return p;
+  if (!root) return p;
+  if (p === root) return ".";
+  const withSlash = root.charAt(root.length - 1) === "/" ? root : root + "/";
+  if (p.indexOf(withSlash) === 0) return "./" + p.slice(withSlash.length);
+  return p;
+}
+
+function isAbsolutePathLike(v) {
+  return typeof v === "string" && v.length > 1 &&
+    (v.charAt(0) === "/" || /^[A-Za-z]:[\\/]/.test(v));
+}
+
 // Heuristic error detection on a tool-call response payload.
 // Returns { hasError, kind, bytes, preview }.
 function summarizeToolResponse(resp, max = 240) {
@@ -258,6 +414,9 @@ const mcpServers = (raw.mcpServers ?? []).map((m) => ({
 const modelStats = new Map();
 const toolStats = new Map();
 const fileStats = new Map();
+// Authoritative absolute workspace root(s) collected from <workspace_info>.
+// Used after the loop to strip the project folder from reported file paths.
+const workspaceFolderSet = new Set();
 const ttftSamples = [];
 const durationSamples = [];
 
@@ -274,6 +433,10 @@ let totalCacheCreationTokens = 0;
 let totalDurationMs = 0;
 let totalToolDefsTokens = 0;
 let totalToolDefsFullPriceUsd = 0;
+// Worst-case tokens if the FULL catalog were sent flat on every call (no
+// virtual-tools grouping). Compared against totalToolDefsTokens (direct/sent)
+// this reveals what grouping saved.
+let totalToolDefsCatalogIfFlatTokens = 0;
 let totalToolArgsChars = 0;          // sum of toolCall.args char lengths (output-side tool payload)
 let totalVisibleTextChars = 0;       // sum of response.message[] char lengths
 // Globally distinct thinking events, deduped by plaintext text.
@@ -479,9 +642,32 @@ prompts.forEach((p, pi) => {
       pSummary.withoutCacheUsd += cost.withoutCacheUsd;
 
       // Tool-defs accounting: estimate tokens spent re-sending tool schemas.
+      // `metadata.tools` is the full enabled CATALOG. When virtual-tools
+      // grouping is active (enabled tools over VS Code's threshold, default
+      // 128), only the "direct" subset is sent as full schemas; the rest are
+      // advertised name-only in an <availableDeferredTools> block and loaded on
+      // demand via tool_search. Sizing the bucket from the catalog would
+      // over-count grouped runs ~6x, so we size from the DIRECT (sent) tools
+      // only. The deferred names already ride in the message-text bucket.
       const toolsAdvertised = Array.isArray(md.tools) ? md.tools : [];
-      const toolsJsonLen = toolsAdvertised.length > 0 ? JSON.stringify(toolsAdvertised).length : 0;
+      const deferredNames = extractDeferredToolNames(log.requestMessages?.messages);
+      for (const wf of extractWorkspaceFolders(log.requestMessages?.messages)) {
+        const norm = wf.replace(/[\\/]+$/, "");
+        if (norm) workspaceFolderSet.add(norm);
+      }
+      const directTools =
+        deferredNames.size > 0
+          ? toolsAdvertised.filter((t) => !deferredNames.has(toolDefName(t)))
+          : toolsAdvertised;
+      // How many catalog tools were actually deferred (intersection), vs the
+      // raw block size (which may include phantom/unknown names).
+      const deferredFromCatalog = toolsAdvertised.length - directTools.length;
+      const toolsJsonLen = directTools.length > 0 ? JSON.stringify(directTools).length : 0;
       const toolDefsApproxTokens = Math.ceil(toolsJsonLen / 4);
+      // Worst-case if the full catalog were sent flat (grouping off).
+      const catalogJsonLen =
+        toolsAdvertised.length > 0 ? JSON.stringify(toolsAdvertised).length : 0;
+      const toolDefsCatalogIfFlatApproxTokens = Math.ceil(catalogJsonLen / 4);
       const price = lookupPricing(model);
       const toolDefsApproxFullPriceUsd = price
         ? (toolDefsApproxTokens * price.inputPerM) / 1_000_000
@@ -489,6 +675,7 @@ prompts.forEach((p, pi) => {
       pSummary.toolDefsApproxTokens += toolDefsApproxTokens;
       totalToolDefsTokens += toolDefsApproxTokens;
       totalToolDefsFullPriceUsd += toolDefsApproxFullPriceUsd;
+      totalToolDefsCatalogIfFlatTokens += toolDefsCatalogIfFlatApproxTokens;
 
       const ms = modelStats.get(model) ?? {
         name: model,
@@ -609,9 +796,13 @@ prompts.forEach((p, pi) => {
         cacheSavingsCredits: credits(cost.withoutCacheUsd - cost.totalUsd),
         messageCount,
         toolCallsAdvertised: toolCallsInResp,
-        toolDefsCount: toolsAdvertised.length,
+        toolDefsCount: directTools.length,
+        toolDefsCatalogCount: toolsAdvertised.length,
+        toolDefsDeferredCount: deferredFromCatalog,
+        toolDefsDeferredIndexCount: deferredNames.size,
         toolDefsJsonBytes: toolsJsonLen,
         toolDefsApproxTokens,
+        toolDefsCatalogIfFlatApproxTokens,
         toolDefsApproxFullPriceUsd: round6(toolDefsApproxFullPriceUsd),
         toolDefsApproxFullPriceCredits: credits(toolDefsApproxFullPriceUsd),
         visibleTextChars,
@@ -692,6 +883,34 @@ const toolsArr = [...toolStats.values()].sort((a, b) => b.calls - a.calls);
 const filesArr = [...fileStats.values()].sort(
   (a, b) => b.reads + b.writes + b.lists - (a.reads + a.writes + a.lists)
 );
+
+// Resolve the workspace root from the authoritative <workspace_info> folder(s)
+// (falling back to a prefix heuristic over observed paths) and strip it from
+// every reported file path so they render workspace-relative ("./src/x.ts")
+// without the project folder name -- matching the cost-view canvas. The raw
+// absolute paths remain available in the source export; only the digest's
+// display paths are normalized. `rawPath` is preserved when stripping changed it.
+const workspaceFolders = [...workspaceFolderSet];
+const observedPaths = filesArr
+  .map((f) => f.path)
+  .filter(isAbsolutePathLike);
+const workspaceRoot = computeWorkspaceRoot(workspaceFolders, observedPaths);
+session.workspaceFolders = workspaceFolders;
+session.workspaceRoot = workspaceRoot || null;
+if (workspaceRoot) {
+  for (const f of filesArr) {
+    const stripped = stripRoot(f.path, workspaceRoot);
+    if (stripped !== f.path) {
+      f.rawPath = f.path;
+      f.path = stripped;
+    }
+  }
+  for (const p of promptsOut) {
+    if (Array.isArray(p.filesTouched)) {
+      p.filesTouched = p.filesTouched.map((fp) => stripRoot(fp, workspaceRoot));
+    }
+  }
+}
 
 const totalCostUsd = modelsArr.reduce((s, m) => s + m.costUsd, 0);
 const totalWithoutCacheUsd = modelsArr.reduce((s, m) => s + m.withoutCacheUsd, 0);
@@ -874,8 +1093,13 @@ const digest = {
           ? Math.round((totalToolDefsTokens / totalPromptTokens) * 10000) / 10000
           : 0,
       approxFullPriceUsd: round6(totalToolDefsFullPriceUsd),
+      catalogIfFlatApproxTokens: totalToolDefsCatalogIfFlatTokens,
+      groupingSavedApproxTokens: Math.max(
+        0,
+        totalToolDefsCatalogIfFlatTokens - totalToolDefsTokens,
+      ),
       note:
-        "Worst-case (all fresh) tokens for re-sending tool schemas. Actual paid cost depends on cache hits.",
+        "approxTokensTotal counts only the tool schemas actually SENT (the 'direct' tools). When virtual-tools grouping is active (enabled tools over VS Code's threshold, default 128) the rest of the catalog is advertised name-only via <availableDeferredTools> and loaded on demand by tool_search. catalogIfFlatApproxTokens is the worst case if the whole catalog were sent flat every call; groupingSavedApproxTokens is the difference. Worst-case (all fresh) tokens; actual paid cost depends on cache hits.",
     },
     toolCallPayloads: {
       approxTokensTotal: totalToolArgsApproxTokens,

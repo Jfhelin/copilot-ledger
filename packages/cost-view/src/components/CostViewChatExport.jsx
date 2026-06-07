@@ -1902,18 +1902,26 @@ function LLMDetail(props) {
             var routerNames = shape && shape.available
               ? new Set((shape.routerOrGroupedTools || []).map(function (t) { return t.name; }))
               : null;
-            var summary = ev.totalTools + " model-visible tool definitions sent to the model";
+            var sentCount = ev.totalTools;
+            var deferredCount = ev.deferredToolsCount || 0;
+            var catalogCount = ev.catalogToolsCount || (sentCount + deferredCount);
+            var summary = sentCount + " tool definition" + (sentCount === 1 ? "" : "s") + " sent to the model";
+            if (deferredCount > 0) {
+              summary += " — plus " + deferredCount + " deferred (advertised name-only, loaded on demand via tool_search)";
+            }
             if (shape && shape.available && (shape.routerOrGroupedToolCount > 0 || shape.possibleRouterToolCount > 0)) {
-              summary += " (" + shape.directToolCount + " direct, " + shape.routerOrGroupedToolCount + " router/grouped";
+              summary += ". Of those sent: " + shape.directToolCount + " direct, " + shape.routerOrGroupedToolCount + " router/grouped";
               if (shape.possibleRouterToolCount > 0) summary += ", " + shape.possibleRouterToolCount + " possible router";
-              summary += "). IDE-selected tool count is not in the export -- routers stand in for many hidden subcommands.";
+              summary += ".";
+            } else if (deferredCount > 0) {
+              summary += " (" + catalogCount + " tools enabled in VS Code; the rest are virtualized behind tool_search and cost only their name in the index).";
             } else {
               summary += ". IDE-selected tool count is not in the export.";
             }
             return (
               <>
                 <div
-                  title="Model-visible tool definitions are the tool schemas actually sent to the model in this request. The IDE may show more selected/enabled tools than were sent. Router/grouped tools can stand in for many hidden or deferred subcommands behind one schema."
+                  title="Model-visible tool definitions are the tool schemas actually sent over the wire in this request. When VS Code's virtual-tools threshold (default 128) is crossed, most enabled tools are 'deferred' — advertised by name only in an <availableDeferredTools> index and loaded on demand via tool_search — so the count sent is far smaller than the IDE-enabled catalog. Router/grouped tools can also stand in for many subcommands behind one schema."
                   style={{ color: theme.text.secondary, fontSize: theme.fontSize.sm, marginBottom: 5, cursor: "help" }}
                 >
                   {summary}
