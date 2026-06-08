@@ -1,10 +1,10 @@
 # Model Choice — Pick It, or Let Auto Pick
 
-> **Status: Measured (single-session, N=1 per arm).** The head-to-head below is a
-> real Sonnet-vs-Haiku comparison on the same task, digested with our own tool.
-> The "every session already runs two models" anchor is measured separately
-> (`hi2_18.json`). The Auto-mode billing multiplier is a documented mechanical
-> rule, not a captured A/B — labeled as such. See `publishing-plan.md`.
+> **Status: Published — Measured (single-session, N=1 per arm).** The head-to-head
+> below is a real Sonnet-vs-Haiku comparison on the same task, digested with our
+> own tool. The "every session already runs two models" anchor is measured
+> separately (`hi2_18.json`). The Auto-mode billing multiplier is a documented
+> mechanical rule, not a captured A/B — labeled as such. See `publishing-plan.md`.
 
 ## LinkedIn Hook
 

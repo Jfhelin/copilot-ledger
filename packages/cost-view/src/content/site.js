@@ -129,7 +129,7 @@ export var EXPERIMENTS = [
     id: "model-selection",
     title: "Model Choice — Pick It, or Let Auto Pick",
     hook: "Same task. Half the credits. More of it done. I changed the model.",
-    status: "Draft",
+    status: "Published",
     confidence: "Measured, N=1 per arm: same JSDoc task, Sonnet 20.7 cr (16/24) vs Haiku 10.5 cr (24/24).",
     // Bespoke page: pages/ModelChoice.jsx. App.jsx routes
     // /experiments/model-selection to it directly.

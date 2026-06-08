@@ -299,7 +299,7 @@ numbers are stable IDs, not the article count or order.
    model + Auto Mode) into one piece. Measured: same JSDoc task on Sonnet 4.5
    (20.7 cr, 16/24 symbols) vs Haiku 4.5 (10.5 cr, 24/24) — ~49% cheaper and more
    complete; plus two-model-per-session routing and Auto's 0.9× multiplier.
-   (Measured, N=1 per arm.)
+   (Published — measured, N=1 per arm.)
 8. Caveman Prompting (`04`) — *Caveman Prompting saved less than 3%.* Contrarian
    closer. (Stub — needs a with/without capture.)
 

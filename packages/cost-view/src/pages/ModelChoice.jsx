@@ -78,7 +78,7 @@ export default function ModelChoice() {
 
       <PageHeader kicker="Experiment" title="Same task. Half the credits. More of it done. I changed the model.">
         <div style={{ display: "flex", gap: theme.space.md, alignItems: "center", marginTop: theme.space.lg, flexWrap: "wrap" }}>
-          <Badge tone={STATUS_TONE.Draft}>Draft</Badge>
+          <Badge tone={STATUS_TONE.Published}>Published</Badge>
           <span style={{ color: theme.text.dim, fontSize: theme.fontSize.sm }}>
             One task per arm (N=1). Credits, tool calls, output and cache are digest-measured; the symbol-completeness grade is from a prior published review, not the digest.
           </span>
