@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useHashRoute, navigate } from "./lib/router.js";
+import { trackPageview } from "./lib/analytics.js";
 import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Learn from "./pages/Learn.jsx";
@@ -80,6 +81,13 @@ export default function App() {
     if (hash && hash !== "#" && hash !== "#/") return;
     navigate("/analyze", { src: query.exportUrl });
   }, [query.embed, query.exportUrl]);
+
+  // Fire one cookieless pageview per hash route (initial load + every
+  // navigation). Skipped in embed mode so canvas iframe traffic isn't counted.
+  useEffect(function () {
+    if (query.embed) return;
+    trackPageview(route.path);
+  }, [query.embed, route.path]);
 
   // Canvas / embed mode: bypass the knowledge-site shell entirely.
   if (query.embed) {
