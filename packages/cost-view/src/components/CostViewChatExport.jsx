@@ -2891,7 +2891,7 @@ function Kpis(props) {
     }
   }
   var totalCostItem = { l: "Total cost", v: fmt$(t.cost), notes: notes };
-  var inputCost = (t.freshCost || 0) + (t.cachedCost || 0);
+  var inputCost = (t.freshCost || 0) + (t.cachedCost || 0) + (t.cacheWriteCost || 0);
   var freshTok = Math.max(0, (t.promptTokens || 0) - (t.cached || 0) - (t.cacheWrite || 0));
   var items = [
     totalCostItem,
@@ -2899,9 +2899,9 @@ function Kpis(props) {
       l: "Billed input",
       v: inputCost > 0 ? fmt$(inputCost) : fmtT(t.promptTokens),
       m: inputCost > 0 ? fmtT(t.promptTokens) + " tok" : null,
-      d: fmtT(t.cached) + " cached · " + fmtT(freshTok) + " fresh · " + (100 * t.cacheHitRate).toFixed(0) + "% hit",
+      d: fmtT(t.cached) + " cached · " + fmtT(freshTok) + " fresh" + ((t.cacheWrite || 0) > 0 ? " · " + fmtT(t.cacheWrite) + " written" : "") + " · " + (100 * t.cacheHitRate).toFixed(0) + "% hit",
       dColor: theme.text.muted,
-      dTitle: "Input split: cached (cheap rate) + fresh (full rate). Cache hit rate shows what fraction of input tokens were served from cache.",
+      dTitle: "Input split: cached (cheap rate) + fresh (full rate) + cache writes (billed above the input rate). Cache hit rate shows what fraction of input tokens were served from cache.",
     },
     (function () {
       // Split output cost into thinking, visible (response text), and tool-args
