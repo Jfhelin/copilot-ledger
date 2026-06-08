@@ -49,8 +49,12 @@ mini-series so each post reinforces the next.
 6. **Round Trips Are the Lever** (`01`, merges former `03`) — The README was
    cheap; finding it wasn't. Context quality *and* prompt precision are one
    mechanism: both cut discovery round trips.
-7. **Model Selection** (`02`) — The biggest cost lever often isn't prompt length.
-   *(Stub — needs a two-model capture.)*
+7. **Model Choice — Pick It, or Let Auto Pick** (`02`) — GitHub's **top two**
+   cost levers (*choose the right model* + *use Auto Mode*) combined into one
+   piece, since both answer "which model runs your turn?". Measured: same JSDoc
+   task on Sonnet 4.5 (20.7 cr, 16/24 symbols) vs Haiku 4.5 (10.5 cr, 24/24) —
+   ~49% cheaper *and* more complete; plus the two-model-per-session routing anchor
+   and Auto's documented 0.9× billing multiplier. *(Published — measured, N=1 per arm.)*
 8. **Caveman Prompting** (`04`) — The prompt-compression trick saved <3% in a
    107-credit session. Contrarian closer. *(Stub — needs with/without capture.)*
 

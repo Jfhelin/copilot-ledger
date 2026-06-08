@@ -294,8 +294,12 @@ numbers are stable IDs, not the article count or order.
 6. Round Trips Are the Lever (`01`, merges former `03` Prompt Precision) — *The
    README was cheap. Finding it wasn't.* Context quality and prompt precision are
    one mechanism.
-7. Model Selection (`02`) — *The biggest cost lever is often model selection.*
-   (Stub — needs a two-model capture.)
+7. Model Choice — Pick It, or Let Auto Pick (`02`) — *Same task. Half the credits.
+   More of it done. I changed the model.* Combines GitHub's top two levers (right
+   model + Auto Mode) into one piece. Measured: same JSDoc task on Sonnet 4.5
+   (20.7 cr, 16/24 symbols) vs Haiku 4.5 (10.5 cr, 24/24) — ~49% cheaper and more
+   complete; plus two-model-per-session routing and Auto's 0.9× multiplier.
+   (Published — measured, N=1 per arm.)
 8. Caveman Prompting (`04`) — *Caveman Prompting saved less than 3%.* Contrarian
    closer. (Stub — needs a with/without capture.)
 

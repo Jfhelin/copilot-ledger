@@ -13,6 +13,7 @@ import CacheBehavior from "./pages/CacheBehavior.jsx";
 import ContextGrowth from "./pages/ContextGrowth.jsx";
 import AgentPlanning from "./pages/AgentPlanning.jsx";
 import InstalledSkillOverhead from "./pages/InstalledSkillOverhead.jsx";
+import ModelChoice from "./pages/ModelChoice.jsx";
 import AskVsAgentMode from "./pages/AskVsAgentMode.jsx";
 import FixedReport from "./pages/FixedReport.jsx";
 
@@ -48,6 +49,7 @@ function ContentForRoute({ path, params }) {
   if (path === "/experiments/context-growth") return <ContextGrowth />;
   if (path === "/experiments/agent-planning") return <AgentPlanning />;
   if (path === "/experiments/installed-skill-overhead") return <InstalledSkillOverhead />;
+  if (path === "/experiments/model-selection") return <ModelChoice />;
   if (path === "/experiments/ask-vs-agent-mode") return <AskVsAgentMode />;
   if (path.indexOf("/experiments/") === 0) {
     return <Experiments experimentId={path.slice("/experiments/".length)} />;

@@ -50,7 +50,7 @@ What changed this session (editorial only — no React/site.js yet):
 | 06 | Agent Planning | ✅ full (N=1 + model) | ✅ bespoke page | Published | — (reframed: "sub-agents are a context loan") |
 | 07 | Tool & Skill Overhead | ✅ seeded (N=1) | ✅ fixed report `tool-overhead-120` | Under investigation | needs cleanup A/B capture |
 | 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published (page) — LinkedIn post pending | — |
-| 02 | Model Selection | stub | — | Draft | needs 2-model capture |
+| 02 | Model Choice — Pick It, or Let Auto Pick | ✅ full (N=1 per arm) | ✅ bespoke page + 2 fixed reports (Sonnet/Haiku) | Published | — (measured Sonnet 20.7 cr vs Haiku 10.5 cr JSDoc A/B) |
 | 03 | Prompt Precision | **merged → 01 (tombstone)** | — | Retired | — |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
 
