@@ -11,6 +11,7 @@ import AnalyzeSession from "./pages/AnalyzeSession.jsx";
 import ContextQualityReadme from "./pages/ContextQualityReadme.jsx";
 import CacheBehavior from "./pages/CacheBehavior.jsx";
 import ContextGrowth from "./pages/ContextGrowth.jsx";
+import ToolOverhead from "./pages/ToolOverhead.jsx";
 import AgentPlanning from "./pages/AgentPlanning.jsx";
 import InstalledSkillOverhead from "./pages/InstalledSkillOverhead.jsx";
 import ModelChoice from "./pages/ModelChoice.jsx";
@@ -47,6 +48,7 @@ function ContentForRoute({ path, params }) {
   if (path === "/experiments/context-quality-readme") return <ContextQualityReadme />;
   if (path === "/experiments/cache-behavior") return <CacheBehavior />;
   if (path === "/experiments/context-growth") return <ContextGrowth />;
+  if (path === "/experiments/tool-skill-overhead") return <ToolOverhead />;
   if (path === "/experiments/agent-planning") return <AgentPlanning />;
   if (path === "/experiments/installed-skill-overhead") return <InstalledSkillOverhead />;
   if (path === "/experiments/model-selection") return <ModelChoice />;

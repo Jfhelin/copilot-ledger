@@ -49,8 +49,8 @@ What changed this session (editorial only — no React/site.js yet):
 | 08 | Cache Behavior (**+ prefix-ordering finding**) | ✅ full | ✅ live on Pages (anatomy chart not yet added) | Published | optional anatomy chart/capture |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
 | 06 | Agent Planning | ✅ full (N=1 + model) | ✅ bespoke page | Published | — (reframed: "sub-agents are a context loan") |
-| 07 | Tool & Skill Overhead | ✅ seeded (N=1) | ✅ fixed report `tool-overhead-120` | Under investigation | needs cleanup A/B capture |
-| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published (page) — LinkedIn post pending | — |
+| 07 | Tool Overhead | ✅ full (N=1) | ✅ bespoke page + fixed report `tool-overhead-120` | Published | — (narrowed to tools; skill story owned by 09) |
+| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published | — (LinkedIn post still to draft) |
 | 02 | Model Choice — Pick It, or Let Auto Pick | ✅ full (N=1 per arm) | ✅ bespoke page + 2 fixed reports (Sonnet/Haiku) | Published | — (measured Sonnet 20.7 cr vs Haiku 10.5 cr JSDoc A/B) |
 | 03 | Prompt Precision | **merged → 01 (tombstone)** | — | Retired | — |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
@@ -161,18 +161,22 @@ Three findings, each potentially article-grade:
 - **No new #10.** The deferred-tool-index story is fully owned by #07 (capture,
   pinned report, LinkedIn post, video already done) — a separate page would
   duplicate it. Earlier draft note proposing #10 was withdrawn after re-reading #07.
-- **#09 is the one gap in the trilogy:** still needs its clean install/uninstall
-  A/B to move Draft→publishable (now feasible post-cleanup; recipe below).
+- **#09 is now Published** (was the one gap in the trilogy): a measured
+  before/after from existing `hi*` captures on disk (`hi18` 37 skills →
+  `hi_skillCleaned3` 14 skills) cut the system prompt ~11,026→~7,629 approx tok
+  (~31%). Shipped as a charts-only bespoke page (`pages/InstalledSkillOverhead.jsx`);
+  raw export withheld (internal skill catalog), credit delta withheld (cold/warm
+  cache confound).
 - Length-preserving scrub unblocks shipping #05 + the floor runs as **real fixed
   reports**, not just static charts.
 
-**⚠️ Two caveats before the next capture:**
-- The global plugin surface currently shows **`work-iq` still installed** (`ls
-  ~/.copilot/installed-plugins/`) — NOT `microsoft-365-agents-toolkit` as the #09
-  field note claims. Verify/clean before any "clean" capture or the "after" won't
-  be clean.
+**⚠️ Caveat for any future capture:**
+- The global plugin surface is now **clean** (`ls ~/.copilot/installed-plugins/`
+  is empty), matching the #09 "after" state. Earlier sessions saw `work-iq` still
+  installed — re-verify before trusting any "before" capture is representative.
 - `01-hello-80` / `readme-cold-nocontext` used **gpt-4o-mini**; capture the floor
-  on the model you actually use (sonnet-4.6) so credits are representative.
+  on the model you actually use (sonnet-4.6) so credits are representative. (The
+  #09 A/B used sonnet-4.5 main calls for exactly this reason.)
 
 ## What shipped this session (on the open PR branch)
 
@@ -225,7 +229,13 @@ Three findings, each potentially article-grade:
   installed-but-disabled MCP servers did NOT inflate the payload — installed
   plugins/skills did, via their name+description entries.
 
-## Clean-rerun recipe (to capture #09's A/B, and a cleaner #05/#07 baseline)
+## Clean-rerun recipe (already done for #09; kept for a cleaner #05/#07 baseline)
+
+> **#09's A/B is captured and published** — the `hi18`/`hi_skillCleaned*`/`hi4_0`
+> runs already on disk served as the before/after (37→14 skills, system prompt
+> ~11,026→~7,629 approx tok). The recipe below remains useful if you want a
+> matched-cache (cold/cold) pair to also pin down a clean *credit* delta, which
+> the current captures can't (before was cold, after warm).
 
 To get a capture without the internal-skill disclosure (and to measure the #09
 saving), do a before/after on the same trivial prompt ("Reply with just OK."),

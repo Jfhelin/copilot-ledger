@@ -29,10 +29,11 @@ mini-series so each post reinforces the next.
    (~9,700 tokens pre-cached) — **and the block that anchors it is your *tool
    defs*, not your system prompt** (the system prompt is too user-specific to
    share across users). Tools-first on the wire is *why*.
-2. **[Fixed Floor 2/3] Tool & Skill Overhead** (`07`) — Tool count is nearly
+2. **[Fixed Floor 2/3] Tool Overhead** (`07`) — Tool count is nearly
    free; most tools ride name-only and cached. *Churning* the sent set is the
    real tax. (The deferred-tool-index decoupling lives here — captures 23→320
-   tools; do not split it into a separate page.)
+   tools; do not split it into a separate page.) **Published — bespoke page live;
+   pinned report `tool-overhead-120`. Narrowed to tools; the skill story is `09`.**
 3. **[Fixed Floor 3/3] Installed Skill Overhead** (`09`) — A third of the system
    prompt was skills I never used; skills aren't virtualized, so uninstalling
    cuts every call.

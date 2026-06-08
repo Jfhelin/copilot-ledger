@@ -93,6 +93,18 @@ describe("App shell routing", function () {
     await act(async function () { mounted.root.unmount(); });
   });
 
+  it("renders the bespoke tool-overhead experiment page from a hash route", async function () {
+    setLocation("/#/experiments/tool-skill-overhead");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("The bytes on the wire barely moved.");
+    // Measured numbers from the article appear on the page.
+    expect(text).toContain("15.7");
+    expect(text).toContain("320");
+    expect(text).toContain("Open the 120-tool report in Copilot Ledger");
+    await act(async function () { mounted.root.unmount(); });
+  });
+
   it("renders the bespoke agent-planning experiment page from a hash route", async function () {
     setLocation("/#/experiments/agent-planning");
     var mounted = await renderApp();
