@@ -2893,15 +2893,24 @@ function Kpis(props) {
   var totalCostItem = { l: "Total cost", v: fmt$(t.cost), notes: notes };
   var inputCost = (t.freshCost || 0) + (t.cachedCost || 0) + (t.cacheWriteCost || 0);
   var freshTok = Math.max(0, (t.promptTokens || 0) - (t.cached || 0) - (t.cacheWrite || 0));
+  var showSliceCost = inputCost > 0;
+  var inputSlice = function (tok, label, cost) {
+    return fmtT(tok) + " " + label + (showSliceCost ? " (" + fmt$(cost || 0) + ")" : "");
+  };
+  var inputSlices = [];
+  if (freshTok > 0) inputSlices.push(inputSlice(freshTok, "fresh", t.freshCost));
+  if ((t.cacheWrite || 0) > 0) inputSlices.push(inputSlice(t.cacheWrite, "cache write", t.cacheWriteCost));
+  if ((t.cached || 0) > 0) inputSlices.push(inputSlice(t.cached, "cache read", t.cachedCost));
+  if (inputSlices.length === 0) inputSlices.push(fmtT(t.promptTokens) + " input");
   var items = [
     totalCostItem,
     {
       l: "Billed input",
       v: inputCost > 0 ? fmt$(inputCost) : fmtT(t.promptTokens),
       m: inputCost > 0 ? fmtT(t.promptTokens) + " tok" : null,
-      d: fmtT(t.cached) + " cached · " + fmtT(freshTok) + " fresh" + ((t.cacheWrite || 0) > 0 ? " · " + fmtT(t.cacheWrite) + " written" : "") + " · " + (100 * t.cacheHitRate).toFixed(0) + "% hit",
+      d: inputSlices.join(" · ") + " · " + (100 * t.cacheHitRate).toFixed(0) + "% hit",
       dColor: theme.text.muted,
-      dTitle: "Input split: cached (cheap rate) + fresh (full rate) + cache writes (billed above the input rate). Cache hit rate shows what fraction of input tokens were served from cache.",
+      dTitle: "Each input token is billed once, in exactly one bucket: fresh input at the base rate, cache writes at a premium over input (stored for reuse next turn), cache reads at a steep discount. So a cold start pays the write premium but no separate input charge for the same tokens. Cache hit rate is the share of input tokens served from cache.",
     },
     (function () {
       // Split output cost into thinking, visible (response text), and tool-args
