@@ -3115,14 +3115,6 @@ function Kpis(props) {
       return { l: "Tool calls", v: "" + t.toolCalls, d: sub, dColor: theme.text.muted, dTitle: title };
     })(),
   ];
-  if (t.cacheWrite > 0) {
-    items.splice(3, 0, {
-      l: "Cache write",
-      v: t.cacheWriteCost > 0 ? fmt$(t.cacheWriteCost) : fmtT(t.cacheWrite),
-      m: t.cacheWriteCost > 0 ? fmtT(t.cacheWrite) + " tok" : null,
-      vTitle: "Cost of cache-write tokens (typically ~1.25x the fresh input rate). Pays once per chunk; subsequent calls hit at the cache-read rate.",
-    });
-  }
   if (t.unexpectedMissCount > 0) {
     items.push({ l: "⚠ Unexpected misses", v: "" + t.unexpectedMissCount, d: "wasted ~" + fmt$(t.unexpectedMissCost), warn: true });
   }
