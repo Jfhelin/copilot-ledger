@@ -270,13 +270,36 @@ When ending a writeup, reinforce official guidance with the concrete evidence:
 
 ## Currently planned experiments
 
-1. Context Quality — *The README was cheap. Finding it wasn't.*
-2. Model Selection — *The biggest cost lever is often model selection.*
-3. Prompt Precision — *Vague prompts cost more than precise prompts.*
-4. Caveman Prompting — *Caveman Prompting saved less than 3% in my Copilot session.*
-5. Context Growth — *What 23,000 tokens of context actually looks like.*
-6. Agent Planning — *I thought the answer was expensive. The plan was.*
-7. Tool and Skill Overhead — *Under investigation. Do not overclaim.*
+Consolidated to **8 strong articles** in three clusters (see
+`docs/content-lab/publishing-plan.md` for the authoritative launch order). File
+numbers are stable IDs, not the article count or order.
+
+**A · The Fixed Floor — before you type**
+
+1. Cache Behavior (`08`) — *Your "cold" session isn't cold — and it's your tool
+   defs, not your system prompt, that anchor the warm block.* (The
+   prompt-ordering / global-cache finding lives here, not in a separate page.)
+2. Tool & Skill Overhead (`07`) — *I added a 100-tool MCP server. The wire barely
+   moved.* Churn is the tax, not count.
+3. Installed Skill Overhead (`09`) — *Skills aren't virtualized; uninstalling cuts
+   every call.*
+
+**B · The Session Tax — as you work**
+
+4. Context Growth (`05`) — *Re-reading the grown context was 40% of the session.*
+5. Agent Planning (`06`) — *Sub-agents are a context loan, not a discount.*
+
+**C · What you control per task**
+
+6. Round Trips Are the Lever (`01`, merges former `03` Prompt Precision) — *The
+   README was cheap. Finding it wasn't.* Context quality and prompt precision are
+   one mechanism.
+7. Model Selection (`02`) — *The biggest cost lever is often model selection.*
+   (Stub — needs a two-model capture.)
+8. Caveman Prompting (`04`) — *Caveman Prompting saved less than 3%.* Contrarian
+   closer. (Stub — needs a with/without capture.)
+
+Optional 9–10 (only once measured): Compaction break-even; Image input.
 
 ## Video guidance
 

@@ -103,12 +103,13 @@ function emptyExperiment(extra) {
 export var EXPERIMENTS = [
   emptyExperiment({
     id: "context-quality-readme",
-    title: "The answer lived in one file. Letting the agent find it cost 37% more.",
+    title: "Round Trips Are the Lever",
     hook: "The answer lived in one file. Letting the agent find it cost 37% more.",
     status: "Published",
-    confidence: "One run per arm (N=1), not a universal benchmark.",
-    // This experiment has a bespoke, fully-written page component
-    // (pages/ContextQualityReadme.jsx) rather than the generic Field layout.
+    confidence: "Context arm one run per arm (N=1); the merged prompt-precision arm is reasoned from the same mechanism, capture pending.",
+    // Bespoke page: pages/ContextQualityReadme.jsx (route id kept stable as
+    // context-quality-readme). Merges the former "Prompt Precision" experiment —
+    // context quality and prompt precision are one round-trip mechanism.
     // App.jsx routes /experiments/context-quality-readme to it directly.
     custom: true,
     reportRoute: "/reports/context-quality-maprows",
@@ -118,7 +119,7 @@ export var EXPERIMENTS = [
     title: "The first call was already warm. The cheap part was everything after it.",
     hook: "The first call was already warm. The cheap part was everything after it.",
     status: "Published",
-    confidence: "Shared-cache hit N=4; per-call curve and sub-agent reuse N=1.",
+    confidence: "Shared-cache hit N=4; per-call curve, sub-agent reuse, and prefix anatomy N=1.",
     // Bespoke page: pages/CacheBehavior.jsx. App.jsx routes
     // /experiments/cache-behavior to it directly.
     custom: true,
@@ -128,13 +129,6 @@ export var EXPERIMENTS = [
     id: "model-selection",
     title: "Model Selection",
     hook: "The biggest cost lever is often model selection.",
-    status: "Draft",
-    confidence: "Placeholder.",
-  }),
-  emptyExperiment({
-    id: "prompt-precision",
-    title: "Prompt Precision",
-    hook: "Vague prompts cost more than precise prompts.",
     status: "Draft",
     confidence: "Placeholder.",
   }),

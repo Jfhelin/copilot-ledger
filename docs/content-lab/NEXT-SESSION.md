@@ -1,20 +1,57 @@
 # Next Session — Handoff
 
 A standing "pick up here" note for the Copilot Behavior Lab content program.
-Update it at the end of each working session. Last updated: 2026-06-07 (#09 published).
+Update it at the end of each working session. Last updated: 2026-06-08
+(consolidated to 8 articles; 03→01 merge; ordering finding→08).
+
+## Session 2026-06-08 (consolidation to 8 strong articles — START HERE)
+
+**Decision (user): fewer, stronger articles for LinkedIn reach — target 8, path
+to 10.** LinkedIn not started yet, so we reshuffled editorial freely. New lineup
+and rationale are in `publishing-plan.md` (authoritative) and mirrored in the
+skill's "Currently planned experiments". Three clusters: **A Fixed Floor**
+(08, 07, 09) · **B Session Tax** (05, 06) · **C Per task** (01, 02, 04).
+
+What changed this session (editorial only — no React/site.js yet):
+
+- **New finding folded into `08`:** the warm prefix is anchored by **tool defs,
+  not the system prompt**. Wire order is `tools → system → messages`, so tool
+  schemas are the first cached bytes; the system prompt is ~⅓ stable base + ~⅔
+  user-specific (cwd, workspace, `copilot-instructions.md`, template vars) so it
+  can't be shared cross-user. Measured from `hi2_18.json` `p2.l0` (sonnet-4.5):
+  tools ≈ 8,526 tok, system ≈ 11,026 tok (first ~3,700 invariant). Reconciles 08's
+  ~9,680 shared block ≈ tools + invariant system head. Added: Key Finding #6,
+  "Anatomy of the warm prefix" table, Interpretation layer-1 fix, Confidence note
+  (anatomy = N=1; ordering is structural), Evidence ref, LinkedIn-post paragraph.
+  **NOT a separate #10** — it's part of the cache story.
+- **`03` Prompt Precision merged into `01`:** `01` retitled **"Round Trips Are the
+  Lever"** with a new "The Same Lever: Prompt Precision" section (reasoned from the
+  measured context arm, **capture pending** — labeled as such). `03` is now a
+  tombstone redirect that preserves the stable ID; do not publish it standalone.
+
+**Open follow-ups from this consolidation:**
+
+- **React/site.js not yet updated** to match. `01`'s deployed page is still titled
+  "Context Quality"; `08`'s page doesn't yet show the prefix-anatomy chart. Decide
+  whether to (a) rework the deployed pages now or (b) leave pages and only ship
+  editorial. The merge and the ordering finding are editorial-complete regardless.
+- A **prefix-anatomy capture** beyond `hi2_18.json` (different toolset/model) would
+  lift the ordering finding from N=1 toward a multi-point observation.
+- The precise-vs-vague capture (old `03`) now feeds `01`'s precision section, not a
+  new page.
 
 ## Program status at a glance
 
 | # | Experiment | Editorial | Deployed page | Status | Blocking dependency |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Context Quality | ✅ full | ✅ live on Pages | Published | — |
-| 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
+| 01 | Round Trips Are the Lever (was Context Quality; **+03 merged**) | ✅ full (precision arm reasoned) | ✅ live on Pages (title still "Context Quality") | Published | page retitle + precision capture (optional) |
+| 08 | Cache Behavior (**+ prefix-ordering finding**) | ✅ full | ✅ live on Pages (anatomy chart not yet added) | Published | optional anatomy chart/capture |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
 | 06 | Agent Planning | ✅ full (N=1 + model) | ✅ bespoke page | Published | — (reframed: "sub-agents are a context loan") |
 | 07 | Tool & Skill Overhead | ✅ seeded (N=1) | ✅ fixed report `tool-overhead-120` | Under investigation | needs cleanup A/B capture |
 | 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published (page) — LinkedIn post pending | — |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |
-| 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |
+| 03 | Prompt Precision | **merged → 01 (tombstone)** | — | Retired | — |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
 
 "Editorial" = the markdown in `experiments/NN-*.md`. "Deployed page" = a bespoke

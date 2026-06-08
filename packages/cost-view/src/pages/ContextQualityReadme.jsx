@@ -56,11 +56,14 @@ export default function ContextQualityReadme() {
         <TextLink to="/experiments">← All experiments</TextLink>
       </div>
 
-      <PageHeader kicker="Experiment" title="The answer lived in one file. Letting the agent find it cost 37% more.">
+      <PageHeader kicker="Experiment" title="Round Trips Are the Lever">
+        <p style={{ marginTop: theme.space.md, marginBottom: 0, color: theme.text.secondary, fontSize: theme.fontSize.lg, lineHeight: 1.5 }}>
+          The answer lived in one file. Letting the agent find it cost 37% more.
+        </p>
         <div style={{ display: "flex", gap: theme.space.md, alignItems: "center", marginTop: theme.space.lg, flexWrap: "wrap" }}>
           <Badge tone={STATUS_TONE.Published}>Published</Badge>
           <span style={{ color: theme.text.dim, fontSize: theme.fontSize.sm }}>
-            One run per arm (N=1), not a universal benchmark.
+            Context arm: one run per arm (N=1). Precision arm: reasoned, capture pending.
           </span>
         </div>
       </PageHeader>
@@ -213,6 +216,39 @@ export default function ContextQualityReadme() {
       <Section title="Recommended developer behavior">
         <Pre label="Instead of">How does mapDatabaseRows work?</Pre>
         <Pre label="Use">{"Here is api/src/utils/sql.ts. How does mapDatabaseRows transform the rows it gets back from SQLite?"}</Pre>
+      </Section>
+
+      <Section title="The same lever: prompt precision">
+        <Prose>
+          <p>
+            Attaching a file is one way to cut round trips. <strong>Wording the
+            ask precisely is the other</strong> — and it works through the
+            identical mechanism. A vague prompt (“clean up the cart logic”) gives
+            the agent no anchor, so it does what Arm A did for context: it{" "}
+            <em>explores</em> — searching, listing directories, reading candidate
+            files — to infer what you meant before it can act. A precise prompt
+            (“in <code>CartContext.tsx</code>, dedupe the <code>addItem</code>{" "}
+            reducer so repeated SKUs increment quantity instead of appending”)
+            names the file and the change, collapsing that discovery tail the
+            same way the attachment did.
+          </p>
+          <p>
+            Both levers move the <strong>hop count</strong>, not the prompt
+            length. A longer, more precise prompt is a few hundred more tokens on
+            one cached call; the vague version it replaces can cost several extra
+            round trips, each re-billing the whole prefix. That is why “be
+            precise” and “give good context” are the same advice wearing two
+            hats: reduce the number of times the agent has to go find out what you
+            already know.
+          </p>
+        </Prose>
+        <Callout tone="warning" label="Confidence">
+          This precision arm is reasoned from the measured context-quality
+          mechanism, not yet separately captured. A clean precise-vs-vague A/B
+          (same task, model, and repo) is the pending measurement that would put a
+          credit number on it — treat the direction as a single-mechanism
+          inference, not a benchmark.
+        </Callout>
       </Section>
 
       <Section title="Evidence">
