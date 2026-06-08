@@ -440,11 +440,17 @@ export default function AnalyzeSession({ embed = false, initialExportUrl = null,
             events={session.events}
             metadata={session.metadata}
             selectedPromptId={selectedPromptId}
-            onSelectPrompt={onSelectPrompt}
+            // Fixed reports (published on GitHub Pages) have no canvas bridge to
+            // forward a selection into chat, so the prompt/component-box/stat-card
+            // "…for discussion" affordances lead nowhere. Withhold the handlers in
+            // fixed mode to keep these reports genuinely read-only (this also drops
+            // the misleading tooltips, button semantics, and pointer cursors, which
+            // are all gated on the handler props inside CostViewChatExport).
+            onSelectPrompt={fixed ? undefined : onSelectPrompt}
             selectedBucket={selectedBucket}
-            onSelectBucket={onSelectBucket}
+            onSelectBucket={fixed ? undefined : onSelectBucket}
             selectedStat={selectedStat}
-            onSelectStat={onSelectStat}
+            onSelectStat={fixed ? undefined : onSelectStat}
             summaries={currentSummaries}
             summariesPending={summariesPending}
             onRequestSummaries={onRequestSummaries}

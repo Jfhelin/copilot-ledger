@@ -192,6 +192,33 @@ describe("App shell routing", function () {
       expect(text).not.toContain("Choose file");
       expect(text).not.toContain("Upload or select");
       expect(text).not.toContain("Close");
+      // Fixed reports have no canvas bridge, so the selection-for-discussion
+      // affordances are withheld: none of their tooltips should be present.
+      expect(mounted.container.innerHTML).not.toContain("for discussion");
+      await act(async function () { mounted.root.unmount(); });
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+
+  it("wires selection-for-discussion affordances in the interactive standalone viewer", async function () {
+    var json = readFileSync(
+      path.resolve(process.cwd(), "public/sessions/02-one-tool.json"),
+      "utf8",
+    );
+    var fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      text: function () { return Promise.resolve(json); },
+    });
+    try {
+      // The standalone /analyze viewer (not fixed, not embed) keeps the
+      // selection handlers, so the component-box "for discussion" tooltips
+      // render — the read-only fixed report above must NOT have them.
+      setLocation("/#/analyze?src=public/sessions/02-one-tool.json");
+      var mounted = await renderApp();
+      await flush();
+      expect(textOf(mounted.container)).toContain("COPILOT LEDGER");
+      expect(mounted.container.innerHTML).toContain("for discussion");
       await act(async function () { mounted.root.unmount(); });
     } finally {
       fetchSpy.mockRestore();
