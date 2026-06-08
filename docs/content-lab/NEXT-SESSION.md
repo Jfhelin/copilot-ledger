@@ -11,7 +11,7 @@ Update it at the end of each working session. Last updated: 2026-06-07.
 | 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
 | 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
-| 07 | Tool & Skill Overhead | ✅ seeded (N=1) | — | Under investigation | needs cleanup A/B capture |
+| 07 | Tool Overhead | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (narrowed to tools; skill A/B split out to #09) |
 | 09 | Installed Skill Overhead | ✅ seeded (N=1) | — | Draft | needs install/uninstall A/B capture |
 | 02 | Model Selection | stub | — | Draft | needs 2-model capture |
 | 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |

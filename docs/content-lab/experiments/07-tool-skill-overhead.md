@@ -1,4 +1,12 @@
-# Tool and Skill Overhead
+# Tool Overhead
+
+> **Status:** Published (bespoke page `pages/ToolOverhead.jsx`, route
+> `/experiments/tool-skill-overhead`). The stable file/route ID keeps the
+> `tool-skill` slug; the *scope* is now tools only. The installed-**skill**
+> catalog is its own experiment — see
+> [09 Installed Skill Overhead](09-installed-skill-overhead.md) — because skills
+> are injected via system-prompt text, a different mechanism from the
+> grouped/deferred tool schemas measured here.
 
 ## LinkedIn Hook
 
@@ -136,10 +144,11 @@ its stability, not the enabled count.**
   tokens had to be re-written too.
 - **Tool schemas ≠ skill instructions.** Tool *schemas* are grouped and deferred
   as shown here. Skill *instruction text* is injected into the system prompt and
-  is **not** virtualized — it is sent in full on every call. If you want to trim
-  always-sent overhead, the instruction text of an unused skill is a more promising
-  target than the tool count. This run does not isolate that; it is the next
-  measurement.
+  is **not** virtualized — it is sent in full on every call. That half is measured
+  separately in [09 Installed Skill Overhead](09-installed-skill-overhead.md),
+  which found the installed-skill catalog was ~54% of the system prompt. If you
+  want to trim always-sent overhead, the instruction text of an unused skill is a
+  more promising target than the tool count.
 
 This is the bridge to the [Cache Behavior experiment](08-cache-behavior.md): the
 mode-switch reset listed there is, underneath, a tool-definitions change — and
@@ -207,8 +216,9 @@ tool was selected — is the next measurement and is **not** in this session.
   and may change between versions. Further testing across tasks and versions may be
   needed.
 - **The 15.7-credit churn event: low (N=1).** Measured cleanly from one export,
-  but a single observation. The **skill**-specific overhead is still **not
-  isolated** — a run that toggles one skill on/off is the missing measurement.
+  but a single observation. The **skill**-specific overhead is measured separately
+  in [09 Installed Skill Overhead](09-installed-skill-overhead.md) (the
+  system-prompt skill catalog), so it is no longer an open gap for this page.
 - **The quality claim: inferred, not measured.** That curation improves tool
   *selection* rests on VS Code's own "degraded tool calling" warning plus the
   deferral/near-duplicate mechanisms we observed — not on a selection-accuracy
@@ -268,8 +278,8 @@ tool was selected — is the next measurement and is **not** in this session.
 >
 > Tool count is almost free. Changing the tool set is not.
 >
-> (Six captures for the curve; the 15.7-credit event is a single session. Still
-> investigating — measuring skill-instruction overhead next.)
+> (Six captures for the curve; the 15.7-credit event is a single session. The
+> installed-skill catalog is its own measurement — see Installed Skill Overhead.)
 
 ## Video Outline
 

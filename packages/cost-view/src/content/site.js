@@ -164,10 +164,14 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "tool-skill-overhead",
-    title: "Tool and Skill Overhead",
+    title: "I added a 100-tool MCP server to Copilot. The bytes on the wire barely moved.",
     hook: "I added a 100-tool MCP server to Copilot. The bytes on the wire barely moved.",
-    status: "Under investigation",
-    confidence: "Decoupling curve across six captures (catalog 23–320); the 15.7-credit churn event is a single session (N=1); skill-instruction overhead not yet isolated.",
+    status: "Published",
+    confidence: "Decoupling curve across six captures (catalog 23\u2013320); the 15.7-credit churn event is a single session (N=1). The installed-skill catalog is measured separately in Installed Skill Overhead.",
+    // Bespoke page: pages/ToolOverhead.jsx. App.jsx routes
+    // /experiments/tool-skill-overhead to it directly.
+    custom: true,
+    reportRoute: "/reports/tool-overhead-120",
   }),
   emptyExperiment({
     id: "installed-skill-overhead",
