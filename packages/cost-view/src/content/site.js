@@ -131,6 +131,10 @@ export var EXPERIMENTS = [
     hook: "Same task. Half the credits. More of it done. I changed the model.",
     status: "Draft",
     confidence: "Measured, N=1 per arm: same JSDoc task, Sonnet 20.7 cr (16/24) vs Haiku 10.5 cr (24/24).",
+    // Bespoke page: pages/ModelChoice.jsx. App.jsx routes
+    // /experiments/model-selection to it directly.
+    custom: true,
+    reportRoute: "/reports/model-choice-haiku",
   }),
   emptyExperiment({
     id: "caveman-prompting",
@@ -342,6 +346,32 @@ export var FIXED_REPORTS = [
     },
     backTo: "/experiments/installed-skill-overhead",
     backLabel: "Back to experiment (Installed Skill Overhead)",
+  },
+  {
+    id: "model-choice-sonnet",
+    title: "Model Choice — JSDoc task on claude-sonnet-4.5 (heavy)",
+    file: "sessions/model-choice-sonnet-jsdoc.json",
+    summaries: {
+      userGoal:
+        "The heavy arm of a same-task model comparison: run /test-mcp-audit-jsdoc — add JSDoc to every exported symbol in the demo repo's api/src/repositories (~24 symbols) — on claude-sonnet-4.5. The only thing that differs from the Haiku report is the worker model; the repo, prompt, and task are identical, so the two reports isolate what the model choice alone costs.",
+      agentApproach:
+        "On claude-sonnet-4.5 the agent answered in 9 tool calls with 5,760 output tokens at a 67% cache hit, for 20.7 credits. On the prior published quality review it documented 16 of ~24 symbols — about a third of the job left undone. Compare against the Haiku report (10.5 credits, 24/24 symbols): same task, the heavier model cost ~2× and finished less.",
+    },
+    backTo: "/experiments/model-selection",
+    backLabel: "Back to experiment (Model Choice)",
+  },
+  {
+    id: "model-choice-haiku",
+    title: "Model Choice — JSDoc task on claude-haiku-4.5 (light)",
+    file: "sessions/model-choice-haiku-jsdoc.json",
+    summaries: {
+      userGoal:
+        "The light arm of the same comparison: the identical /test-mcp-audit-jsdoc task — add JSDoc to every exported symbol in the demo repo's api/src/repositories (~24 symbols) — run on claude-haiku-4.5. Same repo and prompt as the Sonnet report; only the worker model changes, so the pair shows the cost and completeness impact of model choice by itself.",
+      agentApproach:
+        "On claude-haiku-4.5 the agent ran more tool calls (16) and more output (7,544 tokens) at a 68% cache hit, yet cost only 10.5 credits — ~49% less than the Sonnet arm. On the prior published quality review it documented all 24 symbols (vs Sonnet's 16). Cheaper and more complete: roughly 3× the documented-symbols-per-credit on this mechanical task.",
+    },
+    backTo: "/experiments/model-selection",
+    backLabel: "Back to experiment (Model Choice)",
   },
 ];
 

@@ -177,9 +177,13 @@ consistency.
 - **Heavy arm:** `t3_a_normalInstructions52_2.json` — `claude-sonnet-4.5`,
   20.7 cr / 9 tool calls / 5,760 output / 67% cache. Regenerate with
   `node .github/skills/copilot-chat-export/scripts/digest.mjs ~/t3_a_normalInstructions52_2.json --stdout`.
+  Published as a fixed report at `/reports/model-choice-sonnet`
+  (`sessions/model-choice-sonnet-jsdoc.json`, scrubbed).
 - **Light arm:** `t12_b_haiku_2.json` — `claude-haiku-4.5`, 10.5 cr / 16 tool
   calls / 7,544 output / 68% cache. Regenerate with
   `node .github/skills/copilot-chat-export/scripts/digest.mjs ~/t12_b_haiku_2.json --stdout`.
+  Published as a fixed report at `/reports/model-choice-haiku`
+  (`sessions/model-choice-haiku-jsdoc.json`, scrubbed).
 - **Routing anchor:** `hi2_18.json` — `p0.l0` / `p1.l0` (`gpt-4o-mini`) and
   `p2.l0` (`claude-sonnet-4.5`).
 - **Quality grade source:** prior JSDoc cost-comparison review (24/24 vs 16/24).
