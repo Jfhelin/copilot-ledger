@@ -177,8 +177,11 @@ export var EXPERIMENTS = [
     id: "installed-skill-overhead",
     title: "A third of my system prompt was skills I never used.",
     hook: "A third of my Copilot system prompt was skills I never used — and I paid to re-read them on every call.",
-    status: "Draft",
-    confidence: "Seed measurement only (N=1): the skills catalog was 54% of the system prompt and installed-but-unused plugins were ~31% (~2,934 tok); the controlled before/after is not yet captured.",
+    status: "Published",
+    confidence: "Before/after capture (N=1 each), claude-sonnet-4.5: removing 23 installed plugins cut the system prompt ~11,026\u2192~7,629 approx tok (~31%). Token reduction is measured; the credit delta is confounded by cache warmth.",
+    // Bespoke page: pages/InstalledSkillOverhead.jsx. App.jsx routes
+    // /experiments/installed-skill-overhead to it directly.
+    custom: true,
   }),
 ];
 

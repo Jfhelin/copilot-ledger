@@ -7,10 +7,11 @@
 
 ## Executive Summary
 
-> **Scope note:** Partial single-session evidence (N=1, the seed measurement
-> below). The clean before/after capture that turns this into a measured saving
-> is **not yet run** — see the protocol under "What Happened." Treat the numbers
-> as a directional anchor, not a benchmark.
+> **Scope note:** Now backed by a measured before/after (N=1 each), not just the
+> seed. The clean isolation is the **system-prompt token reduction**; the credit
+> delta between the captures is **confounded by cache warmth** (the before run was
+> cold, the after warm) and is not claimed as a skill-removal saving. See "What
+> Happened." Treat the numbers as a direction, not a benchmark.
 
 Copilot advertises every **installed skill/plugin** to the model by injecting a
 short *name + description* entry into the system prompt — so the agent knows the
@@ -78,26 +79,45 @@ shared block) measured but didn't fully attribute.
 
 ## What Happened
 
-This experiment is **seeded but not yet measured end-to-end.** The seed number
-above comes from reading the system prompt of an existing run. To turn it into a
-defensible saving, run a controlled before/after:
+This experiment is now backed by a **measured before/after** (replacing the
+earlier seed-only state). Four runs of the **same trivial `hi` prompt in the same
+repo** (`octocat_supply`), captured at different cleanup stages; the main agent
+call (`p2`) is `claude-sonnet-4.5` in the first three. System-prompt and catalog
+sizes are chars/4 approx tokens measured from `message[0]`; the rest is from the
+digest.
 
-**The clean before/after A/B (needs two captures):**
+| Run | `<skill>` blocks | Skill catalog (approx tok) | System prompt (approx tok) | Main-call `promptTokens` | Cache state | Credits |
+| --- | ---: | ---: | ---: | ---: | --- | ---: |
+| `hi18.json` (before) | 37 | ~5,165 | ~11,026 | 22,070 | **cold** (0% hit, write 22,061) | 8.6 |
+| `hi_skillCleaned.json` | 19 | ~3,037 | ~8,739 | 21,364 | warm (45% hit) | 5.0 |
+| `hi_skillCleaned3.json` (after) | 14 | ~1,924 | ~7,629 | 20,167 | warm (48% hit) | 4.3 |
+| `hi4_0.json` (reference) | 0 | 0 | ~6,940 | 6,672 | n/a — `gpt-5.4-mini` | 0 |
 
-- **Before:** capture the machine as it is now — the three internal plugins
-  (`github-revenue`, `work-iq`, `copilot-plugins/workiq`) still installed. Fresh
-  session, a trivial identical prompt (e.g. "Reply with just OK."), same model,
-  same mode, same repo. Export as `skills-before.json`.
-- **After:** **uninstall or disable** those three plugins (this is the lever —
-  not merely "don't use them," since the catalog is injected on install). Ask the
-  same prompt in a fresh session. Export as `skills-after.json`.
-- Drop both in `~/CopilotLogExports/`. Then diff:
-  - system-prompt token count (message `role=0`) and `<skill>` block count,
-  - first-call `promptTokens`, `cacheCreationTokens`, `cacheHitRate`, `credits`,
-  - `toolDefsApproxTokens` (should be ~unchanged — this isolates *skills* from
-    *tools*, the half experiment 07 deliberately lumped together).
-- Expected direction from the seed: ~2,900 fewer system-prompt tokens, a smaller
-  first-call cold write, and a lower per-call floor for the rest of the session.
+**The measured result:** removing 23 installed-but-unused skills cut the system
+prompt from **~11,026 → ~7,629 approx tokens (~3,400 tok, ~31%)**, with the
+installed-skill catalog itself falling ~5,165 → ~1,924 approx tokens. The removed
+skills averaged **~141 approx tokens each** (an average — descriptions vary, not a
+fixed per-skill constant). The 0-skill run is a reference only (different model and
+prompt template), not part of the sonnet before/after.
+
+**Two measurements, kept separate:** the catalog effect is inside the *system
+prompt* (`message[0]`): ~11,026 → ~7,629. The *total* `promptTokens` fell less
+(22,070 → 20,167) because other prefix parts moved at the same time — tool
+definitions actually **rose** (8,361 → 9,107 approx tok) between the two runs. This
+experiment isolates catalog rent in the system prompt; it does not claim the whole
+prompt prefix shrank by the same amount.
+
+**Why no credit claim:** the before run was a *cold* call (full cache write) and
+the after run was *warm* (48% hit), so the 8.6 → 4.3 credit drop is **confounded by
+cache warmth**, not a clean skill-removal saving — and no cold "after" capture
+exists on the same model to isolate it. As a *pricing estimate only*: ~3,200 fewer
+catalog tokens trims a cold first-call cache write by **roughly ~1 credit** at
+Sonnet cache-write pricing. The defensible result is the token reduction; the
+credit figure is an estimate.
+
+**Raw exports are withheld:** their system prompts embed internal plugin catalog
+descriptions (`revenue-kusto-context`, `workiq`, `customer-intelligence`, …), so
+the published page ships derived aggregate measurements only — no bundled export.
 
 ## Field Note — the move, executed (2026-06-07, author's machine)
 
@@ -201,23 +221,27 @@ sessions, not a universal constant — and it shrinks if you uninstall plugins.
 
 ## Confidence Level
 
-**Low — single partial observation (N=1), no controlled A/B yet.** The seed
-figures (skills catalog = 54% of the system prompt; internal plugins = ~2,934
-tokens / 31%) are measured directly from one export's system-prompt message and
-are internally consistent, but the *saving* is inferred, not measured. The
-before/after capture above is required before publishing a credits delta.
+**Medium-Low — before/after is N=1 each.** The system-prompt and catalog sizes
+are measured directly from `message[0]` (chars/4 approx tokens) across four runs of
+the same prompt and are internally consistent. The **token reduction is measured**;
+the **credit impact is only estimated**, because no cold "after" capture exists to
+isolate it from cache warmth. Treat the direction — installed skills are a real,
+removable slice of the fixed system-prompt floor — as the finding, not the exact
+per-skill split.
 
 ## Evidence
 
-- **Primary export (seed):** `04-plan-implement-cart.json`. System prompt =
-  message `role=0` of any request, ~37,990 chars (~9,498 tok); 37 `<skill>`
-  blocks spanning ~20,510 chars (~5,128 tok); 22 internal-plugin skills ~11,735
-  chars (~2,934 tok). Tool catalog (`metadata.tools`) = 28–56 generic tools, zero
-  internal-MCP schemas.
-- **Pending:** `skills-before.json` / `skills-after.json` (the A/B above).
+- **Before/after captures:** `hi18.json` (before, 37 skills), `hi_skillCleaned.json`
+  (19) / `hi_skillCleaned3.json` (after, 14), `hi4_0.json` (0-skill reference) —
+  each the same `hi` prompt in `octocat_supply`. Sizes measured from the main agent
+  call's `requestMessages.messages[0]` (system); cache/credits from the digest.
+- **Seed export (earlier reading):** `04-plan-implement-cart.json` — system prompt
+  ~37,990 chars (~9,498 tok), 37 `<skill>` blocks, 22 internal-plugin skills.
+- **Withheld:** raw exports are not bundled (system prompts contain internal plugin
+  catalog descriptions); the published page uses derived aggregates only.
 - Regenerate with
   `node .github/skills/copilot-chat-export/scripts/digest.mjs <export> --stdout`
-  and inspect the first request's `requestMessages.messages[0]` (system) plus
+  and inspect the main call's `requestMessages.messages[0]` (system) plus
   per-call `toolDefsApproxTokens` and `promptTokens`.
 
 ## LinkedIn Post

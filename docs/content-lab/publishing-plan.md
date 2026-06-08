@@ -29,8 +29,10 @@ themed mini-series so each post reinforces the next.
    deferred-tool-index decoupling lives here — captures 23→320 tools; do not split
    it into a separate page.) **Published — bespoke page live (PR #19).**
 3. **[Fixed Floor 3/3] Installed Skill Overhead** — A third of the system prompt
-   was skills I never used. *(Draft — needs the clean install/uninstall A/B to
-   become a measured saving; see NEXT-SESSION.md. Publish after that capture.)*
+   was skills I never used. **Published — bespoke charts-only page live (PR #19).**
+   Measured before/after: removing 23 installed plugins cut the system prompt
+   ~11,026→~7,629 approx tok (~31%). Credit delta withheld (cold/warm cache
+   confound); raw export not bundled (internal skill catalog).
 4. Context Quality — The README was cheap. Finding it wasn't.
 5. Agent Planning — 40 credits spent before a single line of code (38% of the run).
 6. Context Growth — Long sessions behave differently than short ones.
