@@ -1,6 +1,6 @@
 import { theme } from "../lib/theme.js";
 import { hrefFor } from "../lib/router.js";
-import { PageHeader, Section, Prose, Badge, Callout, TextLink } from "../components/ui.jsx";
+import { PageHeader, Section, Prose, Badge, Callout, TextLink, Pre } from "../components/ui.jsx";
 import { BarChart } from "../components/charts.jsx";
 import { STATUS_TONE } from "../content/site.js";
 
@@ -223,6 +223,40 @@ export default function ModelChoice() {
           <ReportButton to={SONNET_REPORT}>Sonnet 4.5 run (20.7 cr)</ReportButton>
           <ReportButton to={HAIKU_REPORT}>Haiku 4.5 run (10.5 cr)</ReportButton>
         </div>
+      </Section>
+
+      <Section title="LinkedIn draft">
+        <Pre>
+{`Same task. Half the credits. More of it done. I changed one thing: the model.
+
+I gave a Copilot agent one job — add JSDoc to every exported symbol in a repo — and ran it twice, changing nothing but the worker model. Then I digested both exports:
+
+- claude-sonnet-4.5 → 20.7 credits, documented 16 of ~24 symbols.
+- claude-haiku-4.5 → 10.5 credits, documented all 24.
+
+The lighter model cost ~49% less AND finished the job. More tool calls, more output, less money. On a mechanical, well-specified task the heavy model's per-token premium bought nothing but a bigger bill and a third of the work left undone.
+
+This is GitHub's #1 cost lever in one measurement: the worker model is the biggest dial you have, because it multiplies the price of every cached re-read on every turn — far more than any prompt tweak. "Choose the right model" isn't fussy advice; here it was a 2x swing on identical work.
+
+The catch: this is the kind of task that favors a light model — rote and low-ambiguity. A harder, exploratory task could flip it. Which is why Auto Mode is the easy default: it routes per turn so you don't have to guess, and it bills at 0.9x — a flat 10% off — on top.
+
+Single-session observation, not a universal benchmark. But the direction is hard to argue with.`}
+        </Pre>
+      </Section>
+
+      <Section title="Video outline">
+        <Prose>
+          <p>60–120 second LinkedIn video, screen-recording the Copilot Ledger canvas:</p>
+        </Prose>
+        <BulletList
+          items={[
+            "0–10s — \u201cSame task. Half the credits. More of it done. I changed one thing — the model.\u201d Show both digests side by side.",
+            "10–40s — The task: JSDoc every exported symbol. Sonnet → 20.7 cr, 16/24 symbols. Haiku → 10.5 cr, 24/24. Point at the credit totals and the coverage.",
+            "40–75s — Counter-intuitive bit: the cheaper model made more tool calls and more output. Light model, more work, less money — on this kind of task.",
+            "75–105s — The routing anchor: even a one-word \u201chi\u201d already runs two models. Model choice is routing the product already does; Auto extends it to the main call — and bills 10% less doing it.",
+            "105–120s — Takeaway: \u201cThe worker model is your biggest cost dial. Right-size it for the task, or let Auto pick — just don\u2019t pay top-tier rates for rote work.\u201d",
+          ]}
+        />
       </Section>
 
       <Section title="Confidence">
