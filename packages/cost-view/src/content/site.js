@@ -286,7 +286,7 @@ export var STATUS_TONE = {
 // Fields:
 //   id        - stable route segment (#/reports/<id>)
 //   title     - descriptive name shown in the report header instead of the
-//               raw filename (e.g. "Context Quality — lazy lookup").
+//               raw filename (e.g. "Round Trips — lazy arm").
 //   file      - bundled export under public/ (loaded via assetUrl).
 //   summaries - OPTIONAL { userGoal, agentApproach } shown at the top of the
 //               report. Authored at publish time because a fixed report has no
@@ -307,7 +307,7 @@ export var FIXED_REPORTS = [
   },
   {
     id: "context-quality-maprows",
-    title: "Context Quality — lazy lookup (search → read → answer)",
+    title: "Round Trips — lazy arm (search → read → answer)",
     file: "sessions/t2-maprows-lazy.json",
     summaries: {
       userGoal:
