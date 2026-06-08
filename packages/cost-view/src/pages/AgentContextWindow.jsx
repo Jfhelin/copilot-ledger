@@ -1,7 +1,33 @@
 import { theme } from "../lib/theme.js";
+import { hrefFor } from "../lib/router.js";
 import { PageHeader, Section, Prose, Badge, Callout, TextLink } from "../components/ui.jsx";
 import { BarChart } from "../components/charts.jsx";
 import { STATUS_TONE } from "../content/site.js";
+
+var REPORT_ROUTE = "/reports/claude-agent-context-window";
+
+function ReportButton({ children }) {
+  return (
+    <a
+      href={hrefFor(REPORT_ROUTE)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: theme.space.sm,
+        background: theme.accent.primary,
+        color: "#ffffff",
+        textDecoration: "none",
+        fontWeight: 700,
+        fontSize: theme.fontSize.md,
+        padding: theme.space.md + "px " + theme.space.xl,
+        borderRadius: theme.radius.lg,
+        boxShadow: theme.shadow.sm,
+      }}
+    >
+      {children} <span aria-hidden="true">→</span>
+    </a>
+  );
+}
 
 function BulletList({ items }) {
   return (
@@ -139,10 +165,20 @@ export default function AgentContextWindow() {
         </Prose>
         <BulletList
           items={[
-            "Inventory — the Claude agent simply had far more tools connected (247 vs 56), mostly one large Azure MCP server plus other MCP servers (223 MCP tools in total). More installed tools is a user/environment choice, not an engine property.",
+            "Inventory — the Claude agent simply had far more tools connected (247 vs 56), mostly one large Azure MCP server plus other MCP servers (223 MCP tools in total). Crucially, this was largely NOT a user choice (see note below), so it isn't a fair 'you installed more' difference.",
             "Virtualization policy — the Claude Agent SDK ships every tool schema in full, so its prompt scales linearly with the inventory. Copilot defers most schemas to a name-only index, so its sent payload stays roughly flat as the catalog grows.",
           ]}
         />
+        <Callout tone="warning" label="The inventory difference was mostly outside the user's control">
+          In this setup the Claude agent (run inside VS Code) loaded <strong>every MCP server
+          configured in VS Code</strong> with no per-server on/off toggle, whereas the GitHub
+          Copilot agent <strong>lets you enable/disable MCP servers individually</strong>. So the
+          Copilot side had a curated 56-tool set by choice, while the Claude side inherited all 247
+          tools whether or not the task needed them. That makes the larger inventory partly a
+          property of the harness too — not just "more stuff installed." Combined with no
+          virtualization, the Claude agent both <em>can't prune</em> the catalog and <em>ships all of
+          it in full.</em>
+        </Callout>
         <Prose>
           <p style={{ marginTop: theme.space.lg }}>
             The honest counterfactual ties the two together. Our separate{" "}
@@ -151,8 +187,8 @@ export default function AgentContextWindow() {
             <strong> even with the Claude agent's 247-tool inventory, Copilot would still bill ~9–10k
             tokens for tools, and its floor would stay near 20k.</strong> Conversely, the Claude SDK
             on Copilot's smaller 56-tool set would still ship them in full (~56 × ~293 ≈ 16k tokens
-            of tools). So virtualization explains the bulk of the gap; the large MCP inventory is
-            what made it bite this hard.
+            of tools). So virtualization explains the bulk of the gap; the un-prunable, un-virtualized
+            MCP inventory is what made it bite this hard.
           </p>
         </Prose>
       </Section>
@@ -234,9 +270,10 @@ export default function AgentContextWindow() {
         <BulletList
           items={[
             "Normalize for installed tools and MCP servers before comparing. A connected Azure MCP server can add ~60k tokens to every call on a non-virtualizing harness and almost nothing on a virtualizing one — that's configuration, not engine efficiency.",
+            "Check whether you can even curate the toolset. In this setup the Claude agent in VS Code force-loaded all MCP servers with no per-server toggle, while the Copilot agent lets you disable them — so 'just install fewer tools' isn't always available to the user.",
             "Tool virtualization is the single biggest structural lever between these two. It makes Copilot's fixed floor near-constant as you add tools; the Claude Agent SDK's floor scales with the inventory.",
             "Skill encoding is a real but minor difference. Copilot could trim it (truncate descriptions, drop absolute file paths) for a few hundred tokens.",
-            "Record the inventory (tools, MCP servers, skills) alongside the token counts for every run. Without it, a default-mode comparison mostly measures what each machine happens to have installed.",
+            "Record the inventory (tools, MCP servers, skills) alongside the token counts for every run. Without it, a default-mode comparison mostly measures what each machine happens to have installed — and whether the harness even let the user prune it.",
           ]}
         />
       </Section>
@@ -260,10 +297,18 @@ export default function AgentContextWindow() {
       <Section title="Evidence">
         <Prose>
           <p>
-            The raw Claude capture is <strong>withheld</strong>: its tool list and skill catalog
-            embed internal MCP server and skill names plus absolute home-directory paths, which we
-            don't publish. The numbers above are derived aggregates only. The Copilot side of the
-            comparison is the published{" "}
+            This is the actual (scrubbed) Claude agent capture, pinned to that one export. Open the
+            <strong> tool_defs</strong> box to watch the 247 full schemas dominate the window
+            (~72,000 tokens, ≈84% of the prompt) while the skill catalog sits compact in the
+            system box. Usernames in the export are obfuscated; every token figure is unchanged.
+          </p>
+        </Prose>
+        <div style={{ marginTop: theme.space.lg }}>
+          <ReportButton>Open the 247-tool Claude capture in Copilot Ledger</ReportButton>
+        </div>
+        <Prose>
+          <p style={{ marginTop: theme.space.lg }}>
+            The Copilot side of the comparison is the published{" "}
             <TextLink to="/experiments/installed-skill-overhead">Installed Skill Overhead</TextLink>
             {" "}capture (a scrubbed, 14-skill cleaned floor at 20,167 tokens).
           </p>

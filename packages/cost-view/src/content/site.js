@@ -202,9 +202,10 @@ export var EXPERIMENTS = [
     status: "Internal",
     confidence: "One capture per agent (N=1), one machine, both on claude-sonnet-4.5. Billed prompt_tokens and tool counts are exact; sub-bucket splits are char/4 estimates. Virtualization is corroborated by the multi-capture Tool Overhead experiment. Structural comparison, not a cost benchmark.",
     // Bespoke internal page: pages/AgentContextWindow.jsx (charts-only, no
-    // LinkedIn/video, raw export withheld \u2014 it embeds internal MCP/skill
-    // names). App.jsx routes /experiments/agent-context-window to it directly.
+    // LinkedIn/video). Raw export scrubbed (username obfuscated) and published
+    // as a fixed report. App.jsx routes /experiments/agent-context-window.
     custom: true,
+    reportRoute: "/reports/claude-agent-context-window",
   }),
 ];
 
@@ -424,6 +425,19 @@ export var FIXED_REPORTS = [
     },
     backTo: "/experiments/ask-vs-agent-mode",
     backLabel: "Back to experiment (Ask vs Agent mode)",
+  },
+  {
+    id: "claude-agent-context-window",
+    title: "Claude Agent SDK in VS Code — 247 tools, all shipped in full",
+    file: "sessions/claude-agent-247-tools.json",
+    summaries: {
+      userGoal:
+        "The developer sent a one-word \"OK\" to the Claude agent (the Claude Agent SDK / Claude Code harness) running inside VS Code, on claude-sonnet-4.5 — the mirror of the trivial-prompt captures used elsewhere. The question is purely what the harness puts in the context window before any work happens, to compare its fixed floor against VS Code Copilot Chat on the same model.",
+      agentApproach:
+        "The agent answered in a single call but the prompt billed 86,085 input tokens for a one-word reply. ~72,000 of those (≈84%) are tool definitions: all 247 enabled tools were shipped as full JSON schemas, with no virtualization/deferral — 223 of them MCP tools (a large Azure MCP server plus others), 24 built-in. In this setup the harness force-loaded every configured MCP server with no per-server toggle, so the inventory was largely not the user's choice. The installed-skill catalog, by contrast, is compact (~61 tok/skill: truncated descriptions, no file paths) and follows Anthropic level-1 progressive disclosure. Open the tool_defs box to see the 247 full schemas dominate the window; contrast with the Copilot 120-tools report, where 97 of 120 tools ride name-only for ~9,107 tokens. Username paths in this export are obfuscated; numbers are unchanged.",
+    },
+    backTo: "/experiments/agent-context-window",
+    backLabel: "Back to experiment (Agent Context Window)",
   },
 ];
 
