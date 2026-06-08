@@ -190,7 +190,7 @@ describe("App shell routing", function () {
       await flush();
       var text = textOf(mounted.container);
       // The descriptive title is shown in the header instead of the filename.
-      expect(text).toContain("Context Quality — lazy lookup");
+      expect(text).toContain("Round Trips — lazy arm");
       expect(text).not.toContain("t2-maprows-lazy.json");
       // The authored summaries render at the top without any canvas bridge.
       expect(text).toContain("mapDatabaseRows");

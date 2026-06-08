@@ -136,7 +136,7 @@ view — never as a bare uploader link. A fixed report deliberately:
   new file" affordance. The reader cannot navigate to a different run; they see
   exactly the evidence the page is about. (This is the `fixed` viewer mode.)
 - **Shows a descriptive name, not a filename.** The header reads e.g.
-  *"Context Quality — lazy lookup (search → read → answer)"*, not
+  *"Round Trips — lazy arm (search → read → answer)"*, not
   `t2-maprows-lazy.json`.
 - **Opens with the summary populated.** The two top boxes — *what the user
   wanted* and *how the agent approached it* — are authored at publish time, so

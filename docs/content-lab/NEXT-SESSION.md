@@ -31,10 +31,11 @@ What changed this session (editorial only — no React/site.js yet):
 
 **Open follow-ups from this consolidation:**
 
-- **React/site.js not yet updated** to match. `01`'s deployed page is still titled
-  "Context Quality"; `08`'s page doesn't yet show the prefix-anatomy chart. Decide
-  whether to (a) rework the deployed pages now or (b) leave pages and only ship
-  editorial. The merge and the ordering finding are editorial-complete regardless.
+- **React/site.js partially caught up.** `01`'s deployed page is now retitled
+  "Round Trips Are the Lever" (page, `site.js`, and the fixed-report card all
+  match the consolidation). `08`'s page doesn't yet show the prefix-anatomy chart.
+  Decide whether to (a) add 08's chart now or (b) leave it and only ship editorial.
+  The merge and the ordering finding are editorial-complete regardless.
 - A **prefix-anatomy capture** beyond `hi2_18.json` (different toolset/model) would
   lift the ordering finding from N=1 toward a multi-point observation.
 - The precise-vs-vague capture (old `03`) now feeds `01`'s precision section, not a
@@ -44,7 +45,7 @@ What changed this session (editorial only — no React/site.js yet):
 
 | # | Experiment | Editorial | Deployed page | Status | Blocking dependency |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Round Trips Are the Lever (was Context Quality; **+03 merged**) | ✅ full (precision arm reasoned) | ✅ live on Pages (title still "Context Quality") | Published | page retitle + precision capture (optional) |
+| 01 | Round Trips Are the Lever (was Context Quality; **+03 merged**) | ✅ full (precision arm reasoned) | ✅ live on Pages (retitled "Round Trips Are the Lever") | Published | precision capture (optional) |
 | 08 | Cache Behavior (**+ prefix-ordering finding**) | ✅ full | ✅ live on Pages (anatomy chart not yet added) | Published | optional anatomy chart/capture |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
 | 06 | Agent Planning | ✅ full (N=1 + model) | ✅ bespoke page | Published | — (reframed: "sub-agents are a context loan") |

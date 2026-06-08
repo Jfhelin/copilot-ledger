@@ -185,7 +185,7 @@ different model would land in a different namespace and start cold.
 - **Start fresh when the old prefix is dead weight:** a large stale prefix costs
   ~10% on *every* future read, so a smaller fresh prefix can be cheaper for an
   unrelated task — at the cost of one new cold write and re-establishing context
-  (which can trigger extra search/read hops; see Context Quality).
+  (which can trigger extra search/read hops; see Round Trips Are the Lever).
 - **Compacting context** shrinks the prefix, but the summarization is itself a
   model call *and* it changes the prefix — so it invalidates the cache and the
   next call pays a fresh write. Worth it once history is large and stale; wasteful
