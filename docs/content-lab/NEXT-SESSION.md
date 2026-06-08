@@ -50,7 +50,7 @@ What changed this session (editorial only — no React/site.js yet):
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
 | 06 | Agent Planning | ✅ full (N=1 + model) | ✅ bespoke page | Published | — (reframed: "sub-agents are a context loan") |
 | 07 | Tool Overhead | ✅ full (N=1) | ✅ bespoke page + fixed report `tool-overhead-120` | Published | — (narrowed to tools; skill story owned by 09) |
-| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published (page) — LinkedIn post pending | — |
+| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published | — (LinkedIn post still to draft) |
 | 02 | Model Choice — Pick It, or Let Auto Pick | ✅ full (N=1 per arm) | ✅ bespoke page + 2 fixed reports (Sonnet/Haiku) | Published | — (measured Sonnet 20.7 cr vs Haiku 10.5 cr JSDoc A/B) |
 | 03 | Prompt Precision | **merged → 01 (tombstone)** | — | Retired | — |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |

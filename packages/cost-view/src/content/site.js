@@ -178,7 +178,7 @@ export var EXPERIMENTS = [
     id: "installed-skill-overhead",
     title: "Removing a plugin's tool schemas barely moved the wire. Its skills cost every call.",
     hook: "I uninstalled one Copilot plugin. Removing its tool schemas barely moved the wire. Removing its skills cut tokens on every call.",
-    status: "Draft",
+    status: "Published",
     confidence: "Measured before/after staircase (N=3 captures, one machine). The clean skill-only step (no tool change) cut the skill catalog \u22481,110 tok and billed prompt 1,197 \u2014 a ~1:1 isolation; sent tool schemas held flat at ~9,107 throughout. Catalog tokens are char/4 approximations; prompt_tokens and tool-def counts are exact. The earlier step also removed an MCP server, so its larger drop is not skill-only.",
     // Bespoke page: pages/InstalledSkillOverhead.jsx with inline charts.
     // App.jsx routes /experiments/installed-skill-overhead to it directly.
