@@ -16,6 +16,7 @@ import AgentPlanning from "./pages/AgentPlanning.jsx";
 import InstalledSkillOverhead from "./pages/InstalledSkillOverhead.jsx";
 import ModelChoice from "./pages/ModelChoice.jsx";
 import AskVsAgentMode from "./pages/AskVsAgentMode.jsx";
+import AgentContextWindow from "./pages/AgentContextWindow.jsx";
 import FixedReport from "./pages/FixedReport.jsx";
 
 // Application shell for the Copilot Behavior Lab knowledge site.
@@ -53,6 +54,7 @@ function ContentForRoute({ path, params }) {
   if (path === "/experiments/installed-skill-overhead") return <InstalledSkillOverhead />;
   if (path === "/experiments/model-selection") return <ModelChoice />;
   if (path === "/experiments/ask-vs-agent-mode") return <AskVsAgentMode />;
+  if (path === "/experiments/agent-context-window") return <AgentContextWindow />;
   if (path.indexOf("/experiments/") === 0) {
     return <Experiments experimentId={path.slice("/experiments/".length)} />;
   }

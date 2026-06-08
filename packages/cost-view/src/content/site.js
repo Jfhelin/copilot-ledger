@@ -195,6 +195,17 @@ export var EXPERIMENTS = [
     // App.jsx routes /experiments/ask-vs-agent-mode to it directly.
     custom: true,
   }),
+  emptyExperiment({
+    id: "agent-context-window",
+    title: "Same model, same prompt: one agent's context window was 4\u00d7 the other's \u2014 almost all of it tool schemas.",
+    hook: "Same trivial prompt, same model. The Claude Agent SDK billed 86,085 input tokens; VS Code Copilot Chat billed 20,167. Almost the entire gap was un-virtualized tool definitions.",
+    status: "Internal",
+    confidence: "One capture per agent (N=1), one machine, both on claude-sonnet-4.5. Billed prompt_tokens and tool counts are exact; sub-bucket splits are char/4 estimates. Virtualization is corroborated by the multi-capture Tool Overhead experiment. Structural comparison, not a cost benchmark.",
+    // Bespoke internal page: pages/AgentContextWindow.jsx (charts-only, no
+    // LinkedIn/video, raw export withheld \u2014 it embeds internal MCP/skill
+    // names). App.jsx routes /experiments/agent-context-window to it directly.
+    custom: true,
+  }),
 ];
 
 export function findExperiment(id) {
@@ -280,6 +291,7 @@ export var STATUS_TONE = {
   Draft: "warning",
   Planned: "muted",
   "Under investigation": "info",
+  Internal: "info",
 };
 
 // ── Fixed reports ─────────────────────────────────────────────────────────
