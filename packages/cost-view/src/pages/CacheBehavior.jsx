@@ -189,6 +189,44 @@ export default function CacheBehavior() {
         />
       </Section>
 
+      <Section title="Anatomy of the warm prefix">
+        <Prose>
+          <p>
+            What is actually <em>in</em> that ~9,680-token shared block? On the
+            Anthropic wire a request is ordered{" "}
+            <code>tools → system → messages</code>, so the first bytes the cache
+            sees are the <strong>tool definitions</strong>, not the system prompt.
+            Measured on one cold <code>claude-sonnet-4.5</code> call
+            (<code>hi2_18.json</code> <code>p2.l0</code>):
+          </p>
+        </Prose>
+        <BarChart
+          ariaLabel="Prefix blocks by size: tool definitions about 8,526 tokens and the base system prompt about 3,700 tokens are shared across users; the user-specific system tail is about 7,300 tokens"
+          data={[
+            { label: "Tool definitions (24 schemas)", value: 8526, display: "~8,526 tok", sublabel: "shared across users", color: theme.semantic.success },
+            { label: "System — base instructions", value: 3700, display: "~3,700 tok", sublabel: "shared across users", color: theme.semantic.success },
+            { label: "System — your custom instructions", value: 7300, display: "~7,300 tok", sublabel: "cwd, workspace, copilot-instructions.md", color: theme.cost.missAccent },
+          ]}
+          caption="Tool defs are serialized first and are identical for everyone on the same toolset; the system prompt's base preamble is shared too, but its larger tail (your working directory, workspace name, and repo custom instructions) differs per user — so it can't ride a cross-user cache."
+        />
+        <Callout tone="info" label="Why tools go first">
+          The system prompt feels like it should anchor the context window, but it
+          is too user-specific to share: roughly two-thirds of it here was your
+          working directory, workspace name, an embedded copilot-instructions.md
+          (~2,900 tok), and template variables with absolute paths. Putting the
+          invariant tool block first keeps ~8.5K bytes byte-identical ahead of any
+          per-user content — so tools plus the base system preamble are what stays
+          globally warm, lining up with the ~9,680-token shared hit above.
+        </Callout>
+        <Prose>
+          <p style={{ marginTop: theme.space.lg }}>
+            This is the same mechanism behind the mode-switch reset: because the
+            tool block sits at the very front of the prefix, changing it (a
+            Plan → Agent switch) re-freezes everything after it.
+          </p>
+        </Prose>
+      </Section>
+
       <Section title="Sub-agent vs cold start">
         <Table
           head={["Call", "Role", "Cache hit", "New tokens", "Credits"]}
