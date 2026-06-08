@@ -1,20 +1,58 @@
 # Next Session — Handoff
 
 A standing "pick up here" note for the Copilot Behavior Lab content program.
-Update it at the end of each working session. Last updated: 2026-06-07.
+Update it at the end of each working session. Last updated: 2026-06-08
+(consolidated to 8 articles; 03→01 merge; ordering finding→08).
+
+## Session 2026-06-08 (consolidation to 8 strong articles — START HERE)
+
+**Decision (user): fewer, stronger articles for LinkedIn reach — target 8, path
+to 10.** LinkedIn not started yet, so we reshuffled editorial freely. New lineup
+and rationale are in `publishing-plan.md` (authoritative) and mirrored in the
+skill's "Currently planned experiments". Three clusters: **A Fixed Floor**
+(08, 07, 09) · **B Session Tax** (05, 06) · **C Per task** (01, 02, 04).
+
+What changed this session (editorial only — no React/site.js yet):
+
+- **New finding folded into `08`:** the warm prefix is anchored by **tool defs,
+  not the system prompt**. Wire order is `tools → system → messages`, so tool
+  schemas are the first cached bytes; the system prompt is ~⅓ stable base + ~⅔
+  user-specific (cwd, workspace, `copilot-instructions.md`, template vars) so it
+  can't be shared cross-user. Measured from `hi2_18.json` `p2.l0` (sonnet-4.5):
+  tools ≈ 8,526 tok, system ≈ 11,026 tok (first ~3,700 invariant). Reconciles 08's
+  ~9,680 shared block ≈ tools + invariant system head. Added: Key Finding #6,
+  "Anatomy of the warm prefix" table, Interpretation layer-1 fix, Confidence note
+  (anatomy = N=1; ordering is structural), Evidence ref, LinkedIn-post paragraph.
+  **NOT a separate #10** — it's part of the cache story.
+- **`03` Prompt Precision merged into `01`:** `01` retitled **"Round Trips Are the
+  Lever"** with a new "The Same Lever: Prompt Precision" section (reasoned from the
+  measured context arm, **capture pending** — labeled as such). `03` is now a
+  tombstone redirect that preserves the stable ID; do not publish it standalone.
+
+**Open follow-ups from this consolidation:**
+
+- **React/site.js partially caught up.** `01`'s deployed page is now retitled
+  "Round Trips Are the Lever" (page, `site.js`, and the fixed-report card all
+  match the consolidation). `08`'s page doesn't yet show the prefix-anatomy chart.
+  Decide whether to (a) add 08's chart now or (b) leave it and only ship editorial.
+  The merge and the ordering finding are editorial-complete regardless.
+- A **prefix-anatomy capture** beyond `hi2_18.json` (different toolset/model) would
+  lift the ordering finding from N=1 toward a multi-point observation.
+- The precise-vs-vague capture (old `03`) now feeds `01`'s precision section, not a
+  new page.
 
 ## Program status at a glance
 
 | # | Experiment | Editorial | Deployed page | Status | Blocking dependency |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Context Quality | ✅ full | ✅ live on Pages | Published | — |
-| 08 | Cache Behavior | ✅ full | ✅ live on Pages | Published | — |
+| 01 | Round Trips Are the Lever (was Context Quality; **+03 merged**) | ✅ full (precision arm reasoned) | ✅ live on Pages (retitled "Round Trips Are the Lever") | Published | precision capture (optional) |
+| 08 | Cache Behavior (**+ prefix-ordering finding**) | ✅ full | ✅ live on Pages (anatomy chart not yet added) | Published | optional anatomy chart/capture |
 | 05 | Context Growth | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (raw export intentionally NOT bundled — see below) |
-| 06 | Agent Planning | ✅ seeded (N=1) | — | Draft | optional deploy |
-| 07 | Tool Overhead | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (narrowed to tools; skill A/B split out to #09) |
-| 09 | Installed Skill Overhead | ✅ full (N=1) | ✅ bespoke page (PR #19) | Published | — (charts-only; raw export withheld — internal skill catalog) |
-| 02 | Model Selection | stub | — | Draft | needs 2-model capture |
-| 03 | Prompt Precision | stub | — | Draft | needs precise/vague capture |
+| 06 | Agent Planning | ✅ full (N=1 + model) | ✅ bespoke page | Published | — (reframed: "sub-agents are a context loan") |
+| 07 | Tool Overhead | ✅ full (N=1) | ✅ bespoke page + fixed report `tool-overhead-120` | Published | — (narrowed to tools; skill story owned by 09) |
+| 09 | Installed Skill Overhead | ✅ full (**measured N=3**) | ✅ live on Pages (bespoke page + fixed report) | Published (page) — LinkedIn post pending | — |
+| 02 | Model Choice — Pick It, or Let Auto Pick | ✅ full (N=1 per arm) | ✅ bespoke page + 2 fixed reports (Sonnet/Haiku) | Published | — (measured Sonnet 20.7 cr vs Haiku 10.5 cr JSDoc A/B) |
+| 03 | Prompt Precision | **merged → 01 (tombstone)** | — | Retired | — |
 | 04 | Caveman Prompting | stub | — | Draft | needs with/without capture |
 
 "Editorial" = the markdown in `experiments/NN-*.md`. "Deployed page" = a bespoke
@@ -22,7 +60,60 @@ React page + route in the cost-view SPA that actually ships on GitHub Pages.
 GitHub Pages deploys ONLY `packages/cost-view/dist` from `main`; the
 `docs/content-lab/*.md` files are editorial sources and are NOT published.
 
-## Session 2026-06-07 (privacy remediation + measured floor data) — START HERE
+## Session 2026-06-07 (#09 measured AND published — START HERE)
+
+**#09 Installed Skill Overhead is done: measured, written, and its page is live.**
+PR #21 (bespoke page + inline charts + fixed report) is **merged to `main`** — the
+page ships on GitHub Pages at `/#/experiments/installed-skill-overhead`. The 5
+relocated skill folders are now **committed in `octodemo/internalChatModes`** (the
+machine cleanup is durable). Only remaining task on #09: **post the LinkedIn draft**
+(it's at the bottom of `experiments/09-installed-skill-overhead.md`).
+
+What was done:
+
+- Captured a clean **3-step before/after staircase** on a trivial `hi` prompt
+  (claude-sonnet-4.5, same `octocat_supply` workspace), in `~/CopilotLogExports/`:
+  `hi_116.json` (dirty, 23 global-plugin skills) → `hi_skillCleaned.json` (5) →
+  `hi_skillCleaned3.json` (**0** global-plugin skills). Skill catalog ≈5,146 →
+  ≈3,027 → ≈1,917 tok; billed `prompt_tokens` 25,367 → 21,364 → 20,167.
+- **The clean causal point is pass 2** (`hi_skillCleaned`→`3`): tool catalog/deferred/
+  sent all unchanged, skill catalog ≈−1,110 ≈ billed prompt −1,197 (near 1:1). Pass 1
+  also removed the `workiq` MCP server (enabled tools 120→56), so its larger −4,003
+  is NOT skill-only — the rewrite states this explicitly (rubber-duck caught the
+  over-attribution; fixed).
+- **Cross-link to #07 is the spine:** sent full-schema tool block held flat at
+  ~9,107 across all three even as the flat tool catalog fell 36,020→16,545. Tools
+  virtualized; skills not. #09 stays a **separate page** (not merged into #07) per
+  the chosen "twin" framing.
+- **The relocation is real, executed, and now committed:** the M365 toolkit (4 skills)
+  + `microsoft-foundry` were moved from global (`~/.copilot/installed-plugins/work-iq`,
+  `~/.agents/skills/`) into `octodemo/internalChatModes/.github/skills/` and committed
+  there. Both global dirs are EMPTY (0 global-plugin skills). The earlier 18 internal
+  data skills were moved in a prior session.
+- **Bespoke page + fixed report shipped:** `pages/InstalledSkillOverhead.jsx` with 3
+  inline charts (staircase BarChart, tools-vs-skills contrast BarChart, before/after
+  composition StackedBars); fixed report `skill-overhead-cleaned` (scrubbed
+  `hi_skillCleaned3`, `jfhelin`→`appuser` length-preserving, byte-identical). 191
+  tests + build green. Routed in `App.jsx`; `site.js` EXPERIMENTS (custom + reportRoute)
+  and FIXED_REPORTS updated.
+
+**Remaining floor (the only skills left after the move):** 14 skills = 2 project
+(workspace-scoped) + 5 VS Code built-in Copilot (~904 tok, irreducible) + 7 VS Code
+extension (GitHub-PR ×6 + evals ×1, ~700 tok, removable by disabling those
+extensions). Also flagged: **3 duplicate GitHub MCP servers** worth collapsing to 1.
+
+**Next:**
+- **Post #09 to LinkedIn** (draft + video outline already written) — the last open
+  item on #09 itself.
+- #07's cleanup A/B (the `cleanup-before/after` capture) is the open item to move
+  **#07** from "Under investigation" → measured; the skills half (#09) is now done.
+- Optional: a 4th capture in a repo with NO project skills to show the pure 12-skill
+  / ~1,604-tok global floor (vs the 14 here that include 2 octocat project skills).
+- Optional: disable the GitHub-PR + evals VS Code extensions and re-capture to push
+  the floor toward the ~904-tok irreducible built-in minimum.
+
+
+## Session 2026-06-07 (privacy remediation + measured floor data) — earlier
 
 **Shipped (PR #19, branch `jfhelin/project-state-review`):**
 - **Scrubbed the 3 already-published exports** (`t2-maprows-lazy`, `02-one-tool`,

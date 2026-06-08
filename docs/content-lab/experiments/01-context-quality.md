@@ -1,4 +1,10 @@
-# Context Quality
+# Round Trips Are the Lever
+
+*Context quality and prompt precision are two sides of one mechanism: both decide
+how many times the agent has to go look something up. This page merges the former
+**Context Quality** and **Prompt Precision** experiments — the measured arm is the
+attach-the-file A/B below; the precision arm is the same mechanism, capture
+pending.*
 
 ## LinkedIn Hook
 
@@ -111,10 +117,35 @@ warm; you are billed cache-read rates on it, not fresh rates, even on call one.
 > **Cache Behavior** experiment (`08-cache-behavior.md`), where it is the
 > headline rather than a side note.
 
+## The Same Lever: Prompt Precision
+
+Attaching a file is one way to cut round trips. **Wording the ask precisely is the
+other** — and it works through the identical mechanism. A vague prompt ("clean up
+the cart logic") gives the agent no anchor, so it does what Arm A did for context:
+it *explores* — searching, listing directories, reading candidate files — to infer
+what you meant before it can act. A precise prompt ("in `CartContext.tsx`, dedupe
+the `addItem` reducer so repeated SKUs increment quantity instead of appending")
+names the file and the change, collapsing that discovery tail the same way the
+attachment did.
+
+Both levers move the **hop count**, not the prompt length. A longer, more precise
+prompt is a few hundred more tokens on one cached call; the vague version it
+replaces can cost five extra round trips, each re-billing the whole prefix. That
+is why "be precise" and "give good context" are the same advice wearing two hats:
+*reduce the number of times the agent has to go find out what you already know.*
+
+> **Status:** this precision arm is **reasoned from the measured context-quality
+> mechanism, not yet separately captured.** A clean precise-vs-vague A/B (same
+> task, same model, same repo) is the pending measurement that would put a credit
+> number on it. Until then, treat the direction as a single-mechanism inference,
+> not a benchmark.
+
 ## Practical Guidance
 
 - **If you know the file, attach it.** In this session it was 37% cheaper and
   far more predictable — one call instead of a six-call fan-out.
+- **Name the file and the change in the prompt.** Precision is the no-attachment
+  version of the same lever: it removes the discovery hops a vague ask triggers.
 - **Provide useful context up front** so the agent doesn't spend round trips
   rediscovering what you already know. This reinforces official GitHub guidance.
 - **But avoid excessive context.** Inlining is not free on the first call;
@@ -135,6 +166,9 @@ warm; you are billed cache-read rates on it, not fresh rates, even on call one.
   hit reproduced across **four** independent sessions. Still labelled an
   observation, not a proven provider guarantee — further testing across machines
   and accounts would confirm whether it is truly cross-user.
+- The **prompt-precision arm is the weakest**: it is reasoned from the same
+  round-trip mechanism as the measured context arm, but has **no capture yet**.
+  Do not quote a credit figure for it until the precise-vs-vague A/B is run.
 
 ## Evidence
 

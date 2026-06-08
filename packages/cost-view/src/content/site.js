@@ -103,12 +103,13 @@ function emptyExperiment(extra) {
 export var EXPERIMENTS = [
   emptyExperiment({
     id: "context-quality-readme",
-    title: "The answer lived in one file. Letting the agent find it cost 37% more.",
+    title: "Round Trips Are the Lever",
     hook: "The answer lived in one file. Letting the agent find it cost 37% more.",
     status: "Published",
-    confidence: "One run per arm (N=1), not a universal benchmark.",
-    // This experiment has a bespoke, fully-written page component
-    // (pages/ContextQualityReadme.jsx) rather than the generic Field layout.
+    confidence: "Context arm one run per arm (N=1); the merged prompt-precision arm is reasoned from the same mechanism, capture pending.",
+    // Bespoke page: pages/ContextQualityReadme.jsx (route id kept stable as
+    // context-quality-readme). Merges the former "Prompt Precision" experiment —
+    // context quality and prompt precision are one round-trip mechanism.
     // App.jsx routes /experiments/context-quality-readme to it directly.
     custom: true,
     reportRoute: "/reports/context-quality-maprows",
@@ -118,7 +119,7 @@ export var EXPERIMENTS = [
     title: "The first call was already warm. The cheap part was everything after it.",
     hook: "The first call was already warm. The cheap part was everything after it.",
     status: "Published",
-    confidence: "Shared-cache hit N=4; per-call curve and sub-agent reuse N=1.",
+    confidence: "Shared-cache hit N=4; per-call curve, sub-agent reuse, and prefix anatomy N=1.",
     // Bespoke page: pages/CacheBehavior.jsx. App.jsx routes
     // /experiments/cache-behavior to it directly.
     custom: true,
@@ -126,17 +127,14 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "model-selection",
-    title: "Model Selection",
-    hook: "The biggest cost lever is often model selection.",
-    status: "Draft",
-    confidence: "Placeholder.",
-  }),
-  emptyExperiment({
-    id: "prompt-precision",
-    title: "Prompt Precision",
-    hook: "Vague prompts cost more than precise prompts.",
-    status: "Draft",
-    confidence: "Placeholder.",
+    title: "Model Choice — Pick It, or Let Auto Pick",
+    hook: "Same task. Half the credits. More of it done. I changed the model.",
+    status: "Published",
+    confidence: "Measured, N=1 per arm: same JSDoc task, Sonnet 20.7 cr (16/24) vs Haiku 10.5 cr (24/24).",
+    // Bespoke page: pages/ModelChoice.jsx. App.jsx routes
+    // /experiments/model-selection to it directly.
+    custom: true,
+    reportRoute: "/reports/model-choice-haiku",
   }),
   emptyExperiment({
     id: "caveman-prompting",
@@ -157,10 +155,13 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "agent-planning",
-    title: "Agent Planning",
-    hook: "The agent spent 40 credits before it wrote a single line of code.",
-    status: "Draft",
-    confidence: "Single session (N=1); planning was 38% of spend, 71% of it exploration sub-agents.",
+    title: "The agent spawned two sub-agents to plan. They both read the same seven files.",
+    hook: "The agent spawned two sub-agents to plan. They both read the same seven files.",
+    status: "Published",
+    confidence: "Single session (N=1) plus a modeled comparison; planning was 38% of spend, the two sub-agents 71% of it, with 94% file overlap \u2014 a direction, not a benchmark.",
+    // Bespoke page: pages/AgentPlanning.jsx. App.jsx routes
+    // /experiments/agent-planning to it directly.
+    custom: true,
   }),
   emptyExperiment({
     id: "tool-skill-overhead",
@@ -175,12 +176,23 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "installed-skill-overhead",
-    title: "A third of my system prompt was skills I never used.",
-    hook: "A third of my Copilot system prompt was skills I never used — and I paid to re-read them on every call.",
+    title: "Removing a plugin's tool schemas barely moved the wire. Its skills cost every call.",
+    hook: "I uninstalled one Copilot plugin. Removing its tool schemas barely moved the wire. Removing its skills cut tokens on every call.",
+    status: "Draft",
+    confidence: "Measured before/after staircase (N=3 captures, one machine). The clean skill-only step (no tool change) cut the skill catalog \u22481,110 tok and billed prompt 1,197 \u2014 a ~1:1 isolation; sent tool schemas held flat at ~9,107 throughout. Catalog tokens are char/4 approximations; prompt_tokens and tool-def counts are exact. The earlier step also removed an MCP server, so its larger drop is not skill-only.",
+    // Bespoke page: pages/InstalledSkillOverhead.jsx with inline charts.
+    // App.jsx routes /experiments/installed-skill-overhead to it directly.
+    custom: true,
+    reportRoute: "/reports/skill-overhead-cleaned",
+  }),
+  emptyExperiment({
+    id: "ask-vs-agent-mode",
+    title: "Ask mode isn't the cheaper mode. It's the colder one.",
+    hook: "Ask mode isn't the cheaper mode. It's the colder one.",
     status: "Published",
-    confidence: "Before/after capture (N=1 each), claude-sonnet-4.5: removing 23 installed plugins cut the system prompt ~11,026\u2192~7,629 approx tok (~31%). Token reduction is measured; the credit delta is confounded by cache warmth.",
-    // Bespoke page: pages/InstalledSkillOverhead.jsx. App.jsx routes
-    // /experiments/installed-skill-overhead to it directly.
+    confidence: "Cache-likelihood finding reproduced across r1 captures (agent first-call 9,680 cached vs ask 0; TTL boundary caught at 69s hit / 12min miss), single machine. Cost comparison is single-run-per-task (N=1) \u2014 agent \u2264 ask in every cell, a direction, not a benchmark.",
+    // Bespoke page: pages/AskVsAgentMode.jsx with inline charts.
+    // App.jsx routes /experiments/ask-vs-agent-mode to it directly.
     custom: true,
   }),
 ];
@@ -278,7 +290,7 @@ export var STATUS_TONE = {
 // Fields:
 //   id        - stable route segment (#/reports/<id>)
 //   title     - descriptive name shown in the report header instead of the
-//               raw filename (e.g. "Context Quality — lazy lookup").
+//               raw filename (e.g. "Round Trips — lazy arm").
 //   file      - bundled export under public/ (loaded via assetUrl).
 //   summaries - OPTIONAL { userGoal, agentApproach } shown at the top of the
 //               report. Authored at publish time because a fixed report has no
@@ -299,7 +311,7 @@ export var FIXED_REPORTS = [
   },
   {
     id: "context-quality-maprows",
-    title: "Context Quality — lazy lookup (search → read → answer)",
+    title: "Round Trips — lazy arm (search → read → answer)",
     file: "sessions/t2-maprows-lazy.json",
     summaries: {
       userGoal:
@@ -335,6 +347,71 @@ export var FIXED_REPORTS = [
     },
     backTo: "/experiments/tool-skill-overhead",
     backLabel: "Back to experiment",
+  },
+  {
+    id: "skill-overhead-cleaned",
+    title: "Installed Skill Overhead — the cleaned floor (0 global-plugin skills)",
+    file: "sessions/skill-overhead-cleaned.json",
+    summaries: {
+      userGoal:
+        "The final step of a three-capture before/after: the same trivial \"hi\" prompt, same model, same repo, captured after relocating every installed plugin's skills out of the global cache and into the one repo that needs them. The question is what the fixed system-prompt floor looks like once no installed-plugin skill rides along globally anymore.",
+      agentApproach:
+        "VS Code answered in a single claude-sonnet-4.5 call. Of the original 37-skill catalog (~5,146 tokens, the dirty baseline), only 14 skills remain (~1,917 tokens) — and zero of them come from installed plugins; they are 2 workspace project skills plus 12 VS Code built-in/extension skills. The billed prompt fell from 25,367 to 20,167 tokens versus the dirty baseline. The sent full-schema tool block held flat at 23 schemas / ~9,107 tokens across all three captures: the clean final step changed only skills (≈1,110 fewer catalog tokens, 1,197 fewer billed prompt tokens — near 1:1), while the virtualized tool schemas never moved. The turn cost 4.3 credits at a 48% cache hit. Open the system box to see the shrunken skill catalog, and compare the tool_defs box to the 120-tools report — same 23 sent.",
+    },
+    backTo: "/experiments/installed-skill-overhead",
+    backLabel: "Back to experiment (Installed Skill Overhead)",
+  },
+  {
+    id: "model-choice-sonnet",
+    title: "Model Choice — JSDoc task on claude-sonnet-4.5 (heavy)",
+    file: "sessions/model-choice-sonnet-jsdoc.json",
+    summaries: {
+      userGoal:
+        "The heavy arm of a same-task model comparison: run /test-mcp-audit-jsdoc — add JSDoc to every exported symbol in the demo repo's api/src/repositories (~24 symbols) — on claude-sonnet-4.5. The only thing that differs from the Haiku report is the worker model; the repo, prompt, and task are identical, so the two reports isolate what the model choice alone costs.",
+      agentApproach:
+        "On claude-sonnet-4.5 the agent answered in 9 tool calls with 5,760 output tokens at a 67% cache hit, for 20.7 credits. On the prior published quality review it documented 16 of ~24 symbols — about a third of the job left undone. Compare against the Haiku report (10.5 credits, 24/24 symbols): same task, the heavier model cost ~2× and finished less.",
+    },
+    backTo: "/experiments/model-selection",
+    backLabel: "Back to experiment (Model Choice)",
+  },
+  {
+    id: "model-choice-haiku",
+    title: "Model Choice — JSDoc task on claude-haiku-4.5 (light)",
+    file: "sessions/model-choice-haiku-jsdoc.json",
+    summaries: {
+      userGoal:
+        "The light arm of the same comparison: the identical /test-mcp-audit-jsdoc task — add JSDoc to every exported symbol in the demo repo's api/src/repositories (~24 symbols) — run on claude-haiku-4.5. Same repo and prompt as the Sonnet report; only the worker model changes, so the pair shows the cost and completeness impact of model choice by itself.",
+      agentApproach:
+        "On claude-haiku-4.5 the agent ran more tool calls (16) and more output (7,544 tokens) at a 68% cache hit, yet cost only 10.5 credits — ~49% less than the Sonnet arm. On the prior published quality review it documented all 24 symbols (vs Sonnet's 16). Cheaper and more complete: roughly 3× the documented-symbols-per-credit on this mechanical task.",
+    },
+    backTo: "/experiments/model-selection",
+    backLabel: "Back to experiment (Model Choice)",
+  },
+  {
+    id: "ask-mode-cold-start",
+    title: "Ask vs Agent — ask mode, cold start (0 cached)",
+    file: "sessions/ask-mode-cold-start.json",
+    summaries: {
+      userGoal:
+        "The ask-mode arm of a same-prompt A/B on whether ask mode is cheaper than agent mode. The developer opened a fresh chat in read-only ask mode and asked Copilot to explain a single TypeScript file (suppliersRepo.ts), with no prior turn to warm the cache. The question is what ask mode's very first model call inherits from the prompt cache when nothing in the session has run yet.",
+      agentApproach:
+        "The answer turn ran on claude-sonnet-4.5 and its first call inherited 0 cached tokens — a true cold start (flagged as a cache anomaly: first call for the model in the session). Because ask mode carries a distinct 28-tool read-only prefix, it doesn't ride the globally-warm default prefix that agent mode does, so it pays the full cold-cache write. The session cache hit rate is just 12.7% and the turn costs 8.5 credits. Open the tool_defs and system boxes to see the ask-mode-specific prefix; compare with the agent-mode cold start, whose first call inherits ~9,680 cached tokens instead.",
+    },
+    backTo: "/experiments/ask-vs-agent-mode",
+    backLabel: "Back to experiment (Ask vs Agent mode)",
+  },
+  {
+    id: "agent-mode-warm-prefix",
+    title: "Ask vs Agent — agent mode, same cold start (9,680 cached)",
+    file: "sessions/agent-mode-warm-prefix.json",
+    summaries: {
+      userGoal:
+        "The agent-mode arm of the same A/B: an identical fresh chat and the same \"explain suppliersRepo.ts\" prompt, but in agent mode. The question is whether agent mode's first model call — with no prior turn in the session either — starts as cold as ask mode's did.",
+      agentApproach:
+        "It does not. The same first-call cold start on claude-sonnet-4.5 inherits ~9,680 cached tokens, because agent mode's default 56-tool prefix is common enough across users to be kept warm globally — so even a brand-new session lands on a warm shared prefix. The session cache hit rate is 49% (versus ask mode's 12.7%) and the turn costs 6.2 credits (versus 8.5). The two modes differ at tool #1, which is exactly why they occupy separate cache prefixes. Open the tool_defs box and contrast with the ask-mode cold start.",
+    },
+    backTo: "/experiments/ask-vs-agent-mode",
+    backLabel: "Back to experiment (Ask vs Agent mode)",
   },
 ];
 

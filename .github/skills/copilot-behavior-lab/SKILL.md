@@ -136,7 +136,7 @@ view — never as a bare uploader link. A fixed report deliberately:
   new file" affordance. The reader cannot navigate to a different run; they see
   exactly the evidence the page is about. (This is the `fixed` viewer mode.)
 - **Shows a descriptive name, not a filename.** The header reads e.g.
-  *"Context Quality — lazy lookup (search → read → answer)"*, not
+  *"Round Trips — lazy arm (search → read → answer)"*, not
   `t2-maprows-lazy.json`.
 - **Opens with the summary populated.** The two top boxes — *what the user
   wanted* and *how the agent approached it* — are authored at publish time, so
@@ -270,13 +270,40 @@ When ending a writeup, reinforce official guidance with the concrete evidence:
 
 ## Currently planned experiments
 
-1. Context Quality — *The README was cheap. Finding it wasn't.*
-2. Model Selection — *The biggest cost lever is often model selection.*
-3. Prompt Precision — *Vague prompts cost more than precise prompts.*
-4. Caveman Prompting — *Caveman Prompting saved less than 3% in my Copilot session.*
-5. Context Growth — *What 23,000 tokens of context actually looks like.*
-6. Agent Planning — *I thought the answer was expensive. The plan was.*
-7. Tool and Skill Overhead — *Under investigation. Do not overclaim.*
+Consolidated to **8 strong articles** in three clusters (see
+`docs/content-lab/publishing-plan.md` for the authoritative launch order). File
+numbers are stable IDs, not the article count or order.
+
+**A · The Fixed Floor — before you type**
+
+1. Cache Behavior (`08`) — *Your "cold" session isn't cold — and it's your tool
+   defs, not your system prompt, that anchor the warm block.* (The
+   prompt-ordering / global-cache finding lives here, not in a separate page.)
+2. Tool & Skill Overhead (`07`) — *I added a 100-tool MCP server. The wire barely
+   moved.* Churn is the tax, not count.
+3. Installed Skill Overhead (`09`) — *Skills aren't virtualized; uninstalling cuts
+   every call.*
+
+**B · The Session Tax — as you work**
+
+4. Context Growth (`05`) — *Re-reading the grown context was 40% of the session.*
+5. Agent Planning (`06`) — *Sub-agents are a context loan, not a discount.*
+
+**C · What you control per task**
+
+6. Round Trips Are the Lever (`01`, merges former `03` Prompt Precision) — *The
+   README was cheap. Finding it wasn't.* Context quality and prompt precision are
+   one mechanism.
+7. Model Choice — Pick It, or Let Auto Pick (`02`) — *Same task. Half the credits.
+   More of it done. I changed the model.* Combines GitHub's top two levers (right
+   model + Auto Mode) into one piece. Measured: same JSDoc task on Sonnet 4.5
+   (20.7 cr, 16/24 symbols) vs Haiku 4.5 (10.5 cr, 24/24) — ~49% cheaper and more
+   complete; plus two-model-per-session routing and Auto's 0.9× multiplier.
+   (Published — measured, N=1 per arm.)
+8. Caveman Prompting (`04`) — *Caveman Prompting saved less than 3%.* Contrarian
+   closer. (Stub — needs a with/without capture.)
+
+Optional 9–10 (only once measured): Compaction break-even; Image input.
 
 ## Video guidance
 

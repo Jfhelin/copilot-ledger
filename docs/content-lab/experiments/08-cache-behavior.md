@@ -77,6 +77,22 @@ measurement caution for anyone benchmarking Copilot cost.
    forcing a ~40K-token re-write worth 15.7 credits. See the
    [Tool and Skill Overhead experiment](07-tool-skill-overhead.md) for the deep
    dive on why a tool-def change is so expensive.
+6. **The warm block is your *tool definitions*, not your system prompt (N=1,
+   `hi2_18.json`).** This is the part that surprised me. On the Anthropic wire a
+   request serializes as `tools → system → messages`, so the *first* bytes the
+   prefix cache sees are the **tool schemas** — which is also why a tool-def
+   change re-freezes everything after it (finding 5). In a cold sonnet-4.5 call
+   the 24 tool schemas were **~8,526 tokens** and the system prompt **~11,026**,
+   but only the first **~3,700** tokens of that system prompt are the stable,
+   every-user base instructions. The rest is **user-specific** — your working
+   directory (`/Users/<you>/…`), workspace name, your repo's
+   `copilot-instructions.md` (a ~2,900-token attachment here), and template
+   variables with absolute paths. A prefix cache dies at the first byte that
+   differs between users, so the system prompt is mostly *un*-shareable.
+   Tools-first is exactly what puts ~8.5K of guaranteed-identical bytes *ahead*
+   of any per-user contamination — and tools (~8.5K) plus the invariant head of
+   the system preamble line up, in magnitude, with the ~9,680-token shared hit
+   above.
 
 ## What Happened
 
@@ -119,13 +135,35 @@ prefix is mostly the cacheable standard block. No distinct "skill" payload was
 visible in this run; an active skill would ride the same system/user prefix and
 cache the same way.
 
+### Anatomy of the warm prefix (hi2_18.json — one cold sonnet-4.5 call)
+
+What is *in* that shared block, in the order the model receives it:
+
+| Prefix block (wire order) | ≈Tokens | Identical across users? |
+|---|---|---|
+| **Tool definitions** (24 schemas) | ~8,526 | **Yes** — depend on the toolset/mode/version, not your repo |
+| **System prompt — base instructions** | ~3,700 | **Yes** — the "expert AI programming assistant" preamble |
+| **System prompt — your custom instructions** | ~7,300 | **No** — cwd, workspace name, `copilot-instructions.md`, template vars |
+| **User messages** — environment / date / editor context | varies | **No** — OS, current date, open file |
+
+The globally-shareable prefix ends at the **first per-user byte** — here, partway
+into the system prompt. That is why the cross-session shared hit (~9,680 tokens)
+is roughly *tools + the invariant system preamble*, and why your own custom
+instructions never ride the cross-user cache — only your per-session cache. It
+also explains the ordering that surprises people: the system prompt feels like it
+should come "first," but it is too user-specific to anchor a shared cache, so the
+**invariant tool block is serialized ahead of it**.
+
 ## Interpretation
 
 There are three cache layers to keep separate:
 
-1. **A shared standard prefix** (system prompt + scaffolding) that is warm before
-   you start — ~9,680 tokens, identical across sessions. You don't control it and
-   shouldn't credit yourself for "saving" it.
+1. **A shared standard prefix** — your **tool definitions plus the invariant head
+   of the system prompt** — warm before you start, ~9,680 tokens, identical
+   across sessions on the same toolset. It is tools-*first* on the wire, so the
+   tool schemas anchor it; the user-specific tail of the system prompt (your
+   custom instructions, cwd, template vars) falls *outside* this shared block.
+   You don't control it and shouldn't credit yourself for "saving" it.
 2. **A per-session prompt cache** that grows as the conversation extends. This is
    why hit rate climbs to ~99%: each call's prefix is last call's prefix plus a
    little. Staying in one session amortizes the single cold write across many
@@ -147,7 +185,7 @@ different model would land in a different namespace and start cold.
 - **Start fresh when the old prefix is dead weight:** a large stale prefix costs
   ~10% on *every* future read, so a smaller fresh prefix can be cheaper for an
   unrelated task — at the cost of one new cold write and re-establishing context
-  (which can trigger extra search/read hops; see Context Quality).
+  (which can trigger extra search/read hops; see Round Trips Are the Lever).
 - **Compacting context** shrinks the prefix, but the summarization is itself a
   model call *and* it changes the prefix — so it invalidates the cache and the
   next call pays a fresh write. Worth it once history is large and stale; wasteful
@@ -193,8 +231,12 @@ independent sessions — stronger than a single observation — but all four ran
 the same machine and account, so **cross-user** sharing is *not* established. The
 per-call curve, the sub-agent reuse, and the mode-switch cold start are each
 **single-session (N=1)** observations; the mechanism is clear and consistent, but
-the exact figures should not be treated as benchmarks. t2 used extended thinking,
-so its per-call credits are a slight lower bound. The compaction and
+the exact figures should not be treated as benchmarks. The **prefix anatomy**
+(tools-first; ~8,526-token tool block; ~3,700-token invariant system head; the
+user-specific custom-instruction tail) is a **single-export breakdown
+(`hi2_18.json`, N=1)** — the *ordering* is structural (it's the Anthropic wire
+format), but the exact token splits are one measurement. t2 used extended
+thinking, so its per-call credits are a slight lower bound. The compaction and
 stay-vs-fresh guidance is **reasoned from the cache mechanism, not separately
 measured** — we have no captured compaction event yet; it is a candidate for a
 follow-up run.
@@ -207,6 +249,12 @@ follow-up run.
   step through calls 2–6 to watch the hit climb to ~99%.
 - **Shared-cache reproduction (N=4):** `p2.l0` `cachedTokens = 9680` in
   `t1.json`, `t2.json`, `t2_2.json`, `readme-cold-nocontext.json`.
+- **Prefix anatomy (N=1):** `hi2_18.json` `p2.l0` (claude-sonnet-4.5, cold first
+  call) — `metadata.tools` = 24 schemas ≈ 8,526 tok; system message
+  (`messages[0]`) ≈ 11,026 tok, of which the first ~3,700 are the invariant base
+  preamble and the user-specific tail begins where the absolute cwd / workspace
+  name / embedded `copilot-instructions.md` appear. Wire order `tools → system →
+  messages` is the Anthropic request shape.
 - **Sub-agent + mode-switch evidence:** `04-plan-implement-cart.json` — sub-agent
   first calls `p1.l0` / `p0.l2` at ~98% hit; cold main start `p3.l0` at 19% /
   15.7 cr. (Large 7.5 MB export; numbers reproduced in the tables above.)
@@ -230,6 +278,14 @@ Three more things surprised me, all in real sessions:
   you asked for.
 - Sub-agents started ~98% warm. They reuse the parent's already-cached system
   prompt and tool definitions, and only write their own ~400-token task brief.
+
+And the detail I least expected: the thing anchoring that warm block isn't the
+system prompt — it's the **tool definitions**. On the wire the request is ordered
+`tools → system → messages`, so the tool schemas are the very first bytes the
+cache sees. It has to be that way: your system prompt is half *yours* — it carries
+your working directory, your workspace name, and your repo's custom instructions —
+so it can't be shared across users. The tool block is identical for everyone on
+the same toolset, so it goes first and does the cross-user caching.
 
 The one thing that re-froze the cache mid-session: a Plan→Agent mode switch
 changed the toolset and forced a full cold re-write — 15.7 credits.

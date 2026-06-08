@@ -105,16 +105,26 @@ describe("App shell routing", function () {
     await act(async function () { mounted.root.unmount(); });
   });
 
+  it("renders the bespoke agent-planning experiment page from a hash route", async function () {
+    setLocation("/#/experiments/agent-planning");
+    var mounted = await renderApp();
+    var text = textOf(mounted.container);
+    expect(text).toContain("They both read the same seven files");
+    // Measured numbers from the article appear on the page.
+    expect(text).toContain("94%");
+    expect(text).toContain("context loan");
+    await act(async function () { mounted.root.unmount(); });
+  });
+
   it("renders the bespoke installed-skill-overhead experiment page from a hash route", async function () {
     setLocation("/#/experiments/installed-skill-overhead");
     var mounted = await renderApp();
     var text = textOf(mounted.container);
-    expect(text).toContain("A third of my system prompt was skills I never used.");
-    // Measured before/after numbers from the article appear on the page.
-    expect(text).toContain("11,026");
-    expect(text).toContain("7,629");
-    // The credit confound caveat must be present.
-    expect(text).toContain("confounded by cache warmth");
+    expect(text).toContain("Its skills cost every call.");
+    // Measured numbers from the article appear on the page.
+    expect(text).toContain("20,167");
+    expect(text).toContain("9,107");
+    expect(text).toContain("Open the cleaned floor in Copilot Ledger");
     await act(async function () { mounted.root.unmount(); });
   });
 
@@ -192,7 +202,7 @@ describe("App shell routing", function () {
       await flush();
       var text = textOf(mounted.container);
       // The descriptive title is shown in the header instead of the filename.
-      expect(text).toContain("Context Quality — lazy lookup");
+      expect(text).toContain("Round Trips — lazy arm");
       expect(text).not.toContain("t2-maprows-lazy.json");
       // The authored summaries render at the top without any canvas bridge.
       expect(text).toContain("mapDatabaseRows");
