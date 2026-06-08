@@ -175,11 +175,21 @@ export var EXPERIMENTS = [
     title: "Removing a plugin's tool schemas barely moved the wire. Its skills cost every call.",
     hook: "I uninstalled one Copilot plugin. Removing its tool schemas barely moved the wire. Removing its skills cut tokens on every call.",
     status: "Draft",
-    confidence: "Measured before/after staircase (N=3 captures, one machine). The clean skill-only step (no tool change) cut the skill catalog ≈1,110 tok and billed prompt 1,197 — a ~1:1 isolation; sent tool schemas held flat at ~9,107 throughout. Catalog tokens are char/4 approximations; prompt_tokens and tool-def counts are exact. The earlier step also removed an MCP server, so its larger drop is not skill-only.",
+    confidence: "Measured before/after staircase (N=3 captures, one machine). The clean skill-only step (no tool change) cut the skill catalog \u22481,110 tok and billed prompt 1,197 \u2014 a ~1:1 isolation; sent tool schemas held flat at ~9,107 throughout. Catalog tokens are char/4 approximations; prompt_tokens and tool-def counts are exact. The earlier step also removed an MCP server, so its larger drop is not skill-only.",
     // Bespoke page: pages/InstalledSkillOverhead.jsx with inline charts.
     // App.jsx routes /experiments/installed-skill-overhead to it directly.
     custom: true,
     reportRoute: "/reports/skill-overhead-cleaned",
+  }),
+  emptyExperiment({
+    id: "ask-vs-agent-mode",
+    title: "Ask mode isn't the cheaper mode. It's the colder one.",
+    hook: "Ask mode isn't the cheaper mode. It's the colder one.",
+    status: "Published",
+    confidence: "Cache-likelihood finding reproduced across r1 captures (agent first-call 9,680 cached vs ask 0; TTL boundary caught at 69s hit / 12min miss), single machine. Cost comparison is single-run-per-task (N=1) \u2014 agent \u2264 ask in every cell, a direction, not a benchmark.",
+    // Bespoke page: pages/AskVsAgentMode.jsx with inline charts.
+    // App.jsx routes /experiments/ask-vs-agent-mode to it directly.
+    custom: true,
   }),
 ];
 
@@ -372,6 +382,32 @@ export var FIXED_REPORTS = [
     },
     backTo: "/experiments/model-selection",
     backLabel: "Back to experiment (Model Choice)",
+  },
+  {
+    id: "ask-mode-cold-start",
+    title: "Ask vs Agent — ask mode, cold start (0 cached)",
+    file: "sessions/ask-mode-cold-start.json",
+    summaries: {
+      userGoal:
+        "The ask-mode arm of a same-prompt A/B on whether ask mode is cheaper than agent mode. The developer opened a fresh chat in read-only ask mode and asked Copilot to explain a single TypeScript file (suppliersRepo.ts), with no prior turn to warm the cache. The question is what ask mode's very first model call inherits from the prompt cache when nothing in the session has run yet.",
+      agentApproach:
+        "The answer turn ran on claude-sonnet-4.5 and its first call inherited 0 cached tokens — a true cold start (flagged as a cache anomaly: first call for the model in the session). Because ask mode carries a distinct 28-tool read-only prefix, it doesn't ride the globally-warm default prefix that agent mode does, so it pays the full cold-cache write. The session cache hit rate is just 12.7% and the turn costs 8.5 credits. Open the tool_defs and system boxes to see the ask-mode-specific prefix; compare with the agent-mode cold start, whose first call inherits ~9,680 cached tokens instead.",
+    },
+    backTo: "/experiments/ask-vs-agent-mode",
+    backLabel: "Back to experiment (Ask vs Agent mode)",
+  },
+  {
+    id: "agent-mode-warm-prefix",
+    title: "Ask vs Agent — agent mode, same cold start (9,680 cached)",
+    file: "sessions/agent-mode-warm-prefix.json",
+    summaries: {
+      userGoal:
+        "The agent-mode arm of the same A/B: an identical fresh chat and the same \"explain suppliersRepo.ts\" prompt, but in agent mode. The question is whether agent mode's first model call — with no prior turn in the session either — starts as cold as ask mode's did.",
+      agentApproach:
+        "It does not. The same first-call cold start on claude-sonnet-4.5 inherits ~9,680 cached tokens, because agent mode's default 56-tool prefix is common enough across users to be kept warm globally — so even a brand-new session lands on a warm shared prefix. The session cache hit rate is 49% (versus ask mode's 12.7%) and the turn costs 6.2 credits (versus 8.5). The two modes differ at tool #1, which is exactly why they occupy separate cache prefixes. Open the tool_defs box and contrast with the ask-mode cold start.",
+    },
+    backTo: "/experiments/ask-vs-agent-mode",
+    backLabel: "Back to experiment (Ask vs Agent mode)",
   },
 ];
 
