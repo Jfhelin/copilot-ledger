@@ -127,10 +127,10 @@ export var EXPERIMENTS = [
   }),
   emptyExperiment({
     id: "model-selection",
-    title: "Model Selection",
-    hook: "The biggest cost lever is often model selection.",
+    title: "Model Choice — Pick It, or Let Auto Pick",
+    hook: "Same task. Half the credits. More of it done. I changed the model.",
     status: "Draft",
-    confidence: "Placeholder.",
+    confidence: "Measured, N=1 per arm: same JSDoc task, Sonnet 20.7 cr (16/24) vs Haiku 10.5 cr (24/24).",
   }),
   emptyExperiment({
     id: "caveman-prompting",
