@@ -83,8 +83,9 @@ Two things jump out:
   (**[−0.4, +1.7]**) **spans zero** (it's a statistical tie). Across all 40 runs, the
   correlation between **cost and quality was ≈ 0** (r = −0.05). More requests, more
   tokens, more spend bought *no measurable quality*. And neither side was punished by
-  the rubric for making things up — yet **every one of the 40 answers still repeated
-  the same wrong fact** (more on that below). Similar coverage, very different prices.
+  the rubric for making things up — yet **every one of the 40 answers repeated the
+  same wrong fact**: a stale port number both agents trusted from the README instead
+  of reading the config. Similar coverage, very different prices.
 
 To be explicit: **this is not "Copilot is better."** Copilot's quality edge here is
 inside the noise, and Claude's higher cost is *exploration verbosity on one task*,
@@ -142,38 +143,28 @@ better *in general* you'd then have to repeat the whole thing across many prompt
 repositories. Picking a winning harness from this — or from any N=1 race — is exactly
 the mistake the data warns against.
 
-> **The wrong fact, in all 40.** Here's the tell: **every single answer — both CLIs,
-> all 40 runs — reported the frontend port as `5173`**, the framework default the
-> README repeats. The actual configured port is **`5137`** (every config file says
-> so). Not one run read it. No rubric would flag this as a hallucination — it's a
-> plausible, confidently-wrong number both agents inherited from the same stale
-> README. That's not a harness difference; it's what happens when agents trust a
-> README over the code — a reason #2 effect you fix with *context*, not by switching
-> tools.
+## What to trust instead
 
-## What to do instead
+So what do you actually do? Hold the obvious things fixed — same model, same repo,
+same prompt — then *run it more than once* and look at the spread, not the dot. And
+before you blame a tool, check what your own skills, MCP servers, and instruction
+files are quietly injecting. That's the part you control, and usually the part that
+moved.
 
-- **Hold the controllable variables fixed** before you compare: same model
-  snapshot, same repo at a commit, same verbatim prompt, MCP/skills/memory files in
-  a known state on both sides.
-- **Repeat, then look at the distribution.** One run is a dice roll; the spread is
-  the signal. Compare **cost-per-quality across many reps**, not a single timed run.
-- **Separate the axes.** Cost, wall-clock, and quality move independently — the
-  cheapest run here was often *not* the fastest, and never reliably the best.
-- **Audit your own environment first.** Before blaming a tool, check what your
-  skills, MCP servers, and instruction files are injecting. That's reason #2, and
-  it's yours to fix.
-
-**The chart matters. The port matters more.** The chart says cost can separate two
-agents even when quality doesn't. The port says two agents can agree, sound
-confident, and still be wrong in the same boring way — which is the failure your
-developers would actually feel.
+**Cost can separate two agents even when quality can't** — that's what this chart
+shows. And the one fact both agents got wrong, they got wrong identically: the kind
+of failure that owes nothing to which harness you picked, and everything to the
+context you gave it.
 
 None of this contradicts the standard advice — [choose the right model, give useful
 context up front, avoid excessive context, write precise prompts, and review your
 skills and tools periodically](https://docs.github.com/en/copilot). It just adds
 one rule: **don't rank two harnesses on a number that swings 2× when you change
 nothing at all.**
+
+Next time that slide crosses your feed, ask the only question that matters: **did
+they run it twice?** If the answer is no, you're not looking at a benchmark. You're
+looking at one roll of the dice.
 
 ## Coming next: where the harnesses *actually* differ
 
