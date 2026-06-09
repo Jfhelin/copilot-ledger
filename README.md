@@ -9,6 +9,7 @@ Two artifacts, one repo:
 | Package | What it is | Who uses it |
 |---|---|---|
 | [`packages/skill`](./packages/skill) | A Copilot CLI **skill** (`copilot-chat-export`) that digests an exported chat session and reports token spend, cache efficiency, sub-agent flow, and prompt-shape anomalies | The agent, when you ask it to analyse a session |
+| [`packages/skill-claude`](./packages/skill-claude) | A sister Copilot CLI **skill** (`claude-code-export`) that digests a **Claude Code** session into the *same* schema, so Copilot and Claude runs can be compared side by side. Knows the two-log workflow (CLI transcript + optional proxy capture) and ships the capture relay | The agent, when you ask it to analyse or compare a Claude Code session |
 | [`packages/cost-view`](./packages/cost-view) | A focused **React app** that hosts the **Copilot Behavior Lab** knowledge site (Home, Learn, Experiments, Observations, Session Gallery, About) and renders the report viewer under **Analyze Session** — per-prompt cost breakdown, cache attribution, tool usage, multi-model projections. Includes the parser/cost-analysis library | You, in a browser or inside a canvas |
 | [`packages/canvas-extension`](./packages/canvas-extension) | A thin **canvas extension** that opens the cost-view in a Copilot CLI side panel and round-trips a "currently selected prompt" between the canvas and the chat | You + the agent, working on the same session together |
 
@@ -54,6 +55,46 @@ The cost view loads in three ways:
 
 See [`packages/cost-view/src/lib/bridge.js`](./packages/cost-view/src/lib/bridge.js) for the
 full `postMessage` protocol.
+
+## Comparing Copilot against Claude Code
+
+The [`claude-code-export`](./packages/skill-claude) skill brings **Claude Code** sessions
+into the same digest schema as the VS Code skill, so a Copilot-vs-Claude comparison becomes
+a field-by-field diff (context window, cache, token spend, tools, modelled cost).
+
+A Claude Code session is described by **up to two logs**, and the skill combines them:
+
+1. **The transcript** — `~/.claude/projects/<cwd-slug>/<uuid>.jsonl`, written by the Claude
+   CLI itself. Always present; the source of truth for exact tokens, cache, tools,
+   sub-agents, and timing.
+2. **An optional proxy capture** — the transcript does **not** serialize the system prompt
+   or tool schemas, so to see the *context-window composition* (system vs tool-defs vs
+   messages) you run the bundled relay
+   [`claude-relay.mjs`](./packages/skill-claude/scripts/claude-relay.mjs) and point Claude
+   Code at it:
+
+   ```sh
+   # Terminal 1 — start the local relay (never writes API keys)
+   node packages/skill-claude/scripts/claude-relay.mjs
+
+   # Terminal 2 — route the CLI through it, then use Claude normally
+   export ANTHROPIC_BASE_URL=http://127.0.0.1:8788
+   claude
+   ```
+
+   Captures land in `~/CopilotLogExports/claude-captures/`.
+
+The digest generator pairs the two automatically (by timestamp + model):
+
+```sh
+node packages/skill-claude/scripts/claude-digest.mjs <transcript.jsonl>
+# --capture <file|dir> to point at a specific capture, --no-capture to skip pairing
+```
+
+Cost is a **modelled** estimate (Anthropic API token pricing) — transcripts report exact
+tokens but no billed amount, so it is comparable to Copilot in token-cost terms but is
+**not** GitHub AI Credits. See [`packages/skill-claude/SKILL.md`](./packages/skill-claude/SKILL.md)
+for the full workflow.
 
 ## Copilot Behavior Lab site
 
