@@ -1,8 +1,11 @@
 #  One run can't tell two coding agents apart
 
-There's a familiar slide doing the rounds: GitHub Copilot CLI in one column, the
-Claude CLI in the other, a single run each, and a verdict — *"Agent A is 2× cheaper"*
-or *"Agent B is faster."* It feels like evidence. It mostly isn't.
+There's a wave of them right now — decks and posts lining up GitHub Copilot against
+the Claude CLI against the next tool, stopwatch in hand, reporting time, cost, and
+cache hit-rate. They keep reaching different conclusions. They disagree because a
+single timed run measures the wrong things: it captures run-to-run variance and local
+configuration, and says almost nothing about whether the harness is actually
+effective. It feels like evidence. It mostly isn't.
 
 Here's the result this experiment *could* have been posted as:
 
@@ -115,9 +118,13 @@ and they're easy to confuse:
    server or skill you switch on taxes every round-trip. And the two CLIs don't ship
    the same tools — different counts, different schemas, different auto-loaded files —
    so an unmatched environment can swamp the harness difference you're trying to measure.
-3. **The harness may suit *this* prompt or repo.** A default disposition to explore
-   more (or less) can help on one task and hurt on another. That's a
-   *prompt×harness* interaction, not a general verdict.
+3. **The harnesses really are built differently.** They've made different design
+   choices — how much to explore, when to plan, which tools to reach for — and those
+   strategies suit different kinds of work. That's real, but it's not secret sauce:
+   any provider can run this same forensic analysis, so a genuinely good idea gets
+   copied fast. So a single run might just mean this harness's strategy fit *this*
+   prompt. **Article 2 digs into those actual differences** and what they do to the
+   agent's behavior.
 4. **One harness may genuinely be better — in general.** Possible. But **a single
    run cannot show it**, and in this controlled sample we saw **no evidence of it**:
    quality tied, cost differences traced entirely to exploration volume.
