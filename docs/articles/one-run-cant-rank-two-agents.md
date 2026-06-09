@@ -33,7 +33,7 @@ that one tempting slide hides.
   exact tokens, cost, cache, requests, and wall-clock, then **blind-scored for
   factual coverage** (facts present, out of 27) for answer quality.
 
-This was [pre-registered before the results were read](../content-lab/experiments/12-cli-repeatability-envelope.html).
+This was [pre-registered before the results were read](https://github.com/Jfhelin/copilot-ledger/blob/main/docs/content-lab/experiments/12-cli-repeatability-envelope.md).
 
 ## Finding 1 — Hold *everything* fixed and the numbers still swing \~2×
 
@@ -209,7 +209,7 @@ ranking or a stable bound. The coverage rubric rewards breadth (the short `TRIM`
 answers scored slightly lower for being terser, not wronger). Sequential runs share
 the provider's prompt cache, so some variance is cache-timing, not the agent —
 both, notably, are *non-harness* effects. Full design and data:
-[pre-registration #12](../content-lab/experiments/12-cli-repeatability-envelope.html).
+[pre-registration #12](https://github.com/Jfhelin/copilot-ledger/blob/main/docs/content-lab/experiments/12-cli-repeatability-envelope.md).
 
 *Companion pieces: [Why an N=1 run can't rank two agents](./why-n1-benchmarks-mislead.html)
 · [What actually differs between the environments](./what-actually-differs.html).*

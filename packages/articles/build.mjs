@@ -6,7 +6,7 @@
 // Styling reuses the cost-view light-mode design tokens so the pages match the
 // lab visually without importing any of its React/runtime.
 
-import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
+import { readFile, writeFile, mkdir, rm, cp } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { marked } from "marked";
@@ -182,6 +182,12 @@ async function build() {
     await writeFile(resolve(OUT_DIR, outName), html, "utf8");
     console.log(`  ✓ ${article.src} → dist/${outName}`);
   }
+
+  // Copy referenced static assets (chart SVGs, interactive HTML) so the
+  // articles' ./figures/* links resolve in the published bubble.
+  await cp(resolve(CONTENT_DIR, "figures"), resolve(OUT_DIR, "figures"), {
+    recursive: true,
+  });
 
   // A .nojekyll file keeps GitHub Pages from running Jekyll over the output.
   await writeFile(resolve(OUT_DIR, ".nojekyll"), "", "utf8");
