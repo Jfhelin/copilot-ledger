@@ -31,6 +31,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.log
+# …but Copilot CLI log test fixtures are committed (deterministic golden inputs).
+!packages/skill-copilot-cli/scripts/__tests__/fixtures/*.log
 
 # Copilot CLI extension transient state
 .copilot/
