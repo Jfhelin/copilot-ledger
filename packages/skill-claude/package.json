@@ -1,0 +1,12 @@
+{
+  "name": "@copilot-ledger/skill-claude",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Copilot CLI skill for analysing Claude Code session transcripts (token spend, cache, tools, sub-agents) in the same digest schema as the VS Code skill.",
+  "scripts": {
+    "test": "node --test",
+    "sync": "node ./scripts/sync.mjs",
+    "sync:check": "node ./scripts/sync.mjs --check",
+    "install-local": "ln -sfn \"$(pwd)\" \"$HOME/.copilot/skills/claude-code-export\""
+  }
+}

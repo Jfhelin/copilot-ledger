@@ -1,7 +1,7 @@
-// Sync the canonical skill source (this package) into the project's deployed
-// copy under `.github/skills/copilot-chat-export/`.
+// Sync the canonical Claude skill source (this package) into the project's
+// deployed copy under `.github/skills/claude-code-export/`.
 //
-// `packages/skill/` is the source of truth: it carries the tests and the
+// `packages/skill-claude/` is the source of truth: it carries the tests and the
 // package manifest. The `.github/skills/` copy is what the Copilot CLI actually
 // loads. Without this script the two drift apart silently. The companion test
 // (`scripts/__tests__/sync.test.mjs`) fails when they are out of sync, so CI /
@@ -30,11 +30,14 @@ function findRepoRoot(start) {
 }
 
 const repoRoot = findRepoRoot(skillDir);
-const deployedDir = join(repoRoot, ".github", "skills", "copilot-chat-export");
+const deployedDir = join(repoRoot, ".github", "skills", "claude-code-export");
 
-// Files that make up the deployable skill. `copilot-behavior-lab/` and other
-// material that only exists in the deployed copy is intentionally left alone.
-const FILES = ["SKILL.md", join("scripts", "digest.mjs")];
+// Files that make up the deployable skill.
+const FILES = [
+  "SKILL.md",
+  join("scripts", "claude-digest.mjs"),
+  join("scripts", "claude-relay.mjs"),
+];
 
 const check = process.argv.includes("--check");
 const drift = [];
@@ -55,7 +58,7 @@ if (check) {
   if (drift.length) {
     console.error(
       `Skill copies are out of sync (${drift.join(", ")}).\n` +
-        `Run \`npm run sync --workspace=@copilot-ledger/skill\` to update ${deployedDir}.`,
+        `Run \`npm run sync --workspace=@copilot-ledger/skill-claude\` to update ${deployedDir}.`,
     );
     process.exit(1);
   }
