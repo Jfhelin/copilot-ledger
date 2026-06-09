@@ -107,13 +107,17 @@ orchestrator identically for both); requests / round-trips; tool calls; cache-hi
 rate; cached + cache-creation tokens; fresh input tokens; output tokens; model
 snapshot; run start timestamp (for cold/warm reclassification); quality score.
 
-## Quality instrument (blind, itemized → 0–20)
+## Quality instrument (blind, itemized → raw 0–27 coverage count)
 
 - **Primary:** 30–40 **atomic** checklist items (each 0/1, deterministic sum)
   rescaled to 20, scored against a frozen answer key validated at `e1516cf`.
   Discriminators include: api = Express + TypeScript + SQLite (better-sqlite3) +
   OpenAPI/Swagger + vitest; frontend = React 18 + Vite + Tailwind + Playwright,
-  port 5173; api port 3000; SQLite at `api/data/app.db`, in-memory for tests; **no
+  port **5137** (the repo's own `README.md` mis-states this as `5173`, the Vite
+  default; every actual config — `vite.config.ts`, `playwright.config.ts`, the api
+  CORS allow-list, `docs/build.md`, `.devcontainer` — uses `5137`, so `5173` is a
+  parroted default, not a read value); api port 3000; SQLite at `api/data/app.db`,
+  in-memory for tests; **no
   root `package.json`** (independent npm projects wired by `Makefile` +
   `docker-compose`); run path `make install` → `make dev`; the domain entity graph;
   and clarity/actionability (concrete commands, not generic prose).
@@ -133,6 +137,15 @@ snapshot; run start timestamp (for cold/warm reclassification); quality score.
   disclose "labels removed and randomized," never "fully blinded."
 - **Secondary:** blind **pairwise** preference ("which better onboards a new dev to
   THIS repo?", forced A/B/tie) across runs; rubric is primary, pairwise secondary.
+- **Reporting-scale note (post-hoc, presentation only):** the deterministic checklist
+  yields a **raw coverage count out of 27** (25 fact items + a domain-entity point + a
+  port-discrepancy bonus). The pre-declared ×20 projection compressed an already-narrow
+  observed band (all 40 answers landed in raw 17–24) into 12.6–17.8, so the article and
+  charts report the **raw 0–27 count** — the finer native grain — and zoom the chart
+  y-axis to **10–27** (clearly labeled). This is an affine relabel: every effect size,
+  correlation, and confidence interval is identical to the 0–20 scale (Cohen's
+  *d* ≈ 0.39; the cost−quality *r* ≈ 0; the harness quality difference's 95% CI still
+  spans zero). No run triggered a penalty, so raw count = final score for all 40.
 
 ## Analysis plan (pre-declared)
 
@@ -176,6 +189,6 @@ stable bound and not a general ranking of either CLI.
 - [x] Both CLIs verified to resolve the same dated snapshot.
 - [x] MCP-off and instruction-file removal verified; memory-file load matrix mapped.
 - [x] Orchestrator validated on a 2-run smoke (one per harness).
-- [ ] 40-run capture complete.
-- [ ] Blind 0–20 judging + analysis.
-- [ ] Article drafted from results.
+- [x] 40-run capture complete (clean: 0 errors, no snapshot drift, 10/cell).
+- [x] Blind coverage judging + analysis (deterministic 0–27 coverage rubric).
+- [x] Article drafted from results: [`one-run-cant-rank-two-agents`](../../articles/one-run-cant-rank-two-agents.html).

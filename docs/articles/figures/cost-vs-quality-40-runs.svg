@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="520" viewBox="0 0 780 520" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+<rect width="780" height="520" fill="#ffffff"/>
+<text x="72" y="30" font-size="17" font-weight="700" fill="#0f172a">Same task, 40 headless runs: cost varies wide, quality stays flat</text>
+<text x="72" y="48" font-size="12" fill="#64748b">octocat_supply @ e1516cf · one pinned Sonnet snapshot · MCP off · token-normalized cost vs blind factual-coverage score (facts present, of 27)</text>
+<line x1="72" y1="456" x2="592" y2="456" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62" y="460" font-size="11" fill="#64748b" text-anchor="end">10</text>
+<line x1="72" y1="338.3529411764706" x2="592" y2="338.3529411764706" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62" y="342.3529411764706" font-size="11" fill="#64748b" text-anchor="end">15</text>
+<line x1="72" y1="220.70588235294116" x2="592" y2="220.70588235294116" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62" y="224.70588235294116" font-size="11" fill="#64748b" text-anchor="end">20</text>
+<line x1="72" y1="103.05882352941177" x2="592" y2="103.05882352941177" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62" y="107.05882352941177" font-size="11" fill="#64748b" text-anchor="end">25</text>
+<line x1="72" y1="56" x2="72" y2="456" stroke="#f1f5f9" stroke-width="1"/>
+<text x="72" y="476" font-size="11" fill="#64748b" text-anchor="middle">$0.00</text>
+<line x1="164.85714285714286" y1="56" x2="164.85714285714286" y2="456" stroke="#f1f5f9" stroke-width="1"/>
+<text x="164.85714285714286" y="476" font-size="11" fill="#64748b" text-anchor="middle">$0.10</text>
+<line x1="257.7142857142857" y1="56" x2="257.7142857142857" y2="456" stroke="#f1f5f9" stroke-width="1"/>
+<text x="257.7142857142857" y="476" font-size="11" fill="#64748b" text-anchor="middle">$0.20</text>
+<line x1="350.57142857142856" y1="56" x2="350.57142857142856" y2="456" stroke="#f1f5f9" stroke-width="1"/>
+<text x="350.57142857142856" y="476" font-size="11" fill="#64748b" text-anchor="middle">$0.30</text>
+<line x1="443.42857142857144" y1="56" x2="443.42857142857144" y2="456" stroke="#f1f5f9" stroke-width="1"/>
+<text x="443.42857142857144" y="476" font-size="11" fill="#64748b" text-anchor="middle">$0.40</text>
+<line x1="536.2857142857142" y1="56" x2="536.2857142857142" y2="456" stroke="#f1f5f9" stroke-width="1"/>
+<text x="536.2857142857142" y="476" font-size="11" fill="#64748b" text-anchor="middle">$0.50</text>
+<text x="332" y="502" font-size="13" fill="#334155" text-anchor="middle" font-weight="600">Token-normalized cost per run (USD)</text>
+<text x="20" y="256" font-size="13" fill="#334155" text-anchor="middle" font-weight="600" transform="rotate(-90 20 256)">Facts covered, of 27 (blind) — axis starts at 10</text>
+<line x1="192.64580357142862" y1="56" x2="192.64580357142862" y2="456" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.55"/>
+<line x1="72" y1="197.1764705882353" x2="592" y2="197.1764705882353" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.55"/>
+<line x1="405.7764392857143" y1="56" x2="405.7764392857143" y2="456" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.55"/>
+<line x1="72" y1="212.4705882352941" x2="592" y2="212.4705882352941" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.55"/>
+<circle cx="230.2" cy="173.6" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="182.0" cy="173.6" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="178.5" cy="197.2" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="227.5" cy="173.6" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="175.9" cy="126.6" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="169.5" cy="220.7" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="188.3" cy="244.2" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="184.7" cy="197.2" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="175.8" cy="220.7" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="208.5" cy="126.6" r="6" fill="#2563eb" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="394.1" cy="197.2" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="393.7" cy="220.7" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="400.2" cy="150.1" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="502.6" cy="197.2" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="525.1" cy="267.8" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="407.0" cy="173.6" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="563.8" cy="150.1" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="514.1" cy="150.1" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="450.0" cy="197.2" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="392.3" cy="173.6" r="6" fill="#ea580c" fill-opacity="0.78" stroke="#fff" stroke-width="1"/>
+<circle cx="208.4" cy="220.7" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="204.6" cy="197.2" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="248.2" cy="173.6" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="184.3" cy="220.7" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="189.6" cy="197.2" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="180.0" cy="173.6" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="173.5" cy="220.7" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="182.3" cy="267.8" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="184.0" cy="197.2" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="177.2" cy="220.7" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.2"/>
+<circle cx="415.7" cy="244.2" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="280.2" cy="197.2" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="418.3" cy="244.2" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="370.2" cy="197.2" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="324.5" cy="244.2" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="364.1" cy="220.7" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="354.5" cy="291.3" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="343.3" cy="291.3" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="381.2" cy="244.2" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<circle cx="320.6" cy="197.2" r="6" fill="#fff" stroke="#ea580c" stroke-width="2.2"/>
+<text x="616" y="64" font-size="12" font-weight="700" fill="#0f172a">Harness</text>
+<circle cx="623" cy="82" r="6" fill="#2563eb" fill-opacity="0.8"/>
+<text x="636" y="86" font-size="12" fill="#334155">Copilot CLI</text>
+<circle cx="623" cy="104" r="6" fill="#ea580c" fill-opacity="0.8"/>
+<text x="636" y="108" font-size="12" fill="#334155">Claude CLI</text>
+<text x="616" y="138" font-size="12" font-weight="700" fill="#0f172a">Condition</text>
+<circle cx="623" cy="156" r="6" fill="#64748b" fill-opacity="0.8"/>
+<text x="636" y="160" font-size="12" fill="#334155">BARE (filled)</text>
+<circle cx="623" cy="178" r="6" fill="#fff" stroke="#64748b" stroke-width="2.2"/>
+<text x="636" y="182" font-size="12" fill="#334155">TRIM (hollow)</text>
+<text x="616" y="212" font-size="11" fill="#94a3b8">dashed lines =</text>
+<text x="616" y="228" font-size="11" fill="#94a3b8">harness mean cost (│)</text>
+<text x="616" y="244" font-size="11" fill="#94a3b8">&amp; mean quality (─)</text>
+</svg>
