@@ -1,7 +1,7 @@
 # What actually differs between VS Code Copilot, Claude Code in VS Code, and the Claude CLI
 
 > **Status: DRAFT.** Standalone article. The companion piece is
-> [*Why coding-agent comparisons keep disagreeing*](./index.html). The
+> [*Why coding-agent comparisons keep disagreeing*](./why-n1-benchmarks-mislead.html). The
 > **structural** sections are backed by measured captures; the **cost/latency
 > comparison** section is marked `[NEEDS CAPTURE]` and is filled in once the IDE
 > task runs exist (see the checklist at the end).
@@ -115,7 +115,7 @@ else on this list, you set yourself.
 | **Skills installed** | **You** (E1 only) | Not virtualized; uninstalling cuts every call. |
 | **Project memory** (`CLAUDE.md`, instructions) | **You** | Inflates E3's window with no tools at all. |
 | **Repo / working set** | **You** | What the agent has to read. |
-| **The prompt + round-trips it triggers** | **You** | The biggest *variable* cost ([companion article](./index.html)). |
+| **The prompt + round-trips it triggers** | **You** | The biggest *variable* cost ([companion article](./why-n1-benchmarks-mislead.html)). |
 | **Billing unit** | Harness / platform | §5. |
 
 The table is the argument: **most of the cost-moving knobs are on your side of the
@@ -162,7 +162,7 @@ configuration, match these before you read a single number:
 5. **Normalize the billing unit** to tokens under one price table; report native
    credits separately where they exist, and label them as such.
 6. **Repeat and report spread**, not a single run (see the
-   [companion article](./index.html) on why N=1 can't rank stochastic agents).
+   [companion article](./why-n1-benchmarks-mislead.html) on why N=1 can't rank stochastic agents).
 7. **Score the outcome.** "Cheaper/faster" is meaningless unless the task was
    actually completed to the same bar.
 
@@ -182,7 +182,7 @@ What we have so far:
 
 - **E3 (Claude CLI), T1 "explain this repo," 6 reps:** token-normalized credits
   ranged **~4.7 → 84.3** (≈18×), driven by exploration round-trips — see the
-  [companion article](./index.html). This is our variance anchor.
+  [companion article](./why-n1-benchmarks-mislead.html). This is our variance anchor.
 - **E1 / E2 task runs:** not yet captured. They are **IDE-only** and can't be
   scripted headlessly.
 
