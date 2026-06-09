@@ -34,7 +34,7 @@ const deployedDir = join(repoRoot, ".github", "skills", "copilot-chat-export");
 
 // Files that make up the deployable skill. `copilot-behavior-lab/` and other
 // material that only exists in the deployed copy is intentionally left alone.
-const FILES = ["SKILL.md", join("scripts", "digest.mjs")];
+const FILES = ["SKILL.md", join("scripts", "digest.mjs"), join("scripts", "claude-digest.mjs")];
 
 const check = process.argv.includes("--check");
 const drift = [];

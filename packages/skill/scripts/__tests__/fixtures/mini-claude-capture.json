@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-06-09T10:00:04.500Z",
+  "model": "claude-sonnet-4-5",
+  "sizing": {
+    "systemTokens": 500,
+    "toolsTokens": 3000,
+    "messagesTokens": 120,
+    "toolCount": 3,
+    "messageCount": 1
+  },
+  "system": "You are Claude Code.",
+  "tools": [
+    { "name": "Bash", "approxTokens": 1500 },
+    { "name": "Read", "approxTokens": 900 },
+    { "name": "Edit", "approxTokens": 600 }
+  ],
+  "messages": [{ "role": "user", "approxTokens": 120 }]
+}
