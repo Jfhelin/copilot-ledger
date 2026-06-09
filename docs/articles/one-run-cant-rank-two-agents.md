@@ -1,8 +1,11 @@
 #  One run can't tell two coding agents apart
 
-There's a familiar slide doing the rounds: GitHub Copilot CLI in one column, the
-Claude CLI in the other, a single run each, and a verdict — *"Agent A is 2× cheaper"*
-or *"Agent B is faster."* It feels like evidence. It mostly isn't.
+There's a wave of them right now — decks and posts lining up GitHub Copilot against
+the Claude CLI against the next tool, stopwatch in hand, reporting time, cost, and
+cache hit-rate. They keep reaching different conclusions. They disagree because a
+single timed run measures the wrong things: it captures run-to-run variance and local
+configuration, and says almost nothing about whether the harness is actually
+effective. It feels like evidence. It mostly isn't.
 
 Here's the result this experiment *could* have been posted as:
 
