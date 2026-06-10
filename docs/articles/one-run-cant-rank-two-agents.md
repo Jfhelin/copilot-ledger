@@ -175,25 +175,24 @@ the data warns against.
 ## What to trust instead
 
 So what do you actually do? Hold the obvious things fixed — same model, same repo,
-same prompt — then *run it more than once* and look at the spread, not the dot. And
+same prompt — then **run it more than once and look at the spread, not the dot.** And
 before you blame a tool, check what your own skills, MCP servers, and instruction
 files are quietly injecting. That's the part you control, and usually the part that
 moved.
 
-**Cost can separate two agents even when quality can't** — that's what this chart
-shows. And the one fact both agents got wrong, they got wrong identically: the kind
-of failure that owes nothing to which harness you picked, and everything to the
-context you gave it.
+This chart shows **cost can separate two agents even when quality can't.** And the one
+fact both got wrong, they got wrong identically — a failure that owes nothing to which
+harness you picked and everything to the context you gave it.
 
-None of this contradicts the standard advice — [choose the right model, give useful
-context up front, avoid excessive context, write precise prompts, and review your
-skills and tools periodically](https://docs.github.com/en/copilot). It just adds
-one rule: **don't rank two harnesses on a number that swings 2× when you change
-nothing at all.**
-
-Next time that slide crosses your feed, ask the only question that matters: **did
-they run it twice?** If the answer is no, you're not looking at a benchmark. You're
-looking at one roll of the dice.
+None of this contradicts the [standard
+advice](https://docs.github.com/en/copilot) — pick the right model, give good context,
+write precise prompts, review your skills and tools. It just adds one rule: **don't
+rank two harnesses on a number that swings 2× when you change nothing at all.** And
+that 2× is the *floor*, measured under tight control — loosen the setup and one run can
+cost **18× another.** When a single run can swing that far, running each tool once
+isn't measuring the tools. **It's comparing one dice roll to another.** So next time
+that bake-off slide crosses your feed, ask the only question that matters: **did they
+run it twice?**
 
 ## Coming next: where the harnesses *actually* differ
 
