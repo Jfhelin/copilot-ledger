@@ -111,7 +111,7 @@ never once batched two. The same \~13 reads folded into \~4.5 round-trips for Co
 versus spread across \~16 for Claude. Since every request re-sends the full \~22k-token
 prefix, that packaging *is* the cost gap.
 
-And it isn't the model — it's the **same Sonnet snapshot** on both sides. The batching
+And it isn't the model — it's the **same Claude Sonnet 4.5** on both sides. The batching
 comes from the **harness's system instructions**: Copilot's prompt tells the model to
 issue independent tool calls in parallel; Claude's headless loop ran them one at a
 time. On this task — twenty files you can read in any order — parallel-by-default was
