@@ -81,7 +81,9 @@ Two things jump out:
 - **Cost does separate.** In this sample the two clusters don't overlap: Copilot
   CLI averaged **$0.13** token-normalized per run, the Claude CLI **$0.36** — about
   **2.8×**. But look at *why*: per-request prefix size was nearly identical (\~22k
-  tokens). The gap is **round-trips** — Claude averaged **16.4** model requests to
+  tokens), and both harnesses reused it from cache at similar rates (\~0.82 vs
+  \~0.89 hit — Claude isn't materially better at using a hot cache). The gap is
+  **round-trips** — Claude averaged **16.4** model requests to
   Copilot's **4.5**. But Claude wasn't *looking harder*: both made about the same
   number of tool calls (\~13 per run). What differs is how those calls were
   **packaged** into requests — the explainer just below unpacks it.
