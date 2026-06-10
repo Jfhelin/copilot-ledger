@@ -24,7 +24,7 @@
 <body>
 <div class="wrap">
   <h1>Same task, 40 headless runs — cost vs quality</h1>
-  <p class="sub">octocat_supply @ e1516cf · one pinned Sonnet snapshot · MCP off · token-normalized cost vs blind factual-coverage score (facts present, of 27; y-axis zoomed to 10–27). Toggle the filters to compare harnesses and conditions.</p>
+  <p class="sub">Token cost vs blind factual-coverage score. Toggle the filters to compare harnesses and conditions.</p>
   <div class="controls">
     <div class="group">
       <b>Harness</b>
@@ -40,6 +40,7 @@
   </div>
   <svg id="chart" viewBox="0 0 780 520" role="img" aria-label="Cost vs quality scatter"></svg>
   <div style="font-size:12px;color:#94a3b8;margin:2px 0 6px">Dashed lines mark each harness's mean cost (vertical) and mean quality (horizontal); they update as you filter.</div>
+  <div style="font-size:12px;color:#64748b;margin:0 0 6px"><b>BARE</b> = no memory file. <b>TRIM</b> = a short CLAUDE.md file included in the project.</div>
   <div class="stats" id="stats"></div>
 </div>
 <script>
