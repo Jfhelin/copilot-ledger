@@ -127,7 +127,7 @@ footer { margin-top: ${t.space.huge}px; padding-top: ${t.space.xl}px; border-top
 
 function readNextBlock(sibling) {
   if (!sibling) return "";
-  const href = sibling.slug === "index" ? "./" : `./${sibling.slug}.html`;
+  const href = `./${sibling.slug}.html`;
   return `
     <a class="readnext" href="${href}">
       <span class="rn-kicker">Read next</span>
@@ -136,6 +136,10 @@ function readNextBlock(sibling) {
 }
 
 function page(article, bodyHtml, sibling) {
+  // Canonical/og:url always point at the stable per-article slug page, even for
+  // the home article (which is also served at index.html) — so the shareable
+  // long URL stays the preferred one regardless of which article is the root.
+  const canonical = `${SITE.baseUrl}${article.slug}.html`;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -143,9 +147,11 @@ function page(article, bodyHtml, sibling) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(article.title)} — ${escapeHtml(SITE.name)}</title>
 <meta name="description" content="${escapeHtml(article.description)}">
+<link rel="canonical" href="${escapeHtml(canonical)}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="${escapeHtml(article.title)}">
 <meta property="og:description" content="${escapeHtml(article.description)}">
+<meta property="og:url" content="${escapeHtml(canonical)}">
 <meta name="robots" content="index,follow">
 <style>${styles()}</style>
 </head>
@@ -181,6 +187,13 @@ async function build() {
     const outName = `${article.slug}.html`;
     await writeFile(resolve(OUT_DIR, outName), html, "utf8");
     console.log(`  ✓ ${article.src} → dist/${outName}`);
+
+    // The home article is also served at the site root. It keeps its own stable
+    // slug page (above) as the canonical URL; index.html is an additional copy.
+    if (article.home) {
+      await writeFile(resolve(OUT_DIR, "index.html"), html, "utf8");
+      console.log(`  ✓ ${article.src} → dist/index.html (home)`);
+    }
   }
 
   // Copy referenced static assets (chart SVGs, interactive HTML) so the

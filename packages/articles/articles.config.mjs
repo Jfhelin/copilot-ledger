@@ -4,19 +4,28 @@
 // so that adding/removing a public page is a deliberate one-line edit — there is
 // no mechanism by which an unlisted draft can leak into the build.
 //
-// `slug` becomes the output filename (`<slug>.html`). The entry whose slug is
-// "index" is the site root. `src` is resolved relative to repo `docs/articles/`.
-// Order controls the "Read next" footer link (the only inter-page navigation).
+// `slug` becomes the output filename (`<slug>.html`) and is the article's
+// stable, permanent URL — share that, not the bare site root, so the link
+// survives any future reshuffle of which article is the front page. The entry
+// marked `home: true` is ALSO emitted as `index.html` (the site root); change
+// that flag to move the front page without breaking any shared `<slug>.html`
+// link. `src` is resolved relative to repo `docs/articles/`. Order controls the
+// "Read next" footer link (the only inter-page navigation).
 
 export const SITE = {
   name: "Copilot Ledger",
   // Used only for <title>/meta; no link target is rendered to the wider lab.
   tagline: "Notes on how AI coding agents actually behave",
+  // Public origin of the published bubble, with trailing slash. Used to build
+  // absolute canonical / og:url tags so the stable per-article slug URL is the
+  // one search engines and link unfurlers prefer (not the root index.html copy).
+  baseUrl: "https://jfhelin.github.io/copilot-ledger/",
 };
 
 export const ARTICLES = [
   {
-    slug: "index",
+    slug: "one-run-cant-rank-two-agents",
+    home: true,
     src: "one-run-cant-rank-two-agents.md",
     title: "One run can't tell two coding agents apart",
     description:
