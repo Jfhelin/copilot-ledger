@@ -38,6 +38,16 @@ export const ARTICLES = [
     title: "One run can't rank two coding agents",
     description:
       "Same model, same repo, same prompt, 40 headless runs across the Copilot CLI and the Claude CLI. Coding agents are models plus harnesses — and a single run measures harness behavior and variance, not which agent is better.",
+    // Renders with a blog-style post layout (hero title, category label,
+    // author/date byline, clean serif-free reading column) instead of the
+    // default lab style. This is an independent Copilot Ledger page — it mimics
+    // a typical tech-blog format but is not affiliated with the GitHub Blog.
+    theme: "github-blog",
+    category: "AI & ML",
+    author: "Jonas Helin",
+    authorTitle: "Strategic Cloud Solutions Engineer",
+    avatar: "author-jonas.png",
+    date: "June 10, 2026",
     order: 2,
   },
   {

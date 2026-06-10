@@ -135,7 +135,206 @@ function readNextBlock(sibling) {
     </a>`;
 }
 
+// ---- GitHub-blog post theme (opt-in via article.theme === "github-blog") ----
+// A self-contained restyle that mirrors the look of a github.blog article —
+// GitHub system font stack, near-black ink, blue links, a hero with a category
+// label + big bold title + author/date byline, and prominent pull-quotes — with
+// no external fonts or assets so the page stays a single shippable HTML file.
+
+function githubBlogStyles() {
+  return `
+:root {
+  --gh-bg: #ffffff;
+  --gh-ink: #1f2328;
+  --gh-muted: #59636e;
+  --gh-subtle: #656d76;
+  --gh-link: #0969da;
+  --gh-link-hover: #0550ae;
+  --gh-border: #d1d9e0;
+  --gh-border-subtle: #eaeef2;
+  --gh-raised: #f6f8fa;
+  --gh-accent: #0969da;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--gh-bg);
+  color: var(--gh-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.masthead {
+  border-bottom: 1px solid var(--gh-border);
+  padding: 18px 24px;
+}
+.masthead .mast-name {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--gh-ink);
+}
+.gh-wrap { max-width: 688px; margin: 0 auto; padding: 56px 24px 80px; }
+.gh-hero { margin: 0 0 40px; }
+.gh-cat {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gh-accent);
+  margin: 0 0 16px;
+}
+.gh-hero h1 {
+  font-size: 2.7rem;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  margin: 0 0 20px;
+}
+.gh-byline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--gh-border-subtle);
+}
+.gh-byline .gh-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--gh-border);
+  flex: 0 0 auto;
+}
+.gh-byline .gh-author-meta { display: flex; flex-direction: column; line-height: 1.35; }
+.gh-byline .gh-author-name { color: var(--gh-ink); font-weight: 600; font-size: 1rem; }
+.gh-byline .gh-author-sub { color: var(--gh-muted); font-size: 0.9rem; }
+h2 { font-size: 1.65rem; line-height: 1.25; letter-spacing: -0.01em; font-weight: 700; margin: 56px 0 16px; }
+h3 { font-size: 1.2rem; font-weight: 700; margin: 36px 0 8px; }
+p { margin: 0 0 24px; }
+a { color: var(--gh-link); text-decoration: none; }
+a:hover { color: var(--gh-link-hover); text-decoration: underline; }
+strong { color: var(--gh-ink); font-weight: 700; }
+em { font-style: italic; }
+hr { border: 0; border-top: 1px solid var(--gh-border); margin: 48px 0; }
+ul, ol { margin: 0 0 24px; padding-left: 1.5em; }
+li { margin: 6px 0; }
+blockquote {
+  margin: 36px 0;
+  padding: 4px 0 4px 24px;
+  border-left: 4px solid var(--gh-accent);
+  font-size: 1.5rem;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--gh-ink);
+}
+blockquote p { margin: 0; }
+blockquote p:last-child { margin-bottom: 0; }
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.85em;
+  background: var(--gh-raised);
+  border-radius: 6px;
+  padding: 0.15em 0.4em;
+}
+pre {
+  background: var(--gh-raised);
+  border: 1px solid var(--gh-border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+}
+pre code { background: none; padding: 0; font-size: 0.8em; }
+.table-scroll { overflow-x: auto; margin: 0 0 24px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { border: 1px solid var(--gh-border); padding: 8px 14px; text-align: left; }
+thead th { background: var(--gh-raised); font-weight: 700; }
+tbody tr:nth-child(even) { background: var(--gh-raised); }
+iframe { border-radius: 8px; border: 1px solid var(--gh-border) !important; }
+.readnext {
+  display: block;
+  margin-top: 64px;
+  padding: 24px;
+  border: 1px solid var(--gh-border);
+  border-radius: 12px;
+  background: var(--gh-bg);
+  text-decoration: none;
+}
+.readnext:hover { border-color: var(--gh-accent); text-decoration: none; }
+.readnext .rn-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gh-muted); }
+.readnext .rn-title { display: block; margin-top: 6px; color: var(--gh-link); font-weight: 700; font-size: 1.1rem; }
+footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--gh-border-subtle); color: var(--gh-muted); font-size: 0.85rem; }
+@media (max-width: 600px) {
+  .gh-wrap { padding: 32px 18px 56px; }
+  .gh-hero h1 { font-size: 2rem; }
+  body { font-size: 18px; }
+  blockquote { font-size: 1.25rem; }
+}
+`.trim();
+}
+
+// Drop the leading "# Title" the markdown body opens with — in the blog layout
+// the title is rendered in the hero header from article.title instead.
+function stripLeadingH1(html) {
+  return html.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>\s*/, "");
+}
+
+function githubBlogPage(article, bodyHtml, sibling) {
+  const canonical = `${SITE.baseUrl}${article.slug}.html`;
+  const body = stripLeadingH1(bodyHtml);
+  const subParts = [
+    article.authorTitle ? escapeHtml(article.authorTitle) : null,
+    article.date ? escapeHtml(article.date) : null,
+  ].filter(Boolean);
+  const byline = article.author
+    ? `<div class="gh-byline">
+${article.avatar ? `<img class="gh-avatar" src="./figures/${escapeHtml(article.avatar)}" alt="${escapeHtml(article.author)}" width="48" height="48">` : ""}
+<span class="gh-author-meta">
+<span class="gh-author-name">${escapeHtml(article.author)}</span>
+${subParts.length ? `<span class="gh-author-sub">${subParts.join(" · ")}</span>` : ""}
+</span>
+</div>`
+    : "";
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHtml(article.title)} — ${escapeHtml(SITE.name)}</title>
+<meta name="description" content="${escapeHtml(article.description)}">
+<link rel="canonical" href="${escapeHtml(canonical)}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${escapeHtml(article.title)}">
+<meta property="og:description" content="${escapeHtml(article.description)}">
+<meta property="og:url" content="${escapeHtml(canonical)}">
+<meta name="robots" content="index,follow">
+<style>${githubBlogStyles()}</style>
+</head>
+<body>
+<header class="masthead"><span class="mast-name">${escapeHtml(SITE.name)}</span></header>
+<main class="gh-wrap">
+<article>
+<header class="gh-hero">
+${article.category ? `<p class="gh-cat">${escapeHtml(article.category)}</p>` : ""}
+<h1>${escapeHtml(article.title)}</h1>
+${byline}
+</header>
+${body}
+</article>
+${readNextBlock(sibling)}
+<footer>${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</footer>
+</main>
+</body>
+</html>
+`;
+}
+
 function page(article, bodyHtml, sibling) {
+  if (article.theme === "github-blog") return githubBlogPage(article, bodyHtml, sibling);
   // Canonical/og:url always point at the stable per-article slug page, even for
   // the home article (which is also served at index.html) — so the shareable
   // long URL stays the preferred one regardless of which article is the root.
