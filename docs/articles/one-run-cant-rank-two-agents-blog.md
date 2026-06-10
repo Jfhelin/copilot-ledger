@@ -12,7 +12,7 @@ I wanted to understand how much that matters, so I ran a controlled comparison.
 
 Same repo. Same prompt. Same underlying model. Same pinned commit. Same environment constraints. Forty total headless runs.
 
-The cost result was clear: **Copilot CLI delivered similar factual coverage at materially lower token-normalized cost.** Quality was effectively a tie — the gap was under one point on a 27-point rubric — so this is a story about cost, not about one agent being smarter.
+The cost result was clear in this setup: **Copilot CLI delivered similar factual coverage at materially lower token-normalized cost.** Quality was effectively a tie — the gap was under one point on a 27-point rubric — so this is a story about cost, not about one agent being smarter.
 
 But that is not the most important point.
 
@@ -73,7 +73,7 @@ So Copilot CLI cost roughly a third as much, while quality stayed effectively ti
 
 And both harnesses shared the same blind spot: all 40 answers repeated a stale port number straight from the README instead of checking the actual config — a failure that owes nothing to which harness you picked, and everything to the context they were given.
 
-That is the small win. But the bigger lesson is more interesting.
+That cost result is the surface-level finding. The bigger lesson is more interesting.
 
 ## The harness mattered more than the model
 
@@ -83,7 +83,7 @@ So why did the results differ?
 
 The main difference was how the harnesses approached the work.
 
-Both harnesses made roughly the same number of tool calls — about 13 file and directory reads per run. The difference was packaging. Copilot CLI batched independent reads together, averaging about 4.5 model round-trips. Claude CLI took a more sequential path, averaging about 16. Because every request re-sends the same large shared prefix (around 22k tokens), those extra round-trips — not the model, and not cache efficiency, which was similar on both sides — are the cost gap.
+Both harnesses made roughly the same number of tool calls — about 13 file and directory reads per run. The difference was packaging. Copilot CLI batched independent reads together, averaging about 4.5 model round-trips. Claude CLI took a more sequential path, averaging about 16. Because every request carries the same large shared prefix — around 22k tokens — those extra round-trips explain the cost gap far better than the model itself or cache efficiency, which was similar on both sides.
 
 For this repository-explanation task, batching helped.
 
@@ -115,7 +115,7 @@ That is the N=1 trap.
 
 So why do two similar runs differ at all? A gap between two runs can be one of four things:
 
-1. **Randomness** — the same harness varies run to run, as the numbers above show. This is usually the largest single factor.
+1. **Randomness** — the same harness varies run to run, as the numbers above show. In this dataset, that variation alone was already large enough to mislead an N=1 comparison.
 2. **Your environment** — skills, MCP servers, and memory files change what the model sees before you type a word. They are yours, not the harness's.
 3. **Task fit** — a harness strategy that happens to suit *this* task, like the batching above. Real, but task-shaped, and easily copied by any other harness.
 4. **Genuine, general superiority** — possible, but a single run cannot show it, and in this controlled sample we saw no sign of it.
@@ -157,11 +157,11 @@ Copilot is not just one model in one surface. It is a developer experience acros
 
 It can support different models — including models from multiple vendors — across different surfaces and interaction patterns, all while keeping developers inside a familiar workflow.
 
-That matters precisely because no single model or harness strategy wins every task. If the best tool for one job is a different model than the best tool for the next, being able to switch models — without leaving your editor, your CLI, or your review workflow — is itself an efficiency advantage. It is the same logic as picking the right model for the task, applied across vendors instead of locked to one.
+That matters because this experiment is a reminder that task fit cuts both ways. If the best tool for one job is a different model or harness strategy than the best tool for the next, being able to switch models — without leaving your editor, your CLI, or your review workflow — can be an efficiency advantage. It is the same logic as picking the right model for the task, applied across vendors instead of locked to one.
 
 In this experiment, Copilot CLI came out ahead on cost at no measured cost to quality. But that is one CLI on one task — not proof that Copilot is generally better, and not what this experiment set out to show.
 
-But the durable takeaway is not the scoreboard.
+The durable takeaway is not the scoreboard.
 
 The durable takeaway is that agent effectiveness is a system property. It comes from the model, the harness, the tools, the context, and the workflow working together.
 
