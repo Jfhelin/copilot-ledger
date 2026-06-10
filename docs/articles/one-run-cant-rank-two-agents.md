@@ -160,16 +160,14 @@ and they're easy to confuse:
 
 The trap is reading a #1/#2/#3 result as if it were #4.
 
-And note which direction the small edge here points: on raw averages **Copilot
-"won" this round** — slightly higher mean quality at lower cost. It doesn't matter.
-The quality gap (≈0.65 of 27) is tiny next to the run-to-run spread (pooled SD ≈ 1.7),
-an effect size of *d* ≈ 0.4 whose 95% CI comfortably spans zero. To confirm even
-*that* fraction of a point as real — for this one prompt, repo, and model snapshot —
-you'd
-need on the order of **\~100 runs per harness**, not ten; and to call one harness
-better *in general* you'd then have to repeat the whole thing across many prompts and
-repositories. Picking a winning harness from this — or from any N=1 race — is exactly
-the mistake the data warns against.
+And notice which way the small edge here points: on the raw averages, **Copilot
+"won" this round** — a touch higher quality at lower cost. It doesn't matter. That
+quality gap is well under a single point out of 27 — smaller than the swing you get
+from just running the same harness twice. To trust even that sliver as real, you'd
+need something like **\~100 runs per harness**, not ten; and to claim one harness is
+better *in general*, you'd have to repeat the whole thing across many prompts and
+repos. Crowning a winner from this — or from any single race — is exactly the mistake
+the data warns against.
 
 ## What to trust instead
 
