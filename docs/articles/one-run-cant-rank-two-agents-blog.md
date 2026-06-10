@@ -147,15 +147,17 @@ The useful question is:
 
 > Why did this agent behave the way it did on this task?
 
+None of this replaces the standard guidance for getting good results from an agent — pick the right model for the job (or let Auto mode choose as a sensible fallback), write precise requests, and give the agent the context and guardrails it needs. It adds one habit on top: when you compare two agents, judge the spread across several runs, not a single dot — and check what your own environment is injecting before you blame the harness.
+
 ## What this means for Copilot
 
 This experiment tested only Copilot CLI on one headless task — not the full Copilot product surface. But it points to a broader lesson that matters for Copilot and every other coding-agent environment.
 
 Copilot is not just one model in one surface. It is a developer experience across editors, GitHub, the CLI, pull requests, issues, repositories, and enterprise workflows.
 
-It can support different models, different surfaces, and different interaction patterns while keeping developers inside a familiar workflow.
+It can support different models — including models from multiple vendors — across different surfaces and interaction patterns, all while keeping developers inside a familiar workflow.
 
-That flexibility matters because no single model or harness strategy will win every task.
+That matters precisely because no single model or harness strategy wins every task. If the best tool for one job is a different model than the best tool for the next, being able to switch models — without leaving your editor, your CLI, or your review workflow — is itself an efficiency advantage. It is the same logic as picking the right model for the task, applied across vendors instead of locked to one.
 
 In this experiment, Copilot CLI came out ahead on cost at no measured cost to quality. But that is one CLI on one task — not proof that Copilot is generally better, and not what this experiment set out to show.
 
