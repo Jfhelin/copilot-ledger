@@ -33,12 +33,20 @@ export const ARTICLES = [
     order: 1,
   },
   {
+    slug: "one-run-cant-rank-two-agents-blog",
+    src: "one-run-cant-rank-two-agents-blog.md",
+    title: "One run can't rank two coding agents",
+    description:
+      "Same model, same repo, same prompt, 40 headless runs across the Copilot CLI and the Claude CLI. Coding agents are models plus harnesses — and a single run measures harness behavior and variance, not which agent is better.",
+    order: 2,
+  },
+  {
     slug: "why-n1-benchmarks-mislead",
     src: "why-n1-benchmarks-mislead.md",
     title: "Why coding-agent comparisons keep disagreeing",
     description:
       "Same task, same model family, six runs — an ~18× cost spread. Why single-run timing/cost/cache comparisons measure variance and configuration, not harness effectiveness.",
-    order: 2,
+    order: 3,
   },
   {
     slug: "what-actually-differs",
@@ -47,6 +55,6 @@ export const ARTICLES = [
       "What actually differs between VS Code Copilot, Claude Code in VS Code, and the Claude CLI",
     description:
       "Same Sonnet weights, 22k–131k tokens before you type. A measured decomposition of what each environment injects, what the harness controls, and what you do.",
-    order: 3,
+    order: 4,
   },
 ];
