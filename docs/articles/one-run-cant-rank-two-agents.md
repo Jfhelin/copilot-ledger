@@ -65,9 +65,15 @@ and the band widens fast: an [earlier test](./why-n1-benchmarks-mislead.html) hi
 Now both harnesses on one chart — **cost on the x-axis, blind quality on the
 y-axis, one dot per run.**
 
+<iframe src="./figures/cost-vs-quality-interactive.html" loading="lazy" scrolling="no" title="Cost vs quality across 40 headless runs — interactive: filter by harness and condition, hover any dot for its run" style="width:100%;height:720px;border:0;display:block;margin:0 0 12px"></iframe>
+
+<noscript>
+
 ![Cost vs quality across 40 runs: Copilot clusters near $0.11–0.19, Claude near $0.22–0.53, both at the same quality height](./figures/cost-vs-quality-40-runs.svg)
 
-[*Open the interactive version*](./figures/cost-vs-quality-interactive.html) *to filter by harness and condition and hover any dot for its run.*
+</noscript>
+
+*Filter by harness and condition above, and hover any dot for its run.*
 
 Two things jump out:
 
