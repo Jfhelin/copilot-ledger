@@ -102,23 +102,23 @@ ranking — it's that **one task, one run, cannot support a ranking at all.**
 
 ### Why Copilot reached the same answer for less
 
-The round-trip gap looks like "Claude worked harder," but it isn't. Both harnesses
-made about the **same number of tool calls** — \~13 file and directory reads per run —
-so they did equal *looking*. What differed is **packaging**: Copilot fired **\~3 tool
-calls in a single turn** (the README, `package.json`, and the directory tree all at
-once), while Claude issued them **one per request** — across all 20 of its runs it
-never once batched two. The same \~13 reads folded into \~4.5 round-trips for Copilot
-versus spread across \~16 for Claude. Since every request re-sends the full \~22k-token
-prefix, that packaging *is* the cost gap.
+The round-trip gap looks like Claude *worked harder*. It didn't. Both harnesses ran
+about the **same number of tool calls** — \~13 file and directory reads per run. They
+looked at the same things. What differed is how those reads were **packaged**. Copilot
+grouped them, firing **\~3 tool calls in one turn** (README, `package.json`, and the
+directory tree together). Claude sent them **one at a time** — across all 20 of its
+runs it never once batched two. So the same \~13 reads became **\~4.5 round-trips for
+Copilot but \~16 for Claude**. And since every request re-sends the full \~22k-token
+prefix, those extra round-trips *are* the cost gap.
 
-And it isn't the model — it's the **same Claude Sonnet 4.5** on both sides. The batching
-comes from the **harness's system instructions**: Copilot's prompt tells the model to
-issue independent tool calls in parallel; Claude's headless loop ran them one at a
-time. On this task — twenty files you can read in any order — parallel-by-default was
-simply the **better-fitting instruction here**, a real efficiency win at no measured
-quality cost. But that's reason #3 below, not #4: a strategy that *fit this prompt*.
-On work where each step depends on the last, there's nothing to batch and the same
-instinct can over-read. The advantage is structural and real — and still task-shaped.
+It isn't the model, either — both sides ran the **same Claude Sonnet 4.5**. The
+difference is the **harness's system prompt**: Copilot's tells the model to fire
+independent tool calls in parallel; Claude's headless loop ran them one at a time. For
+this task — twenty files you can read in any order — batching was simply the better
+fit: a real efficiency win at no cost to quality. But it's a strategy that *suited this
+prompt*, not proof one harness is better (that's reason #3 below, not #4). On work
+where each step depends on the last, there's nothing to batch, and the same eager
+instinct can over-read. The edge is structural and real — but still shaped by the task.
 
 ## The N=1 trap, quantified
 
@@ -132,14 +132,17 @@ purely on *which two runs you happen to draw* from this very dataset:
 Same two tools, same task, same data — and a single-run comparison can hand the
 "win" to either side. The headline is an artifact of the draw.
 
-## So why *did* the two runs differ? Four reasons, in order
+## So why *do* two similar runs differ? Four reasons, in order
 
 When a single A-vs-B comparison shows a gap, there are only four things it can be —
 and they're easy to confuse:
 
 1. **Randomness.** The repeatability envelope above. Here it alone moved cost up to
    \~1.6×, time \~1.8×, cache work \~2×, *with every input identical*. This is the
-   default explanation for any single-run gap, and usually the largest.
+   default explanation for any single-run gap, and usually the largest. And remember
+   this band comes from a *tightly* controlled setup — loosen the controls and it
+   blows open: a less precise [earlier run](./why-n1-benchmarks-mislead.html) saw
+   what looked like the same runs diverge \~18×.
 2. **Your environment — the part you control.** Skills, MCP servers, and
    auto-loaded memory files change what the model sees before you type a word — and
    they're *yours*, not the harness's. They move cost, too: the tool definitions a
