@@ -104,19 +104,82 @@ else on this list, you set yourself.
 
 ---
 
-## 4. Who controls what
+## 4. The other harness-level difference: how the harness drives the tool loop
+
+§3 is about *space* — how tool **schemas** are packaged onto the wire each turn
+(flat vs grouped/deferred). There's a second, independent axis that is also pure
+harness behavior: *time* — how many tool **calls** the harness packs into a single
+LLM round-trip. Think of them as **two axes of tool packaging**: §3 is spatial
+(schemas per turn), this one is temporal (calls per round-trip).
+
+We traced the per-request tool path for all 40 runs of the controlled headless
+capture behind the [companion article](./why-n1-benchmarks-mislead.html) — the same
+"explain this repo to a new dev" prompt, run 10× each across two **CLI** harnesses
+(**Copilot CLI** and **Claude CLI**, both headless), pinned to one model snapshot
+(`claude-sonnet-4-5-20250929`), MCP off. Copilot cost **~$0.13/run**, Claude
+**~$0.36** (**~2.8×**), at a statistical quality tie.
+
+That 2.8× gap is **not** more exploration. Both harnesses did roughly equal work:
+
+| Harness (headless CLI) | LLM requests/run | Tool calls/run | Tool calls per request | Cost/run |
+|---|---:|---:|---:|---:|
+| **Copilot CLI** | 4.5 | 13.9 | **3.12** | ~$0.13 |
+| **Claude CLI** | 16.4 | 12.9 | **0.77** | ~$0.36 |
+
+Nearly identical amount of "looking" (~13–14 reads each). The difference is
+**batching**. Copilot issued **3.1 tool calls per request** on average — routinely firing
+2–4 parallel `view` calls in one turn (one turn opened the README, `package.json`,
+and the directory tree at once). The Claude CLI was **strictly sequential**: across
+all 20 of its runs (258 tool-calling turns) it issued exactly **one** tool call per
+turn — it **never once batched two**.
+
+This survives controlling for the model: identical `claude-sonnet-4-5-20250929`
+snapshot on both sides. The batching is a **harness behavior**, driven by the
+harness's **system instructions** — Copilot's prompt tells the model to issue
+independent tool calls in parallel; the Claude CLI's headless loop ran them one at
+a time. A contributing tool-design factor: Copilot's `view` reads **both files and
+directories**, so listing and reading funnel through one batchable tool, while the
+Claude CLI splits the same work across `Read` (files only), `Bash` (`ls`/`find`),
+and `Glob` — and ran them sequentially.
+
+Mechanism → cost: each request re-sends the **full per-request prefix** (~22k
+tokens in this capture). Folding ~13 reads into ~4.5 round-trips instead of
+spreading them across ~16 is the **entire** cost gap — at no measured quality cost.
+
+> Two harnesses, the same model, the same ~13 file reads — but one paid for them in
+> 4.5 round-trips and the other in 16. Nobody changed *what* got looked at; the
+> harness changed *how many round-trips* it took.
+
+**Scope it honestly.** This is **task-shaped**. Batching wins on *embarrassingly
+parallel* work — many independent file reads, as here. On tasks where each step
+depends on the last (read an error → edit → re-run → read the result) there's
+nothing to batch, and aggressive batching can over-read. And the sequential side is
+"the **Claude CLI in this headless config**," not Claude the model — it may be a
+headless-config artifact rather than how Claude Code behaves interactively. The
+takeaway is the same as §3: with model and config held fixed, a structural harness
+choice still moved the bill.
+
+Note the source. This evidence is from the two **CLI** harnesses (Copilot CLI /
+Claude CLI), not the IDE captures (E1/E2/E3) behind §1–§3. The Copilot CLI already
+appears in §6 as a sibling harness, so this is consistent — but it's a **terminal**
+capture, not an IDE one.
+
+---
+
+## 5. Who controls what
 
 | Knob | Who actually controls it | Notes |
 |---|---|---|
-| **Model weights** | Shared | Same Sonnet snapshot if you pin it (see §6). |
+| **Model weights** | Shared | Same Sonnet snapshot if you pin it (see §7). |
 | **System prompt** | Harness | Differs in wording; small share of tokens. |
-| **Tool delivery (grouped vs flat)** | **Harness** | The real structural difference (§3). |
+| **Tool delivery (grouped vs flat)** | **Harness** | A structural difference — schema packaging (§3). |
+| **Tool-loop batching (parallel vs sequential)** | **Harness** | A structural difference — calls per round-trip (§4). |
 | **MCP servers enabled** | **You** | Dominant cost driver (84–87% of prefix). |
 | **Skills installed** | **You** (E1 only) | Not virtualized; uninstalling cuts every call. |
 | **Project memory** (`CLAUDE.md`, instructions) | **You** | Inflates E3's window with no tools at all. |
 | **Repo / working set** | **You** | What the agent has to read. |
 | **The prompt + round-trips it triggers** | **You** | The biggest *variable* cost ([companion article](./why-n1-benchmarks-mislead.html)). |
-| **Billing unit** | Harness / platform | §5. |
+| **Billing unit** | Harness / platform | §6. |
 
 The table is the argument: **most of the cost-moving knobs are on your side of the
 line.** Two of the three environments will converge if you set those knobs the
@@ -124,7 +187,7 @@ same way.
 
 ---
 
-## 5. The bill is denominated differently — so "$ cost" comparisons are apples-to-oranges
+## 6. The bill is denominated differently — so "$ cost" comparisons are apples-to-oranges
 
 - **E1 (Copilot)** bills in **GitHub AI credits** — a real, metered number with
   model multipliers built in. (The Copilot **CLI**, a sibling harness, even prints
@@ -145,7 +208,7 @@ every harness reports the same way.
 
 ---
 
-## 6. The parity recipe — getting comparable quality and cost from all three
+## 7. The parity recipe — getting comparable quality and cost from all three
 
 If you want a comparison (or a migration) that isn't dominated by accidental
 configuration, match these before you read a single number:
@@ -172,7 +235,7 @@ control.
 
 ---
 
-## 7. Cost & latency under a real task `[NEEDS CAPTURE]`
+## 8. Cost & latency under a real task `[NEEDS CAPTURE]`
 
 The structural story above is measured. The *working-session* comparison — does
 the parity recipe actually produce comparable cost/latency on a real task across
@@ -192,7 +255,7 @@ verdict on whether the parity recipe holds.
 
 ---
 
-## Appendix — IDE capture checklist (to finish §7)
+## Appendix — IDE capture checklist (to finish §8)
 
 These are the runs only a human in the IDE can produce. Keep everything else
 fixed; vary only the environment.
@@ -217,22 +280,24 @@ fixed; vary only the environment.
 > demonstrates §1/§3 on a real task rather than a "hi."
 
 **After capturing**, drop the files in `~/CopilotLogExports/` and I'll digest them
-with `copilot-chat-export` and fill in §7 (cost, spread, outcome) — the numbers
+with `copilot-chat-export` and fill in §8 (cost, spread, outcome) — the numbers
 trace straight from the digest, same as the structural tables above.
 
 ---
 
 ## What we measured vs. what we're claiming (honesty box)
 
-- **Measured `[HAVE]`:** every number in §1–§5 — prompt tokens, tool-def share,
+- **Measured `[HAVE]`:** every number in §1–§6 — prompt tokens, tool-def share,
   skill counts, tool-delivery strategy — from real captures (`hi18`, `Claudeok`,
   `hi_VSCInsider_claude`, `matched-pair-2.1.112`), digested with the repo's own
-  scripts.
+  scripts. The §4 tool-loop batching numbers (requests, tool calls, tools/req,
+  cost) come from the same 40-run headless CLI capture as the
+  [companion article](./why-n1-benchmarks-mislead.html).
 - **Not matched:** the four §1 captures use different MCP/skill configs. They
   demonstrate *that configuration dominates the window*; they are **not** a
   harness-efficiency ranking.
 - **Not yet measured `[NEEDS CAPTURE]`:** the real-task cost/latency comparison
-  (§7) — pending the IDE captures above.
+  (§8) — pending the IDE captures above.
 - **Single-environment:** the 18× variance is from E3 only; treat it as an
   existence proof of wide run-to-run variance, corroborated by a smaller
   Copilot-CLI spread, not as a bound on any specific pair.
