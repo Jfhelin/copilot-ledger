@@ -24,10 +24,11 @@ that one tempting slide hides.
   new developer get productive in this repository. Explain what it is and its
   purpose, the main components and how they fit together, the data flow between them,
   and exactly how to install, run, and test it locally. Be specific and accurate."*
-- **Repo:** [`octocat_supply`](https://github.com/octodemo/octocat_supply) pinned at
-  one commit (`e1516cf`).
-- **Model:** one pinned Sonnet snapshot (`claude-sonnet-4-5-20250929`), verified
-  identical in both CLIs.
+- **Repo:** [`octocat_supply`](https://github.com/octodemo/octocat_supply), a
+  medium-sized full-stack TypeScript app we often use for demos — a React/Vite
+  frontend and an Express + SQLite API — pinned to a single commit so every run
+  saw exactly the same code.
+- **Model:** Claude Sonnet 4.5 (the same API version on both sides).
 - **Environment held flat:** MCP servers off on both sides; the repo's
   auto-loaded instruction files removed (more on why below). Two conditions —
   **BARE** (no memory file) and **TRIM** (one short, identical `CLAUDE.md` both
