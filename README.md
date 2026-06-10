@@ -6,14 +6,38 @@ Tools for understanding and improving **VS Code Copilot Chat** session efficienc
 
 📄 **Flagship article (stable link): [One run can't tell two coding agents apart →](https://jfhelin.github.io/copilot-ledger/one-run-cant-rank-two-agents.html)** — same model, same repo, same prompt, 40 runs across the Copilot CLI and the Claude CLI. This per-article URL stays valid even after the site's front page changes.
 
-Two artifacts, one repo:
+What's in the repo:
 
 | Package | What it is | Who uses it |
 |---|---|---|
 | [`packages/skill`](./packages/skill) | A Copilot CLI **skill** (`copilot-chat-export`) that digests an exported chat session and reports token spend, cache efficiency, sub-agent flow, and prompt-shape anomalies | The agent, when you ask it to analyse a session |
 | [`packages/skill-claude`](./packages/skill-claude) | A sister Copilot CLI **skill** (`claude-code-export`) that digests a **Claude Code** session into the *same* schema, so Copilot and Claude runs can be compared side by side. Knows the two-log workflow (CLI transcript + optional proxy capture) and ships the capture relay | The agent, when you ask it to analyse or compare a Claude Code session |
+| [`packages/skill-copilot-cli`](./packages/skill-copilot-cli) | A third sibling **skill** (`copilot-cli-export`) that digests a **Copilot CLI** session from its `process-*.log` — exact tokens *and* the exact billed GitHub AI Credits, no proxy needed — into the same schema, completing the three-way Copilot / Claude / CLI comparison. Also knows how to run Copilot CLI headlessly and capture the log | The agent, when you ask it to analyse or compare a Copilot CLI run |
 | [`packages/cost-view`](./packages/cost-view) | A focused **React app** that hosts the **Copilot Behavior Lab** knowledge site (Home, Learn, Experiments, Observations, Session Gallery, About) and renders the report viewer under **Analyze Session** — per-prompt cost breakdown, cache attribution, tool usage, multi-model projections. Includes the parser/cost-analysis library | You, in a browser or inside a canvas |
 | [`packages/canvas-extension`](./packages/canvas-extension) | A thin **canvas extension** that opens the cost-view in a Copilot CLI side panel and round-trips a "currently selected prompt" between the canvas and the chat | You + the agent, working on the same session together |
+| [`packages/articles`](./packages/articles) | The published **"bubble"** that builds the live [Copilot Behavior Lab](https://jfhelin.github.io/copilot-ledger/) site — one standalone HTML page per article, deployed to GitHub Pages | You, reading the experiments online |
+
+A fourth skill, [`copilot-behavior-lab`](./.github/skills/copilot-behavior-lab) (in
+`.github/skills/`, with no package of its own), is the **publishing** skill: it turns a
+session analysis into the article / LinkedIn / short-video bundle that feeds the live
+site. The three digest skills above are also installed under
+[`.github/skills/`](./.github/skills) so the agent can invoke them in this repo.
+
+### Capture & analysis toolkit
+
+The data-gathering pieces we built so a session can be captured *and* compared
+apples-to-apples across the three harnesses:
+
+| Piece | What it does |
+|---|---|
+| [`scripts/digest.mjs`](./packages/skill/scripts/digest.mjs) | Digests a **VS Code Copilot Chat** export into the shared schema (tokens, cache, sub-agents, prompt shape). |
+| [`scripts/claude-relay.mjs`](./packages/skill-claude/scripts/claude-relay.mjs) | A minimal **Anthropic API logging proxy** for Claude Code: sits at `ANTHROPIC_BASE_URL`, streams responses through untouched, and tees each `/v1/messages` request (`system`, `tools`, `messages`) to a JSON capture — the only way to see Claude's exact system prompt + tool schemas. |
+| [`scripts/claude-digest.mjs`](./packages/skill-claude/scripts/claude-digest.mjs) | Digests a **Claude Code** session (CLI transcript + optional relay capture) into the shared schema. |
+| [`scripts/copilot-cli-digest.mjs`](./packages/skill-copilot-cli/scripts/copilot-cli-digest.mjs) | Digests a **Copilot CLI** `process-*.log` — exact tokens **and** exact billed GitHub AI Credits, no proxy needed. |
+| [`scripts/copilot-run.mjs`](./packages/skill-copilot-cli/scripts/copilot-run.mjs) | Runs **Copilot CLI headlessly** for N repetitions, captures each debug log, digests it, and prints a comparison table — the repeatable-capture harness behind the experiments. |
+
+All three digesters emit the **same schema**, which is what makes the Copilot CLI /
+Claude Code / VS Code Copilot numbers directly comparable.
 
 ## Why a separate repo?
 
