@@ -75,8 +75,9 @@ Two things jump out:
   CLI averaged **$0.13** token-normalized per run, the Claude CLI **$0.36** — about
   **2.8×**. But look at *why*: per-request prefix size was nearly identical (\~22k
   tokens). The gap is **round-trips** — Claude averaged **16.4** model requests to
-  Copilot's **4.5**. It's the *same exploration knob* that drives the within-harness
-  swing in Finding 1, just turned further by default for this task.
+  Copilot's **4.5**. But Claude wasn't *looking harder*: both made about the same
+  number of tool calls (\~13 per run). What differs is how those calls were
+  **packaged** into requests — the explainer just below unpacks it.
 - **Quality does not.** The dots form a flat band near the top of the scale (the
   y-axis is zoomed to 10–27, where every real score lands). Copilot averaged
   **21.0/27**, Claude **20.4/27** — and the difference's 95% confidence interval
@@ -88,9 +89,29 @@ Two things jump out:
   of reading the config. Similar coverage, very different prices.
 
 To be explicit: **this is not "Copilot is better."** Copilot's quality edge here is
-inside the noise, and Claude's higher cost is *exploration verbosity on one task*,
-not a defect. The point is the opposite of a ranking — it's that **one task, one
-run, cannot support a ranking at all.**
+inside the noise, and Claude's higher cost is a *packaging choice on one task*
+(sequential vs parallel tool calls), not a defect. The point is the opposite of a
+ranking — it's that **one task, one run, cannot support a ranking at all.**
+
+### Why Copilot reached the same answer for less
+
+The round-trip gap looks like "Claude worked harder," but it isn't. Both harnesses
+made about the **same number of tool calls** — \~13 file and directory reads per run —
+so they did equal *looking*. What differed is **packaging**: Copilot fired **\~3 tool
+calls in a single turn** (the README, `package.json`, and the directory tree all at
+once), while Claude issued them **one per request** — across all 20 of its runs it
+never once batched two. The same \~13 reads folded into \~4.5 round-trips for Copilot
+versus spread across \~16 for Claude. Since every request re-sends the full \~22k-token
+prefix, that packaging *is* the cost gap.
+
+And it isn't the model — it's the **same Sonnet snapshot** on both sides. The batching
+comes from the **harness's system instructions**: Copilot's prompt tells the model to
+issue independent tool calls in parallel; Claude's headless loop ran them one at a
+time. On this task — twenty files you can read in any order — parallel-by-default was
+simply the **better-fitting instruction here**, a real efficiency win at no measured
+quality cost. But that's reason #3 below, not #4: a strategy that *fit this prompt*.
+On work where each step depends on the last, there's nothing to batch and the same
+instinct can over-read. The advantage is structural and real — and still task-shaped.
 
 ## The N=1 trap, quantified
 
