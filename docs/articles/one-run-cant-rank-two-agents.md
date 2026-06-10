@@ -87,15 +87,13 @@ Two things jump out:
   Copilot's **4.5**. But Claude wasn't *looking harder*: both made about the same
   number of tool calls (\~13 per run). What differs is how those calls were
   **packaged** into requests — the explainer just below unpacks it.
-- **Quality does not.** The dots form a flat band near the top of the scale (the
-  y-axis is zoomed to 10–27, where every real score lands). Copilot averaged
-  **21.0/27**, Claude **20.4/27** — and the difference's 95% confidence interval
-  (**[−0.4, +1.7]**) **spans zero** (it's a statistical tie). Across all 40 runs, the
-  correlation between **cost and quality was ≈ 0** (r = −0.05). More requests, more
-  tokens, more spend bought *no measurable quality*. And neither side was punished by
-  the rubric for making things up — yet **every one of the 40 answers repeated the
-  same wrong fact**: a stale port number both agents trusted from the README instead
-  of reading the config. Similar coverage, very different prices.
+- **Quality does not.** The dots sit in a flat band near the top — both harnesses
+  scored about the same. Copilot averaged **21.0 of 27** facts covered, Claude
+  **20.4** — close enough to be a tie, and well inside the run-to-run noise.
+  Spending more — more requests, more tokens, more dollars — bought **no better
+  answer**. And both sides got the *same* thing wrong: **every one of the 40
+  answers repeated a stale port number** straight from the README instead of
+  checking the config. Same coverage, very different prices.
 
 To be explicit: **this is not "Copilot is better."** Copilot's quality edge here is
 inside the noise, and Claude's higher cost is a *packaging choice on one task*
