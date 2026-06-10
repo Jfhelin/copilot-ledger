@@ -24,10 +24,11 @@ that one tempting slide hides.
   new developer get productive in this repository. Explain what it is and its
   purpose, the main components and how they fit together, the data flow between them,
   and exactly how to install, run, and test it locally. Be specific and accurate."*
-- **Repo:** [`octocat_supply`](https://github.com/octodemo/octocat_supply) pinned at
-  one commit (`e1516cf`).
-- **Model:** one pinned Sonnet snapshot (`claude-sonnet-4-5-20250929`), verified
-  identical in both CLIs.
+- **Repo:** [`octocat_supply`](https://github.com/octodemo/octocat_supply), a
+  medium-sized full-stack TypeScript app we often use for demos — a React/Vite
+  frontend and an Express + SQLite API — pinned to a single commit so every run
+  saw exactly the same code.
+- **Model:** Claude Sonnet 4.5 (the same API version on both sides).
 - **Environment held flat:** MCP servers off on both sides; the repo's
   auto-loaded instruction files removed (more on why below). Two conditions —
   **BARE** (no memory file) and **TRIM** (one short, identical `CLAUDE.md` both
@@ -65,28 +66,34 @@ and the band widens fast: an [earlier test](./why-n1-benchmarks-mislead.html) hi
 Now both harnesses on one chart — **cost on the x-axis, blind quality on the
 y-axis, one dot per run.**
 
+<iframe src="./figures/cost-vs-quality-interactive.html" loading="lazy" scrolling="no" title="Cost vs quality across 40 headless runs — interactive: filter by harness and condition, hover any dot for its run" style="width:100%;height:720px;border:0;display:block;margin:0 0 12px"></iframe>
+
+<noscript>
+
 ![Cost vs quality across 40 runs: Copilot clusters near $0.11–0.19, Claude near $0.22–0.53, both at the same quality height](./figures/cost-vs-quality-40-runs.svg)
 
-[*Open the interactive version*](./figures/cost-vs-quality-interactive.html) *to filter by harness and condition and hover any dot for its run.*
+</noscript>
+
+*Filter by harness and condition above, and hover any dot for its run.*
 
 Two things jump out:
 
 - **Cost does separate.** In this sample the two clusters don't overlap: Copilot
   CLI averaged **$0.13** token-normalized per run, the Claude CLI **$0.36** — about
   **2.8×**. But look at *why*: per-request prefix size was nearly identical (\~22k
-  tokens). The gap is **round-trips** — Claude averaged **16.4** model requests to
+  tokens), and both harnesses reused it from cache at similar rates (\~0.82 vs
+  \~0.89 hit — Claude isn't materially better at using a hot cache). The gap is
+  **round-trips** — Claude averaged **16.4** model requests to
   Copilot's **4.5**. But Claude wasn't *looking harder*: both made about the same
   number of tool calls (\~13 per run). What differs is how those calls were
   **packaged** into requests — the explainer just below unpacks it.
-- **Quality does not.** The dots form a flat band near the top of the scale (the
-  y-axis is zoomed to 10–27, where every real score lands). Copilot averaged
-  **21.0/27**, Claude **20.4/27** — and the difference's 95% confidence interval
-  (**[−0.4, +1.7]**) **spans zero** (it's a statistical tie). Across all 40 runs, the
-  correlation between **cost and quality was ≈ 0** (r = −0.05). More requests, more
-  tokens, more spend bought *no measurable quality*. And neither side was punished by
-  the rubric for making things up — yet **every one of the 40 answers repeated the
-  same wrong fact**: a stale port number both agents trusted from the README instead
-  of reading the config. Similar coverage, very different prices.
+- **Quality does not.** The dots sit in a flat band near the top — both harnesses
+  scored about the same. Copilot averaged **21.0 of 27** facts covered, Claude
+  **20.4** — close enough to be a tie, and well inside the run-to-run noise.
+  Spending more — more requests, more tokens, more dollars — bought **no better
+  answer**. And both sides got the *same* thing wrong: **every one of the 40
+  answers repeated a stale port number** straight from the README instead of
+  checking the config. Same coverage, very different prices.
 
 To be explicit: **this is not "Copilot is better."** Copilot's quality edge here is
 inside the noise, and Claude's higher cost is a *packaging choice on one task*
@@ -104,7 +111,7 @@ never once batched two. The same \~13 reads folded into \~4.5 round-trips for Co
 versus spread across \~16 for Claude. Since every request re-sends the full \~22k-token
 prefix, that packaging *is* the cost gap.
 
-And it isn't the model — it's the **same Sonnet snapshot** on both sides. The batching
+And it isn't the model — it's the **same Claude Sonnet 4.5** on both sides. The batching
 comes from the **harness's system instructions**: Copilot's prompt tells the model to
 issue independent tool calls in parallel; Claude's headless loop ran them one at a
 time. On this task — twenty files you can read in any order — parallel-by-default was
@@ -153,16 +160,14 @@ and they're easy to confuse:
 
 The trap is reading a #1/#2/#3 result as if it were #4.
 
-And note which direction the small edge here points: on raw averages **Copilot
-"won" this round** — slightly higher mean quality at lower cost. It doesn't matter.
-The quality gap (≈0.65 of 27) is tiny next to the run-to-run spread (pooled SD ≈ 1.7),
-an effect size of *d* ≈ 0.4 whose 95% CI comfortably spans zero. To confirm even
-*that* fraction of a point as real — for this one prompt, repo, and model snapshot —
-you'd
-need on the order of **\~100 runs per harness**, not ten; and to call one harness
-better *in general* you'd then have to repeat the whole thing across many prompts and
-repositories. Picking a winning harness from this — or from any N=1 race — is exactly
-the mistake the data warns against.
+And notice which way the small edge here points: on the raw averages, **Copilot
+"won" this round** — a touch higher quality at lower cost. It doesn't matter. That
+quality gap is well under a single point out of 27 — smaller than the swing you get
+from just running the same harness twice. To trust even that sliver as real, you'd
+need something like **\~100 runs per harness**, not ten; and to claim one harness is
+better *in general*, you'd have to repeat the whole thing across many prompts and
+repos. Crowning a winner from this — or from any single race — is exactly the mistake
+the data warns against.
 
 ## What to trust instead
 
