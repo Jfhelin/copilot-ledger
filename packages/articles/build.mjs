@@ -30,6 +30,31 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
+// Resolve the author identity + disclaimer for an article, falling back to the
+// SITE-level defaults. This is what makes the byline + personal-views disclaimer
+// apply to every page — current and future, both layouts — without repeating the
+// fields per article. A per-article value overrides the default; set
+// `hideByline` / `hideDisclaimer: true` on an entry to opt out (e.g. a guest post).
+function resolveByline(article) {
+  return {
+    author: article.author ?? SITE.author ?? null,
+    authorTitle: article.authorTitle ?? SITE.authorTitle ?? null,
+    avatar: article.avatar ?? SITE.avatar ?? null,
+    org: article.authorOrg ?? SITE.authorOrg ?? null,
+    date: article.date ?? null,
+    disclaimer: article.disclaimer ?? SITE.disclaimer ?? null,
+    hideByline: article.hideByline === true,
+    hideDisclaimer: article.hideDisclaimer === true,
+  };
+}
+
+// The escaped "<title> at <org> · <date>" sub-line shared by both layouts.
+function bylineSubHtml(b) {
+  const titleWithOrg =
+    b.authorTitle && b.org ? `${b.authorTitle} at ${b.org}` : b.authorTitle || null;
+  return [titleWithOrg, b.date].filter(Boolean).map(escapeHtml).join(" · ");
+}
+
 function styles() {
   return `
 :root {
@@ -106,7 +131,25 @@ table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
 th, td { border: 1px solid var(--border); padding: ${t.space.sm}px ${t.space.lg}px; text-align: left; }
 thead th { background: var(--raised); font-weight: 650; }
 tbody tr:nth-child(even) { background: ${t.bg.surface}; }
-.byline { color: var(--muted); font-size: 0.95rem; margin: 0 0 ${t.space.huge}px; }
+.byline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 ${t.space.huge}px;
+  padding-bottom: ${t.space.lg}px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.byline-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex: 0 0 auto;
+}
+.byline-meta { display: flex; flex-direction: column; line-height: 1.35; }
+.byline-name { color: var(--text); font-weight: 600; font-size: 0.98rem; }
+.byline-sub { color: var(--muted); font-size: 0.88rem; }
 .readnext {
   display: block;
   margin-top: ${t.space.huge}px;
@@ -121,6 +164,9 @@ tbody tr:nth-child(even) { background: ${t.bg.surface}; }
 .readnext .rn-kicker { font-family: ${t.font.mono}; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 .readnext .rn-title { display: block; margin-top: ${t.space.sm}px; color: var(--accent); font-weight: 600; font-size: 1.05rem; }
 footer { margin-top: ${t.space.huge}px; padding-top: ${t.space.xl}px; border-top: 1px solid var(--border-subtle); color: var(--muted); font-size: 0.85rem; }
+footer p { margin: 0 0 ${t.space.xs}px; }
+footer p:last-child { margin-bottom: 0; }
+.disclaimer { font-style: italic; }
 @media (max-width: 600px) { .wrap { padding: ${t.space.xxl}px ${t.space.lg}px; } h1 { font-size: 1.7rem; } body { font-size: 16px; } }
 `.trim();
 }
@@ -289,24 +335,18 @@ function stripLeadingH1(html) {
 function githubBlogPage(article, bodyHtml, sibling) {
   const canonical = `${SITE.baseUrl}${article.slug}.html`;
   const body = stripLeadingH1(bodyHtml);
-  const org = article.authorOrg ?? SITE.authorOrg;
-  const titleWithOrg =
-    article.authorTitle && org
-      ? `${article.authorTitle} at ${org}`
-      : article.authorTitle || null;
-  const subParts = [
-    titleWithOrg ? escapeHtml(titleWithOrg) : null,
-    article.date ? escapeHtml(article.date) : null,
-  ].filter(Boolean);
-  const byline = article.author
-    ? `<div class="gh-byline">
-${article.avatar ? `<img class="gh-avatar" src="./figures/${escapeHtml(article.avatar)}" alt="${escapeHtml(article.author)}" width="48" height="48">` : ""}
+  const b = resolveByline(article);
+  const sub = bylineSubHtml(b);
+  const byline =
+    b.author && !b.hideByline
+      ? `<div class="gh-byline">
+${b.avatar ? `<img class="gh-avatar" src="./figures/${escapeHtml(b.avatar)}" alt="${escapeHtml(b.author)}" width="48" height="48">` : ""}
 <span class="gh-author-meta">
-<span class="gh-author-name">${escapeHtml(article.author)}</span>
-${subParts.length ? `<span class="gh-author-sub">${subParts.join(" · ")}</span>` : ""}
+<span class="gh-author-name">${escapeHtml(b.author)}</span>
+${sub ? `<span class="gh-author-sub">${sub}</span>` : ""}
 </span>
 </div>`
-    : "";
+      : "";
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -335,7 +375,7 @@ ${body}
 </article>
 ${readNextBlock(sibling)}
 <footer>
-${(article.disclaimer ?? SITE.disclaimer) ? `<p class="gh-disclaimer">${escapeHtml(article.disclaimer ?? SITE.disclaimer)}</p>` : ""}
+${b.disclaimer && !b.hideDisclaimer ? `<p class="gh-disclaimer">${escapeHtml(b.disclaimer)}</p>` : ""}
 <p class="gh-colophon">${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</p>
 </footer>
 </main>
@@ -350,6 +390,19 @@ function page(article, bodyHtml, sibling) {
   // the home article (which is also served at index.html) — so the shareable
   // long URL stays the preferred one regardless of which article is the root.
   const canonical = `${SITE.baseUrl}${article.slug}.html`;
+  const body = stripLeadingH1(bodyHtml);
+  const b = resolveByline(article);
+  const sub = bylineSubHtml(b);
+  const byline =
+    b.author && !b.hideByline
+      ? `<div class="byline">
+${b.avatar ? `<img class="byline-avatar" src="./figures/${escapeHtml(b.avatar)}" alt="${escapeHtml(b.author)}" width="44" height="44">` : ""}
+<span class="byline-meta">
+<span class="byline-name">${escapeHtml(b.author)}</span>
+${sub ? `<span class="byline-sub">${sub}</span>` : ""}
+</span>
+</div>`
+      : "";
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -368,9 +421,14 @@ function page(article, bodyHtml, sibling) {
 <body>
 <main class="wrap">
 <p class="kicker">${escapeHtml(SITE.name)}</p>
-${bodyHtml}
+<h1>${escapeHtml(article.title)}</h1>
+${byline}
+${body}
 ${readNextBlock(sibling)}
-<footer>${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</footer>
+<footer>
+${b.disclaimer && !b.hideDisclaimer ? `<p class="disclaimer">${escapeHtml(b.disclaimer)}</p>` : ""}
+<p class="colophon">${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</p>
+</footer>
 </main>
 </body>
 </html>

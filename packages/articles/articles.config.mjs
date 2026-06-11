@@ -20,11 +20,16 @@ export const SITE = {
   // absolute canonical / og:url tags so the stable per-article slug URL is the
   // one search engines and link unfurlers prefer (not the root index.html copy).
   baseUrl: "https://jfhelin.github.io/copilot-ledger/",
-  // Author's employer, appended to the byline title as "<title> at <org>" on
-  // blog-themed pages. A per-article `authorOrg` overrides this default.
+  // Author identity for the byline shown on every page (both layouts). A
+  // per-article value overrides any of these; set `hideByline: true` on an entry
+  // to suppress the byline (e.g. a guest post).
+  author: "Jonas Helin",
+  authorTitle: "Strategic Cloud Solutions Engineer",
+  avatar: "author-jonas.png",
+  // Author's employer, appended to the byline title as "<title> at <org>".
   authorOrg: "GitHub",
-  // Personal-views disclaimer rendered in the footer of blog-themed pages (the
-  // ones that carry an author byline). A per-article `disclaimer` overrides it.
+  // Personal-views disclaimer rendered in the footer of every page. A per-article
+  // `disclaimer` overrides it; `hideDisclaimer: true` suppresses it.
   disclaimer:
     "I work at GitHub. This is my personal blog — views are my own, not company-sponsored.",
 };
@@ -51,9 +56,6 @@ export const ARTICLES = [
     // a typical tech-blog format but is not affiliated with the GitHub Blog.
     theme: "github-blog",
     category: "AI & ML",
-    author: "Jonas Helin",
-    authorTitle: "Strategic Cloud Solutions Engineer",
-    avatar: "author-jonas.png",
     date: "June 10, 2026",
     order: 2,
   },
@@ -65,9 +67,6 @@ export const ARTICLES = [
       "Same model, same repo, same prompt, 40 headless runs across the Copilot CLI and the Claude CLI. Coding agents are models plus harnesses — and a single run measures harness behavior and variance, not which agent is better.",
     theme: "github-blog",
     category: "AI & ML",
-    author: "Jonas Helin",
-    authorTitle: "Strategic Cloud Solutions Engineer",
-    avatar: "author-jonas.png",
     date: "June 10, 2026",
     order: 3,
   },
