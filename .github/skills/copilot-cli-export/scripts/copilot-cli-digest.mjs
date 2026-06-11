@@ -20,7 +20,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const DIGEST_VERSION = 1;
+const DIGEST_VERSION = 2;
 const DIGEST_KIND = "copilot-cli";
 
 // ---------------------------------------------------------------------------
@@ -233,7 +233,13 @@ for (const b of blocks) {
     if (aAiu != null && cAiu != null && String(aAiu) !== String(cAiu)) {
       warnings.push(`response ${id} has conflicting total_nano_aiu across duplicates.`);
     }
-    if (richness(c) > richness(a)) responseById.set(id, b);
+    // Keep the richer copy for DATA, but preserve the FIRST index for ordering
+    // so chronology isn't shifted by a later duplicate.
+    if (richness(c) > richness(a)) {
+      responseById.set(id, { ...b, index: Math.min(prev.index, b.index) });
+    } else if (b.index < prev.index) {
+      responseById.set(id, { ...prev, index: b.index });
+    }
   }
 }
 
@@ -278,6 +284,38 @@ function cleanPromptText(text) {
     .replace(/<canvas-context>[\s\S]*?<\/canvas-context>/g, "")
     .replace(/<environment_context>[\s\S]*?<\/environment_context>/g, "")
     .trim();
+}
+
+// ---------------------------------------------------------------------------
+// Tool-result sizes: map each tool_use id to the char length of its result, so
+// the per-call timeline can show how much NEW content each tool injected into
+// the context window. Results are echoed in every later request's prefix, so we
+// dedupe by id (first occurrence wins; copies are identical).
+// ---------------------------------------------------------------------------
+function toolResultChars(content) {
+  if (typeof content === "string") return content.length;
+  if (Array.isArray(content)) {
+    let n = 0;
+    for (const b of content) {
+      if (typeof b === "string") n += b.length;
+      else if (b && typeof b.text === "string") n += b.text.length;
+      else if (b != null) n += JSON.stringify(b).length;
+    }
+    return n;
+  }
+  return content != null ? JSON.stringify(content).length : 0;
+}
+const toolResultCharsById = new Map();
+for (const b of blocks) {
+  if (b.kind !== "request") continue;
+  for (const msg of b.obj.messages || []) {
+    if (!Array.isArray(msg.content)) continue;
+    for (const blk of msg.content) {
+      if (blk && blk.type === "tool_result" && blk.tool_use_id != null && !toolResultCharsById.has(blk.tool_use_id)) {
+        toolResultCharsById.set(blk.tool_use_id, toolResultChars(blk.content));
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -331,6 +369,9 @@ function newPrompt(text, isOrphan = false) {
     tokenNormalizedUsd: 0,
     finalAssistantPreview: null,
     isOrphan,
+    // Ordered per-call timeline: each LLM call (a model response) followed by the
+    // tool calls it issued. Cost is the EXACT native AI-credit split for this call.
+    timeline: [],
   };
   promptsOut.push(p);
   return p;
@@ -393,6 +434,8 @@ for (const b of timeline) {
 
   // Native billing (authoritative)
   const cu = obj.copilot_usage || {};
+  let callNano = 0n;
+  const callNanoByType = { input: 0n, cache_read: 0n, cache_write: 0n, output: 0n, other: 0n };
   if (cu.total_nano_aiu != null) {
     responsesWithNativeBilling += 1;
     let nano;
@@ -401,6 +444,7 @@ for (const b of timeline) {
     } catch {
       nano = 0n;
     }
+    callNano = nano;
     totalNanoAiu += nano;
     current.nativeCredits = round6(current.nativeCredits + Number(nano) / 1e9);
 
@@ -416,6 +460,7 @@ for (const b of timeline) {
         ? td.token_type
         : "other";
       nativeByType[key] += part;
+      callNanoByType[key] += part;
     }
     if (recomputed !== 0n && nano !== 0n) {
       const diff = recomputed > nano ? recomputed - nano : nano - recomputed;
@@ -436,6 +481,40 @@ for (const b of timeline) {
   normalizedUsd += norm.totalUsd;
   normalizedWithoutCacheUsd += norm.withoutCacheUsd;
   current.tokenNormalizedUsd = round6(current.tokenNormalizedUsd + norm.totalUsd);
+
+  // Per-call timeline entry. Cost is the EXACT native credit split for this call
+  // (token_details parts as fractions of total_nano_aiu); falls back to token
+  // proportions only when a response carries no native billing detail.
+  const callCredits = Number(callNano) / 1e9;
+  const partOut = Number(callNanoByType.output);
+  const partFresh = Number(callNanoByType.input);
+  const partCached = Number(callNanoByType.cache_read);
+  const partCwrite = Number(callNanoByType.cache_write);
+  const partSum = partFresh + partCached + partCwrite + partOut + Number(callNanoByType.other);
+  let costComponents;
+  if (partSum > 0) {
+    const f = callCredits / partSum;
+    costComponents = {
+      fresh: (partFresh + Number(callNanoByType.other)) * f,
+      cached: partCached * f,
+      cacheWrite: partCwrite * f,
+      output: partOut * f,
+    };
+  } else {
+    const tokSum = fresh + cacheRead + cacheWrite + completion || 1;
+    costComponents = {
+      fresh: (callCredits * fresh) / tokSum,
+      cached: (callCredits * cacheRead) / tokSum,
+      cacheWrite: (callCredits * cacheWrite) / tokSum,
+      output: (callCredits * completion) / tokSum,
+    };
+  }
+  current.timeline.push({
+    kind: "llm",
+    model,
+    tokens: { fresh, cached: cacheRead, cacheWrite, output: completion, reasoning },
+    cost: { unit: "credits", total: callCredits, ...costComponents },
+  });
 
   if (model) {
     const m = modelStats.get(model) ?? {
@@ -460,6 +539,8 @@ for (const b of timeline) {
     totalToolCalls += 1;
     pushUnique(current.tools, name);
     usedToolStats.set(name, (usedToolStats.get(name) ?? 0) + 1);
+    const resultChars = toolResultCharsById.get(tc.id) ?? 0;
+    current.timeline.push({ kind: "tool", name, contextTokens: Math.ceil(resultChars / 4) });
   }
   if (typeof message.content === "string" && message.content.trim()) {
     current.finalAssistantPreview = message.content.slice(0, 200);

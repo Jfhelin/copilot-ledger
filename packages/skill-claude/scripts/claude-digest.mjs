@@ -18,7 +18,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const DIGEST_VERSION = 1;
+const DIGEST_VERSION = 2;
 const DIGEST_KIND = "claude-code";
 
 // ---------------------------------------------------------------------------
@@ -318,6 +318,9 @@ function newPrompt(text, isSidechain, startedByUser) {
     // before any genuine user line (resumed/compacted transcripts). Excluded
     // from the real-prompt count so it doesn't inflate rollups.prompts.
     isOrphan: !startedByUser,
+    // Ordered per-call timeline: each LLM call (an assistant turn, exact usage from
+    // the transcript) followed by the tool calls it issued. Cost is MODELLED.
+    timeline: [],
   };
 }
 
@@ -331,6 +334,32 @@ function noteTime(p, ts) {
   p.lastTime = ts;
   if (!firstTime || ts < firstTime) firstTime = ts;
   if (!lastTime || ts > lastTime) lastTime = ts;
+}
+
+// Map each tool_use id to the char length of its result, so the per-call
+// timeline can show how much NEW content each tool injected into the context
+// window. Tool results arrive as `tool_result` blocks on later user turns.
+function toolResultChars(content) {
+  if (typeof content === "string") return content.length;
+  if (Array.isArray(content)) {
+    let n = 0;
+    for (const b of content) {
+      if (typeof b === "string") n += b.length;
+      else if (b && typeof b.text === "string") n += b.text.length;
+      else if (b != null) n += JSON.stringify(b).length;
+    }
+    return n;
+  }
+  return content != null ? JSON.stringify(content).length : 0;
+}
+const toolResultCharsById = new Map();
+for (const e of entries) {
+  if (e.type !== "user") continue;
+  for (const b of contentBlocks(e.message || {})) {
+    if (b.type === "tool_result" && b.tool_use_id != null && !toolResultCharsById.has(b.tool_use_id)) {
+      toolResultCharsById.set(b.tool_use_id, toolResultChars(b.content));
+    }
+  }
 }
 
 for (const e of entries) {
@@ -385,6 +414,20 @@ for (const e of entries) {
     pushUnique(current.models, model);
     noteTime(current, ts);
 
+    current.timeline.push({
+      kind: "llm",
+      model,
+      tokens: { fresh, cached: cacheRead, cacheWrite, output: completion },
+      cost: {
+        unit: "usd",
+        total: cost.totalUsd,
+        fresh: cost.freshInputUsd,
+        cached: cost.cachedReadUsd,
+        cacheWrite: cost.cacheWriteUsd,
+        output: cost.outputUsd,
+      },
+    });
+
     totalRequests += 1;
     totalPromptTokens += promptTokens;
     totalCompletionTokens += completion;
@@ -414,6 +457,8 @@ for (const e of entries) {
         totalToolCalls += 1;
         pushUnique(current.tools, b.name);
         usedToolStats.set(b.name, (usedToolStats.get(b.name) ?? 0) + 1);
+        const resultChars = toolResultCharsById.get(b.id) ?? 0;
+        current.timeline.push({ kind: "tool", name: b.name, contextTokens: Math.ceil(resultChars / 4) });
       } else if (b.type === "thinking") {
         current.thinkingBlockCount += 1;
         totalThinkingBlocks += 1;

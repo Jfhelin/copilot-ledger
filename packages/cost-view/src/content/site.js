@@ -256,6 +256,18 @@ export function findObservation(id) {
 // card renders as "Coming soon".
 export var GALLERY_SESSIONS = [
   {
+    id: "copilot-cli-repo-intro",
+    title: "Copilot CLI — explain-this-repo run",
+    description: "A headless Copilot CLI run of the fixed \u201cexplain this repo\u201d task. Shows exact GitHub AI credits billed, cache hit rate, and the representative context window (system / tool-defs / messages).",
+    file: "sessions/copilot-cli-repo-intro.cli.json",
+  },
+  {
+    id: "claude-cli-repo-intro",
+    title: "Claude CLI — explain-this-repo run",
+    description: "The same fixed task run headless on the Claude CLI. Exact per-call token counts and a modelled cost (no billed amount is exposed by the harness); tool names and call flow are shown, but prompt text and tool-definition content are withheld because that detail came from a local relay capture.",
+    file: "sessions/claude-cli-repo-intro.cli.json",
+  },
+  {
     id: "subagent-example",
     title: "Subagent dispatch session",
     description: "A short session where the agent reads a file and dispatches a sub-agent — a compact example of tool calls implying further model calls.",
