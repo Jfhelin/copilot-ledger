@@ -79,6 +79,7 @@ export const ARTICLES = [
     theme: "github-blog",
     category: "AI & ML",
     date: "June 11, 2026",
+    readNext: "more-than-a-model",
     order: 4,
   },
   {

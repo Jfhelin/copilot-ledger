@@ -454,7 +454,12 @@ async function build() {
 
   for (let i = 0; i < ordered.length; i++) {
     const article = ordered[i];
-    const sibling = ordered[(i + 1) % ordered.length];
+    // "Read next" defaults to the next article by order, but an entry can pin a
+    // specific successor with `readNext: "<slug>"` (used to thread a page into
+    // the chain without reshuffling everyone's order).
+    const sibling = article.readNext
+      ? ordered.find((a) => a.slug === article.readNext) ?? ordered[(i + 1) % ordered.length]
+      : ordered[(i + 1) % ordered.length];
     const md = await readFile(resolve(CONTENT_DIR, article.src), "utf8");
     const bodyHtml = wrapTables(marked.parse(md));
     const html = page(article, bodyHtml, ordered.length > 1 ? sibling : null);
