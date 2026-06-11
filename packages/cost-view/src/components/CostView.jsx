@@ -3,6 +3,7 @@ import { theme, alpha } from "../lib/theme.js";
 import { buildCostAnalysis, formatTokens } from "../lib/costAnalysis.js";
 import { formatCost, formatCostValue, isPremiumRequestUnit } from "../lib/pricing.js";
 import CostViewChatExport from "./CostViewChatExport.jsx";
+import CliRunView from "./CliRunView.jsx";
 
 var SUMMARY_GRID_5_COLUMNS = "1.15fr repeat(4, minmax(150px, 0.6fr))";
 var MAIN_GRID_3_COLUMNS = "minmax(310px, 0.9fr) minmax(360px, 1fr) minmax(360px, 1fr)";
@@ -192,6 +193,17 @@ function ContextBars({ calls }) {
 }
 
 export default function CostView({ events, metadata, selectedPromptId, onSelectPrompt, selectedBucket, onSelectBucket, selectedStat, onSelectStat, summaries, summariesPending, onRequestSummaries, canRequestSummaries }) {
+  // CLI session digest (Copilot CLI / Claude CLI): render the honest,
+  // digest-native run view. No per-event timeline exists in a digest.
+  if (metadata && metadata.cliDigest) {
+    return (
+      <CliRunView
+        digest={metadata.cliDigest}
+        selectedPromptId={selectedPromptId}
+        onSelectPrompt={onSelectPrompt}
+      />
+    );
+  }
   // Rich Chat-export view: when the parser has populated a fork-shape
   // costAnalysis (prompts[] + per-event components/category/etc.), delegate
   // to the dedicated 3-column ledger that supports per-prompt drilldown.
