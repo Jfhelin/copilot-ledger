@@ -210,6 +210,36 @@ To publish one (all in `packages/cost-view/`):
 Every number in the `summaries` must trace back to the digest — same rule as the
 page body. Do not invent figures to fill the boxes.
 
+## Pages articles (the `packages/articles` bubble)
+
+Long-form articles live in `docs/articles/*.md` and publish through the
+`packages/articles` bubble — each entry in `articles.config.mjs` renders one
+standalone `<slug>.html`, and GitHub Pages deploys **only** `packages/articles/dist`.
+To add/move a page you MUST edit `articles.config.mjs` (it won't build otherwise);
+verify with `npm run build --workspace=@copilot-ledger/articles`.
+
+There are two layouts: the default "lab" layout and the blog layout
+(`theme: "github-blog"`, with a hero title + category label). **Both** carry an
+author byline (avatar + name + "<authorTitle> at <authorOrg>" + optional date) and a
+personal-views disclaimer in the footer.
+
+The byline and disclaimer are **author identity, not per-article copy** — they come
+from `SITE` defaults in `articles.config.mjs`, so *every* page (current and future,
+either layout) inherits them automatically:
+
+- `SITE.author`, `SITE.authorTitle`, `SITE.avatar` — the byline identity.
+- `SITE.authorOrg` (e.g. `"GitHub"`) — appended as `"<authorTitle> at <authorOrg>"`,
+  keeping the employer affiliation honest and upfront.
+- `SITE.disclaimer` — the italic personal-views footer line ("I work at GitHub. This
+  is my personal blog — views are my own, not company-sponsored.").
+
+Do not re-add these to individual entries or hand-write them into a page body. When
+publishing a new article you normally set only `slug`, `src`, `title`,
+`description`, `order` (plus `theme: "github-blog"` + `category` + `date` for the
+blog layout) — the byline and disclaimer come for free. Per-article `author` /
+`authorTitle` / `avatar` / `authorOrg` / `disclaimer` override the default for guest
+posts; `hideByline: true` / `hideDisclaimer: true` suppress them entirely.
+
 ## Core positioning
 
 > Copilot Behavior Lab helps developers understand how AI coding agents think,
