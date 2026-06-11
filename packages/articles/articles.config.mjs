@@ -98,4 +98,12 @@ export const ARTICLES = [
       "Same Sonnet weights, 22k–131k tokens before you type. A measured decomposition of what each environment injects, what the harness controls, and what you do.",
     order: 6,
   },
+  {
+    slug: "more-than-a-model",
+    src: "more-than-a-model.md",
+    title: "A coding agent is more than a model — what the harness decides",
+    description:
+      "Same Claude Sonnet 4.5 weights across four harnesses — Copilot CLI, Claude CLI, Copilot in VS Code, and Claude Code in VS Code. A measured map of which behaviors come from the model provider and which come from harness design, and how those choices move what the model sees before it reasons.",
+    order: 7,
+  },
 ];
