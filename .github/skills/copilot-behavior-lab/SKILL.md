@@ -210,6 +210,32 @@ To publish one (all in `packages/cost-view/`):
 Every number in the `summaries` must trace back to the digest — same rule as the
 page body. Do not invent figures to fill the boxes.
 
+## Blog-style Pages articles (the `packages/articles` bubble)
+
+Long-form articles live in `docs/articles/*.md` and publish through the
+`packages/articles` bubble — each entry in `articles.config.mjs` renders one
+standalone `<slug>.html`. To add/move a page you MUST edit `articles.config.mjs`
+(it won't build otherwise); verify with
+`npm run build --workspace=@copilot-ledger/articles`.
+
+Entries with `theme: "github-blog"` render the blog layout (hero title, category
+label, author/date byline). The byline and the personal-views disclaimer are
+**author identity, not per-article copy** — they come from `SITE` defaults in
+`articles.config.mjs`, so every blog-themed article inherits them automatically:
+
+- `SITE.authorOrg` (e.g. `"GitHub"`) — appended to the byline as
+  `"<authorTitle> at <authorOrg>"`. This keeps the employer affiliation honest
+  and upfront.
+- `SITE.disclaimer` — a personal-views footer line ("I work at GitHub. This is my
+  personal blog — views are my own, not company-sponsored."), rendered italic in
+  the footer of every blog-themed page.
+
+Do not re-add these to individual entries or hand-write them into a page body. A
+per-article `authorOrg` / `disclaimer` may override the default when genuinely
+needed, but the default is what should normally carry. When publishing a new
+blog-style article, just set `theme: "github-blog"`, `author`, `authorTitle`,
+`avatar`, and `date`; the affiliation and disclaimer come for free.
+
 ## Core positioning
 
 > Copilot Behavior Lab helps developers understand how AI coding agents think,

@@ -20,6 +20,13 @@ export const SITE = {
   // absolute canonical / og:url tags so the stable per-article slug URL is the
   // one search engines and link unfurlers prefer (not the root index.html copy).
   baseUrl: "https://jfhelin.github.io/copilot-ledger/",
+  // Author's employer, appended to the byline title as "<title> at <org>" on
+  // blog-themed pages. A per-article `authorOrg` overrides this default.
+  authorOrg: "GitHub",
+  // Personal-views disclaimer rendered in the footer of blog-themed pages (the
+  // ones that carry an author byline). A per-article `disclaimer` overrides it.
+  disclaimer:
+    "I work at GitHub. This is my personal blog — views are my own, not company-sponsored.",
 };
 
 export const ARTICLES = [

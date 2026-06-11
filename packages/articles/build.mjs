@@ -268,6 +268,9 @@ iframe { border-radius: 8px; border: 1px solid var(--gh-border) !important; }
 .readnext .rn-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gh-muted); }
 .readnext .rn-title { display: block; margin-top: 6px; color: var(--gh-link); font-weight: 700; font-size: 1.1rem; }
 footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--gh-border-subtle); color: var(--gh-muted); font-size: 0.85rem; }
+footer p { margin: 0 0 6px; }
+footer p:last-child { margin-bottom: 0; }
+.gh-disclaimer { font-style: italic; }
 @media (max-width: 600px) {
   .gh-wrap { padding: 32px 18px 56px; }
   .gh-hero h1 { font-size: 2rem; }
@@ -286,8 +289,13 @@ function stripLeadingH1(html) {
 function githubBlogPage(article, bodyHtml, sibling) {
   const canonical = `${SITE.baseUrl}${article.slug}.html`;
   const body = stripLeadingH1(bodyHtml);
+  const org = article.authorOrg ?? SITE.authorOrg;
+  const titleWithOrg =
+    article.authorTitle && org
+      ? `${article.authorTitle} at ${org}`
+      : article.authorTitle || null;
   const subParts = [
-    article.authorTitle ? escapeHtml(article.authorTitle) : null,
+    titleWithOrg ? escapeHtml(titleWithOrg) : null,
     article.date ? escapeHtml(article.date) : null,
   ].filter(Boolean);
   const byline = article.author
@@ -326,7 +334,10 @@ ${byline}
 ${body}
 </article>
 ${readNextBlock(sibling)}
-<footer>${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</footer>
+<footer>
+${(article.disclaimer ?? SITE.disclaimer) ? `<p class="gh-disclaimer">${escapeHtml(article.disclaimer ?? SITE.disclaimer)}</p>` : ""}
+<p class="gh-colophon">${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</p>
+</footer>
 </main>
 </body>
 </html>
