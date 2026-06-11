@@ -131,6 +131,9 @@ table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
 th, td { border: 1px solid var(--border); padding: ${t.space.sm}px ${t.space.lg}px; text-align: left; }
 thead th { background: var(--raised); font-weight: 650; }
 tbody tr:nth-child(even) { background: ${t.bg.surface}; }
+figure { margin: ${t.space.xl}px 0; }
+figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: ${t.radius.lg}px; background: #fff; }
+figcaption { margin-top: ${t.space.sm}px; font-size: 0.88rem; color: var(--muted); text-align: center; }
 .byline {
   display: flex;
   align-items: center;
@@ -300,6 +303,9 @@ table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
 th, td { border: 1px solid var(--gh-border); padding: 8px 14px; text-align: left; }
 thead th { background: var(--gh-raised); font-weight: 700; }
 tbody tr:nth-child(even) { background: var(--gh-raised); }
+figure { margin: 36px 0; }
+figure img { display: block; width: 100%; height: auto; border: 1px solid var(--gh-border); border-radius: 8px; background: #fff; }
+figcaption { margin-top: 10px; font-size: 0.9rem; color: var(--gh-muted); text-align: center; }
 iframe { border-radius: 8px; border: 1px solid var(--gh-border) !important; }
 .readnext {
   display: block;

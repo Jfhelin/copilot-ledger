@@ -90,6 +90,11 @@ Same kind of task.
 
 Roughly a 3x difference in what the model sees before it even starts answering.
 
+<figure>
+  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart comparing prefix size: Copilot CLI about 15k tokens, Claude CLI about 27k tokens, and Claude Code in VS Code about 46k tokens.">
+  <figcaption>The model was the same, but the pre-reasoning payload ranged from about 15k to 46k tokens.</figcaption>
+</figure>
+
 That difference came mostly from harness and configuration choices: system prompt size, tool catalog verbosity, IDE context, and how much extra environment information is injected.
 
 This is the first important lesson:
@@ -126,6 +131,11 @@ So when two agents behave differently, the difference may not come from the mode
 
 It may come from the harness.
 
+<figure>
+  <img src="./figures/harnesses/agent-is-more-than-model.svg" alt="Diagram: a Model box plus a cluster of harness-choice boxes (system prompt, tools, MCP, memory, skills, context, caching, planning, orchestration, UX choices) producing an Agent behavior box.">
+  <figcaption>A coding agent is a model plus the harness around it: prompts, tools, memory, context, caching, planning, and UX choices.</figcaption>
+</figure>
+
 ## What the model provider controls
 
 With Claude Sonnet 4.5, Anthropic controls the model.
@@ -155,6 +165,11 @@ A lot remains in the hands of the harness developer.
 A simple way to say it is:
 
 > The model provider owns the engine. The harness developer builds the car around it.
+
+<figure>
+  <img src="./figures/harnesses/model-provider-vs-harness-control.svg" alt="Table of levers showing which are controlled mostly by the model provider (model weights, training) versus mostly by the harness developer (system prompt, tools, MCP, skills, memory, caching placement, context management, orchestration, sampling, routing).">
+  <figcaption>The model provider owns the engine. The harness developer decides much of what the model sees and how hard it has to work.</figcaption>
+</figure>
 
 That car can be tuned in very different ways.
 
@@ -206,6 +221,11 @@ It was also how they were described.
 
 Claude CLI’s tool catalog was much more verbose than Copilot CLI’s. The tool definitions were around 18.9k tokens for Claude CLI versus around 8.1k tokens for Copilot CLI.
 
+<figure>
+  <img src="./figures/harnesses/tool-catalog-size.svg" alt="Horizontal bar chart of tool catalog size: Copilot CLI about 8.1k tokens across 19 tools, Claude CLI about 18.9k tokens across 27 tools.">
+  <figcaption>Claude CLI exposed more tools and a much larger tool catalog than Copilot CLI in this capture.</figcaption>
+</figure>
+
 That is a pure harness choice.
 
 More detailed tool descriptions may help the model choose the right tool on the first try. But they also increase the fixed cost of every request, especially because the tool catalog is part of the repeated prefix.
@@ -244,6 +264,11 @@ In one clean MCP on/off comparison, adding a single filesystem MCP server added:
 +14 tools
 +1,876 prefix tokens
 ```
+
+<figure>
+  <img src="./figures/harnesses/mcp-delta-callout.svg" alt="Callout: adding one filesystem MCP server added 14 tools and 1,876 prefix tokens. MCP adds capability, but also changes what the model sees.">
+  <figcaption>MCP is capability, but also context. An MCP-on run and an MCP-off run are not the same experiment.</figcaption>
+</figure>
 
 That was one small server.
 

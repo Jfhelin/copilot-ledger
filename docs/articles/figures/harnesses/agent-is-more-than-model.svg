@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="title">A coding agent is more than a model</title>
+  <desc id="desc">A diagram showing that a model, combined with harness choices — system prompt, tools, MCP, memory, skills, context, caching, planning, orchestration, and UX choices — produces agent behavior.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="560" fill="#ffffff"/>
+  <text x="50" y="44" font-size="22" font-weight="700" fill="#24292f">A coding agent is more than a model</text>
+  <text x="50" y="72" font-size="14" fill="#57606a">The model plus the harness around it produces the behavior you experience.</text>
+
+  <!-- Model -->
+  <rect x="50" y="190" width="170" height="200" rx="14" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+  <text x="135" y="285" font-size="20" font-weight="700" fill="#0969da" text-anchor="middle">Model</text>
+  <text x="135" y="312" font-size="12" fill="#57606a" text-anchor="middle">Claude Sonnet 4.5</text>
+
+  <!-- plus -->
+  <text x="252" y="298" font-size="30" font-weight="700" fill="#57606a" text-anchor="middle">+</text>
+
+  <!-- Harness choices cluster -->
+  <text x="450" y="120" font-size="12" letter-spacing="0.12em" fill="#57606a" text-anchor="middle">HARNESS CHOICES</text>
+
+  <!-- column 1 -->
+  <g font-size="13" fill="#24292f" text-anchor="middle">
+    <rect x="300" y="140" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="375" y="166">System prompt</text>
+    <rect x="300" y="190" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="375" y="216">Tools</text>
+    <rect x="300" y="240" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="375" y="266">MCP</text>
+    <rect x="300" y="290" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="375" y="316">Memory</text>
+    <rect x="300" y="340" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="375" y="366">Skills</text>
+  </g>
+
+  <!-- column 2 -->
+  <g font-size="13" fill="#24292f" text-anchor="middle">
+    <rect x="470" y="140" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="545" y="166">Context</text>
+    <rect x="470" y="190" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="545" y="216">Caching</text>
+    <rect x="470" y="240" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="545" y="266">Planning</text>
+    <rect x="470" y="290" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="545" y="316">Orchestration</text>
+    <rect x="470" y="340" width="150" height="42" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="545" y="366">UX choices</text>
+  </g>
+
+  <!-- equals -->
+  <text x="700" y="298" font-size="30" font-weight="700" fill="#57606a" text-anchor="middle">=</text>
+
+  <!-- Agent behavior -->
+  <rect x="780" y="190" width="170" height="200" rx="14" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+  <text x="865" y="285" font-size="18" font-weight="700" fill="#1a7f37" text-anchor="middle">Agent</text>
+  <text x="865" y="310" font-size="18" font-weight="700" fill="#1a7f37" text-anchor="middle">behavior</text>
+
+  <!-- connectors -->
+  <line x1="222" y1="290" x2="292" y2="290" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="622" y1="290" x2="772" y2="290" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+</svg>
