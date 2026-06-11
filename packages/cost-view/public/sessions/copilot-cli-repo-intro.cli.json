@@ -1,0 +1,484 @@
+{
+  "session": {
+    "digestVersion": 2,
+    "kind": "copilot-cli",
+    "generatedAt": "2026-06-11T05:49:39.255Z",
+    "copilotVersion": "1.0.60",
+    "lineCount": 24575,
+    "groupingConfidence": "high",
+    "warnings": [],
+    "redactionProfile": "self-emitted-full",
+    "textRedacted": false,
+    "toolDefinitionsRedacted": false,
+    "callFlowVisible": true,
+    "redacted": true
+  },
+  "rollups": {
+    "prompts": 1,
+    "orphanPrompts": 0,
+    "requests": 7,
+    "responsesWithUsage": 7,
+    "responsesWithNativeBilling": 7,
+    "nativeBillingComplete": true,
+    "toolCalls": 19,
+    "totalTokens": 158976,
+    "freshInputTokens": 2785,
+    "promptTokens": 155663,
+    "completionTokens": 3313,
+    "cachedTokens": 135763,
+    "cacheCreationTokens": 17115,
+    "reasoningTokens": 580,
+    "cacheHitRate": 0.8722,
+    "primaryModel": "claude-sonnet-4-5-20250929",
+    "modelCount": 1,
+    "toolCount": 2,
+    "toolCatalogCount": 19,
+    "toolsUsedCount": 2,
+    "cost": {
+      "primary": "native-github-credits",
+      "currency": "USD",
+      "native": {
+        "credits": 16.296015,
+        "totalNanoAiu": "16296015000",
+        "impliedUsd": 0.16296,
+        "creditsPerUsd": 100,
+        "billingModel": "github-ai-credits-native",
+        "authoritative": true,
+        "complete": true,
+        "byTypeCredits": {
+          "input": 0.8355,
+          "cache_read": 4.07289,
+          "cache_write": 6.418125,
+          "output": 4.9695,
+          "other": 0
+        },
+        "withoutCacheCounterfactual": {
+          "credits": 51.6684,
+          "savingsCredits": 35.372385,
+          "method": "reprice cache_read+cache_write tokens at the observed native input rate",
+          "authoritative": false
+        },
+        "note": "EXACT GitHub AI Credits the CLI was billed (sum of copilot_usage.total_nano_aiu / 1e9). 1 credit = $0.01 USD. This is real spend, already including any premium-request multiplier."
+      },
+      "tokenNormalized": {
+        "totalUsd": 0.16296,
+        "withoutCacheUsd": 0.516684,
+        "savingsUsd": 0.353724,
+        "credits": 16.3,
+        "pricingVersion": "2026-05",
+        "allModelsPriced": true,
+        "billingModel": "token-normalized-model-estimate",
+        "authoritative": false,
+        "note": "MODELLED from PRICING_TABLE for cross-agent EFFICIENCY comparison only (e.g. vs the Claude digest). NOT actual spend and NOT GitHub AI Credits. Compare like-for-like: tokenNormalized here vs tokenNormalized/modelled cost there."
+      }
+    },
+    "tokenSemantics": "promptTokens is TOTAL input (freshInputTokens + cachedTokens + cacheCreationTokens). completionTokens already INCLUDES reasoningTokens — do not add them again. Matches Claude/VS Code digest semantics."
+  },
+  "pricing": {
+    "version": "2026-05",
+    "currency": "USD",
+    "creditsPerUsd": 100,
+    "appliesTo": "tokenNormalized cost only (native credits come from copilot_usage)",
+    "resolved": [
+      {
+        "model": "claude-sonnet-4-5-20250929",
+        "matched": true,
+        "inputPerM": 3,
+        "outputPerM": 15,
+        "cacheReadPerM": 0.30000000000000004,
+        "cacheWritePerM": 3.75
+      }
+    ]
+  },
+  "models": [
+    {
+      "name": "claude-sonnet-4-5-20250929",
+      "requests": 7,
+      "promptTokens": 155663,
+      "completionTokens": 3313,
+      "cachedTokens": 135763,
+      "cacheCreationTokens": 17115,
+      "nativeCredits": 16.296015,
+      "calls": 7
+    }
+  ],
+  "tools": [
+    {
+      "name": "view",
+      "calls": 18
+    },
+    {
+      "name": "report_intent",
+      "calls": 1
+    }
+  ],
+  "toolsUsed": [
+    {
+      "name": "view",
+      "calls": 18
+    },
+    {
+      "name": "report_intent",
+      "calls": 1
+    }
+  ],
+  "toolCatalog": {
+    "count": 19,
+    "names": [
+      "bash",
+      "create",
+      "edit",
+      "fetch_copilot_cli_documentation",
+      "glob",
+      "grep",
+      "list_agents",
+      "list_bash",
+      "read_agent",
+      "read_bash",
+      "report_intent",
+      "session_store_sql",
+      "skill",
+      "sql",
+      "stop_bash",
+      "task",
+      "view",
+      "web_fetch",
+      "write_bash"
+    ],
+    "note": "Tool NAMES advertised to the model in the representative Wire request. Unlike the Claude transcript, the Copilot CLI log DOES include full tool schemas; see prefix.representative for their token weight."
+  },
+  "prefix": {
+    "available": true,
+    "source": "wire-request",
+    "estimateMethod": "chars/4 (approx); tokens here are SHAPE, not billed counts",
+    "representative": {
+      "model": "claude-sonnet-4.5",
+      "systemApproxTokens": 6657,
+      "toolDefsApproxTokens": 8064,
+      "messagesApproxTokens": 156,
+      "toolCount": 19,
+      "prefixApproxTokens": 14877,
+      "toolDefsShareOfPrefix": 0.542045,
+      "skillBlockCount": 0,
+      "topTools": [
+        {
+          "name": "task",
+          "approxTokens": 1544
+        },
+        {
+          "name": "session_store_sql",
+          "approxTokens": 1255
+        },
+        {
+          "name": "skill",
+          "approxTokens": 741
+        },
+        {
+          "name": "bash",
+          "approxTokens": 679
+        },
+        {
+          "name": "grep",
+          "approxTokens": 487
+        },
+        {
+          "name": "read_agent",
+          "approxTokens": 439
+        },
+        {
+          "name": "report_intent",
+          "approxTokens": 434
+        },
+        {
+          "name": "view",
+          "approxTokens": 370
+        },
+        {
+          "name": "write_bash",
+          "approxTokens": 346
+        },
+        {
+          "name": "read_bash",
+          "approxTokens": 278
+        },
+        {
+          "name": "list_agents",
+          "approxTokens": 248
+        },
+        {
+          "name": "edit",
+          "approxTokens": 238
+        },
+        {
+          "name": "sql",
+          "approxTokens": 205
+        },
+        {
+          "name": "web_fetch",
+          "approxTokens": 177
+        },
+        {
+          "name": "glob",
+          "approxTokens": 165
+        }
+      ]
+    },
+    "note": "Context-window SHAPE reconstructed from the raw `Wire request` body in the log (chars/4 estimates). Use the response `usage` for billed token totals; use this only for system-vs-tools-vs-messages composition."
+  },
+  "prompts": [
+    {
+      "ord": 0,
+      "ref": "p0",
+      "promptPreview": "You are helping a new developer get productive in this repository. Explain what it is and its purpose, the main components and how they fit together, the data flow between them, and exactly how to ins",
+      "requestCount": 7,
+      "toolCallCount": 19,
+      "models": [
+        "claude-sonnet-4-5-20250929"
+      ],
+      "tools": [
+        "report_intent",
+        "view"
+      ],
+      "freshInputTokens": 2785,
+      "promptTokens": 155663,
+      "completionTokens": 3313,
+      "cachedTokens": 135763,
+      "cacheCreationTokens": 17115,
+      "reasoningTokens": 580,
+      "nativeCredits": 16.296015,
+      "tokenNormalizedUsd": 0.162961,
+      "finalAssistantPreview": "Perfect! Now I have a comprehensive understanding. Let me provide you with a complete onboarding guide:\n\n---\n\n## 🐱 **OctoCAT Supply - Complete Developer Guide**\n\n### **What It Is**\nOctoCAT Supply is ",
+      "isOrphan": false,
+      "timeline": [
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 10,
+            "cached": 9071,
+            "cacheWrite": 7119,
+            "output": 315,
+            "reasoning": 84
+          },
+          "cost": {
+            "unit": "credits",
+            "total": 3.417255,
+            "fresh": 0.003,
+            "cached": 0.27213000000000004,
+            "cacheWrite": 2.6696250000000004,
+            "output": 0.47250000000000003
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "report_intent",
+          "contextTokens": 4
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 26
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 956
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 24
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 56,
+            "cached": 16190,
+            "cacheWrite": 1720,
+            "output": 262,
+            "reasoning": 84
+          },
+          "cost": {
+            "unit": "credits",
+            "total": 1.5405,
+            "fresh": 0.016800000000000002,
+            "cached": 0.4857,
+            "cacheWrite": 0.645,
+            "output": 0.393
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 68
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 38
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 375
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 376
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 1168
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 1915,
+            "cached": 17910,
+            "cacheWrite": 2156,
+            "output": 166,
+            "reasoning": 84
+          },
+          "cost": {
+            "unit": "credits",
+            "total": 2.1693,
+            "fresh": 0.5744999999999999,
+            "cached": 0.5372999999999999,
+            "cacheWrite": 0.8084999999999999,
+            "output": 0.24899999999999997
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 18
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 22
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 856
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 20066,
+            "cacheWrite": 3322,
+            "output": 299,
+            "reasoning": 82
+          },
+          "cost": {
+            "unit": "credits",
+            "total": 2.29833,
+            "fresh": 0.0021000000000000003,
+            "cached": 0.6019800000000001,
+            "cacheWrite": 1.2457500000000001,
+            "output": 0.4485
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 31
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 18
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 530
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 783,
+            "cached": 23388,
+            "cacheWrite": 377,
+            "output": 263,
+            "reasoning": 82
+          },
+          "cost": {
+            "unit": "credits",
+            "total": 1.472415,
+            "fresh": 0.23490000000000003,
+            "cached": 0.70164,
+            "cacheWrite": 0.141375,
+            "output": 0.3945
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 415
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 3
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 23765,
+            "cacheWrite": 1608,
+            "output": 224,
+            "reasoning": 82
+          },
+          "cost": {
+            "unit": "credits",
+            "total": 1.65405,
+            "fresh": 0.0021000000000000003,
+            "cached": 0.7129500000000001,
+            "cacheWrite": 0.6030000000000001,
+            "output": 0.336
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 377
+        },
+        {
+          "kind": "tool",
+          "name": "view",
+          "contextTokens": 4
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 25373,
+            "cacheWrite": 813,
+            "output": 1784,
+            "reasoning": 82
+          },
+          "cost": {
+            "unit": "credits",
+            "total": 3.744165,
+            "fresh": 0.0021000000000000003,
+            "cached": 0.76119,
+            "cacheWrite": 0.304875,
+            "output": 2.676
+          }
+        }
+      ]
+    }
+  ]
+}

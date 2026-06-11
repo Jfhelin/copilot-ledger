@@ -101,6 +101,28 @@ test("counts tool calls and the advertised tool catalog with schemas", () => {
   assert.equal(d.toolCatalog.count, 2);
 });
 
+test("emits a per-call timeline with exact native cost split that sums to the call", () => {
+  const d = runDigest();
+  const tl = d.prompts[0].timeline;
+  assert.ok(Array.isArray(tl), "timeline is an array");
+  const llm = tl.filter((e) => e.kind === "llm");
+  const tools = tl.filter((e) => e.kind === "tool");
+  assert.equal(llm.length, d.prompts[0].requestCount);
+  assert.equal(tools.length, d.prompts[0].toolCallCount);
+  assert.deepEqual(tools.map((t) => t.name), ["view"]);
+  // tool entries carry an approx. "content added to context" token count
+  for (const t of tools) assert.equal(typeof t.contextTokens, "number");
+  // each LLM entry's cost components sum to its total (within float tolerance)
+  for (const e of llm) {
+    assert.equal(e.cost.unit, "credits");
+    const sum = e.cost.fresh + e.cost.cached + e.cost.cacheWrite + e.cost.output;
+    assert.ok(Math.abs(sum - e.cost.total) < 1e-6, "components sum to total");
+  }
+  // the timeline's LLM cost sums to the authoritative native credits
+  const tlCredits = llm.reduce((s, e) => s + e.cost.total, 0);
+  assert.ok(Math.abs(tlCredits - d.rollups.cost.native.credits) < 1e-3);
+});
+
 test("reconstructs context-window shape from the wire request, incl. skill blocks", () => {
   const rep = runDigest().prefix.representative;
   assert.equal(rep.toolCount, 2);

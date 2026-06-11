@@ -80,6 +80,25 @@ test("counts tool calls, tool catalog, skills and thinking", () => {
   assert.equal(d.rollups.thinking.present, true);
 });
 
+test("emits a per-call timeline with modelled cost that sums to the run total", () => {
+  const d = runDigest(["--no-capture"]);
+  const tl = [];
+  for (const p of d.prompts) for (const e of p.timeline || []) tl.push(e);
+  const llm = tl.filter((e) => e.kind === "llm");
+  const tools = tl.filter((e) => e.kind === "tool");
+  assert.equal(llm.length, d.rollups.requests);
+  assert.equal(tools.length, d.rollups.toolCalls);
+  assert.deepEqual(tools.map((t) => t.name), ["Read"]);
+  for (const t of tools) assert.equal(typeof t.contextTokens, "number");
+  for (const e of llm) {
+    assert.equal(e.cost.unit, "usd");
+    const sum = e.cost.fresh + e.cost.cached + e.cost.cacheWrite + e.cost.output;
+    assert.ok(Math.abs(sum - e.cost.total) < 1e-9, "components sum to total");
+  }
+  const tlUsd = llm.reduce((s, e) => s + e.cost.total, 0);
+  assert.ok(Math.abs(tlUsd - d.rollups.cost.totalUsd) < 1e-3);
+});
+
 test("excludes orphan (assistant-before-user) turns from the prompt count", () => {
   const orphanFixture = path.join(here, "fixtures", "mini-claude-orphan.jsonl");
   const out = execFileSync("node", [script, orphanFixture, "--stdout", "--no-capture"], {
