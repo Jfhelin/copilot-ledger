@@ -43,6 +43,40 @@ Practical consequences:
 - Every number on a finished page must trace back to a digest field or a canvas
   view. No invented figures.
 
+## Reuse existing measured data — the data catalog (read before capturing)
+
+Before running or asking the user to run a new capture, **check what we already
+measured.** The durable catalog of every dataset collected for this content series
+lives at:
+
+> **`docs/content-lab/data/INDEX.md`**
+
+It maps each dataset (the 40-run repeatability experiment, the per-harness prefix
+digests, the Copilot-in-VS-Code exports, the Claude Code extension transcripts, the
+four extracted system prompts, the 6-deliverable harness dossier) to its canonical
+location, records the key measured numbers, and lists known gaps and pending
+captures. Bulky/raw captures it references live in the external dir
+`~/copilot-ledger-data/` (not committed); the distilled analysis sits next to the
+index in `docs/content-lab/data/`.
+
+Use it to avoid re-running sessions: if the number you need is already cataloged,
+cite it from there.
+
+**You are responsible for keeping the catalog current.** A markdown index does not
+update itself — so whenever you produce a page or finding that involves data, in the
+same change:
+
+- If you generated a **new capture/dataset**, add a row/section to `INDEX.md` (what
+  it measures, harness, model, MCP on/off, canonical path) and stage the raw file
+  into `~/copilot-ledger-data/captures/`.
+- If you **closed a gap** listed under "Known gaps / open captures," update or remove
+  that entry.
+- If a headline number changed or a dataset was retired, fix it in `INDEX.md` and bump
+  its "Last updated" date.
+
+Treat updating `INDEX.md` as part of "done," the same way the article isn't done until
+it's registered in `articles.config.mjs`.
+
 ## The producing workflow
 
 When the user asks to produce a page / experiment / post / video bundle:

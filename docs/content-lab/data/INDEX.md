@@ -8,6 +8,12 @@ referenced below.
 
 _Last updated: 2026-06-12._
 
+> **Keeping this current.** This file does not update itself. The
+> `copilot-behavior-lab` skill owns it: whenever a page/finding is produced that
+> involves data, the skill adds new datasets, closes resolved gaps, fixes changed
+> numbers, and bumps the date above. If you add or retire a capture by hand, do the
+> same here.
+
 ---
 
 ## Where everything lives
