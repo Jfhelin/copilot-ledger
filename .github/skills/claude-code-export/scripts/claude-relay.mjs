@@ -1,35 +1,49 @@
 #!/usr/bin/env node
-// Minimal Anthropic API logging relay for Claude Code.
+// Minimal Anthropic API logging relay for Claude Code (CLI *and* the VS Code
+// extension).
 //
 // Claude Code -> this relay (ANTHROPIC_BASE_URL) -> https://api.anthropic.com
-// It streams responses through untouched and tees each /v1/messages REQUEST body,
-// writing a readable JSON capture of { system, tools, messages, ... } per call.
+// It streams responses through untouched and tees each request body for the
+// messages endpoints, writing a readable JSON capture of
+// { system, tools, messages, ... } per call.
 //
 // Usage:
 //   node claude-relay.mjs                 # listens on 127.0.0.1:8788
 //   PORT=9000 node claude-relay.mjs       # custom port
 //
-// Then, in another terminal, point Claude Code at it:
+// Then point a CLI run at it:
 //   export ANTHROPIC_BASE_URL=http://127.0.0.1:8788
 //   claude
 //
-// Captures land in ~/CopilotLogExports/claude-captures/ as <timestamp>-<n>.json
-// plus a one-line summary appended to index.log. API keys are NEVER written.
+// ...or capture the VS Code extension (sdk-ts) — on macOS the extension host
+// only inherits env when VS Code is launched from a shell, so fully quit it
+// first, then:
+//   ANTHROPIC_BASE_URL=http://127.0.0.1:8788 code /path/to/repo
+//
+// Every incoming request is logged (method + path + Host) to index.log so you
+// can VERIFY the harness actually honors ANTHROPIC_BASE_URL and see exactly
+// where it routes. /v1/messages and /v1/messages/count_tokens bodies are teed
+// to per-call JSON files. API keys / auth headers are NEVER written to disk.
+//
+// Env:
+//   PORT               listen port (default 8788)
+//   ANTHROPIC_UPSTREAM upstream host to forward to (default api.anthropic.com).
+//                      Override if the harness targets a non-default endpoint.
+//   CAPTURE_DIR        output dir (default ~/CopilotLogExports/claude-captures)
 
 import http from "node:http";
 import https from "node:https";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const PORT = Number(process.env.PORT || 8788);
 const HOST = "127.0.0.1";
-const UPSTREAM = "api.anthropic.com";
+const UPSTREAM = process.env.ANTHROPIC_UPSTREAM || "api.anthropic.com";
 const OUT_DIR =
   process.env.CAPTURE_DIR ||
   path.join(os.homedir(), "CopilotLogExports", "claude-captures");
-
-fs.mkdirSync(OUT_DIR, { recursive: true });
 
 let counter = 0;
 const stamp = () => new Date().toISOString().replace(/[:.]/g, "-");
@@ -37,12 +51,12 @@ const stamp = () => new Date().toISOString().replace(/[:.]/g, "-");
 // rough token estimate so the file is useful for context-window sizing
 const approxTokens = (s) => (s ? Math.round(s.length / 4) : 0);
 
-function summarize(body) {
+function summarize(body, endpoint) {
   let parsed;
   try {
     parsed = JSON.parse(body);
   } catch {
-    return null; // not JSON (e.g. token-count pings we don't care to decode)
+    return null; // not JSON (e.g. malformed or empty body)
   }
 
   const systemText = Array.isArray(parsed.system)
@@ -89,6 +103,7 @@ function summarize(body) {
 
   return {
     capturedAt: new Date().toISOString(),
+    endpoint: endpoint || "/v1/messages",
     model: parsed.model,
     stream: parsed.stream,
     max_tokens: parsed.max_tokens,
@@ -101,22 +116,39 @@ function summarize(body) {
   };
 }
 
+export { summarize, approxTokens };
+
 const server = http.createServer((clientReq, clientRes) => {
   const chunks = [];
   clientReq.on("data", (c) => chunks.push(c));
   clientReq.on("end", () => {
     const body = Buffer.concat(chunks);
+    const url = clientReq.url || "";
 
-    // Tee the request body for /v1/messages POSTs only.
-    if (clientReq.method === "POST" && clientReq.url.includes("/v1/messages")) {
-      const summary = summarize(body.toString("utf8"));
+    // Visibility: log EVERY request (method + path + Host) so you can confirm
+    // the harness honors ANTHROPIC_BASE_URL and see exactly where it routes.
+    const reqLine =
+      `${new Date().toISOString()}  REQ ${clientReq.method} ${url} ` +
+      `Host=${clientReq.headers.host || "?"}`;
+    fs.appendFileSync(path.join(OUT_DIR, "index.log"), reqLine + "\n");
+    process.stdout.write(reqLine + "\n");
+
+    // Tee the request body for the messages endpoints (real calls AND the
+    // count_tokens pings, which expose the SDK's own prefix sizing).
+    const isMessages =
+      clientReq.method === "POST" && url.includes("/v1/messages");
+    if (isMessages) {
+      const endpoint = url.includes("count_tokens")
+        ? "/v1/messages/count_tokens"
+        : "/v1/messages";
+      const summary = summarize(body.toString("utf8"), endpoint);
       if (summary) {
         const n = ++counter;
         const file = path.join(OUT_DIR, `${stamp()}-${String(n).padStart(3, "0")}.json`);
         fs.writeFileSync(file, JSON.stringify(summary, null, 2));
         const s = summary.sizing;
         const line =
-          `${summary.capturedAt}  ${summary.model}  ` +
+          `${summary.capturedAt}  ${summary.model}  ${summary.endpoint}  ` +
           `system=${s.systemTokens}t tools=${s.toolsTokens}t(${s.toolCount}) ` +
           `messages=${s.messagesTokens}t(${s.messageCount})  -> ${path.basename(file)}`;
         fs.appendFileSync(path.join(OUT_DIR, "index.log"), line + "\n");
@@ -149,13 +181,21 @@ const server = http.createServer((clientReq, clientRes) => {
   });
 });
 
-server.listen(PORT, HOST, () => {
-  process.stdout.write(
-    `Claude relay listening on http://${HOST}:${PORT}\n` +
-      `Forwarding -> https://${UPSTREAM}\n` +
-      `Captures   -> ${OUT_DIR}\n\n` +
-      `In another terminal:\n` +
-      `  export ANTHROPIC_BASE_URL=http://${HOST}:${PORT}\n` +
-      `  claude\n`,
-  );
-});
+function start() {
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  server.listen(PORT, HOST, () => {
+    process.stdout.write(
+      `Claude relay listening on http://${HOST}:${PORT}\n` +
+        `Forwarding -> https://${UPSTREAM}\n` +
+        `Captures   -> ${OUT_DIR}\n\n` +
+        `CLI:      export ANTHROPIC_BASE_URL=http://${HOST}:${PORT} && claude\n` +
+        `VS Code:  quit VS Code, then  ANTHROPIC_BASE_URL=http://${HOST}:${PORT} code <repo>\n`,
+    );
+  });
+}
+
+// Only bind the port when run directly (so the module can be imported in tests).
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  start();
+}
+
