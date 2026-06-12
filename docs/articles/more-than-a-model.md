@@ -78,27 +78,27 @@ That entire payload shapes the model’s behavior.
 In the captures, the “before reasoning” payload varied a lot.
 
 ```text
-Copilot CLI:            ~15k tokens
-Copilot in VS Code:     ~17k tokens
-Claude CLI:             ~27k tokens
+Copilot CLI:            ~16k tokens
+Claude CLI:             ~18k tokens
+Copilot in VS Code:     ~21k tokens
 ```
 
 Same model.
 
 Same kind of task.
 
-Nearly a 2x difference in what the model sees before it even starts answering.
+About a 1.3x difference in the size of what the model sees before it even starts answering — and the composition differs far more than the totals.
 
 <figure>
-  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart comparing the out-of-box prefix floor across three harnesses: Copilot CLI about 15k tokens, Copilot in VS Code about 17k tokens (estimated), and Claude CLI about 27k tokens, all with MCP off and no user-added skills.">
-  <figcaption>The out-of-box floor, MCP off and no user-added skills: the model was the same, but the pre-reasoning payload ranged from about 15k to 27k tokens. This is the floor — real usage only adds to it.</figcaption>
+  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart of the turn-0 prefix in billed tokens for three harnesses on the same model (Claude Sonnet 4.5, MCP off). Copilot CLI totals about 16,200 tokens, Claude CLI about 18,130, and Copilot in VS Code about 20,600. Tool definitions are the largest component everywhere — about 56 percent of the Copilot CLI prefix and 49 percent of the VS Code prefix. All three use the same Anthropic tokenizer and are directly comparable; the spread is about 1.27 times.">
+  <figcaption>The turn-0 payload, MCP off: the model was the same, but the pre-reasoning prefix ranged from about 16k to 21k tokens — a 1.27x spread on the same Anthropic meter. Tool definitions dominate every bar. This is roughly the starting point; real usage only adds to it.</figcaption>
 </figure>
 
 That difference came mostly from harness choices: system prompt size, tool catalog verbosity, IDE context, and how much extra environment information is injected.
 
 These three numbers are the floor — what each harness loads with MCP off, no memory file, and no user-added skills. It is the most portable number I can give you, because everything above it depends on your machine.
 
-And there is a lot that sits above it. The biggest variable, the tool catalog, is partly out of the harness's hands. In an IDE especially, installed extensions add their own tools. The Copilot-in-VS-Code session I captured actually measured about 21k tokens across 56 tools — but 18 of those came from notebook and browser extensions, not from Copilot itself. Strip those extension tools and the floor is roughly 17k (the estimated bar above). Turn MCP on instead and that same harness jumped to about 46k tokens across 95 tools. Add a memory file or a few skills and it grows again.
+And there is a lot that sits above it. The biggest variable, the tool catalog, is partly out of the harness's hands. In an IDE especially, installed extensions add their own tools. The Copilot-in-VS-Code session I captured actually measured about 21k tokens across 56 tools — but 18 of those came from notebook and browser extensions, not from Copilot itself. Strip those extension tools and Copilot's own floor in VS Code is roughly 17k (an estimate — that exact configuration was not separately billed). Turn MCP on instead and that same harness jumped to about 46k tokens across 95 tools. Add a memory file or a few skills and it grows again.
 
 So the portable, harness-controlled part is really the floor: the system prompt plus the built-in tool set, with MCP off and no extra extensions or skills. Everything above that floor is your environment. The exact number on your machine will differ from mine — which is the whole point.
 
@@ -457,11 +457,11 @@ It can add workspace context, repository state, editor state, instructions, skil
 The built-in floor for Copilot in VS Code sits only a little above the Copilot CLI:
 
 ```text
-Copilot CLI:        ~15k tokens
+Copilot CLI:        ~16k tokens
 Copilot in VS Code: ~17k tokens
 ```
 
-But the IDE is where the environment piles on. That same Copilot-in-VS-Code session measured about 21k tokens once a couple of installed extensions added their own tools, and jumped to about 46k with MCP enabled — far above the CLI floor on the identical harness and model.
+But the IDE is where the environment piles on. The Copilot-in-VS-Code session I captured measured about 21k tokens once a couple of installed extensions added their own tools — that is the VS Code bar in the chart above — and jumped to about 46k with MCP enabled, far above the CLI floor on the identical harness and model.
 
 That does not mean the IDE is worse.
 
