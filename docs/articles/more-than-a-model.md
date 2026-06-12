@@ -151,22 +151,6 @@ But that does not mean Anthropic controls the whole coding-agent experience.
 
 A lot remains in the hands of the harness developer.
 
-| Lever | Mostly model provider | Mostly harness developer |
-|---|---:|---:|
-| Model weights | Yes | No |
-| Training | Yes | No |
-| System prompt content | No | Yes |
-| Tool selection | No | Yes |
-| Tool descriptions | No | Yes |
-| MCP exposure | No | Yes |
-| Skills | No | Yes |
-| Memory | No | Yes |
-| Agent orchestration | No | Yes |
-| Cache placement | Partly | Partly |
-| Context compaction | No | Yes |
-| Sampling values | Range/defaults | Chosen values |
-| Model routing | Serves model | Chooses endpoint/proxy |
-
 A simple way to say it is:
 
 > The model provider owns the engine. The harness developer builds the car around it.
@@ -272,11 +256,6 @@ In one clean MCP on/off comparison, adding a single filesystem MCP server added:
 +1,876 prefix tokens
 ```
 
-<figure>
-  <img src="./figures/harnesses/mcp-delta-callout.svg" alt="Callout: adding one filesystem MCP server added 14 tools and 1,876 prefix tokens. MCP adds capability, but also changes what the model sees.">
-  <figcaption>MCP is capability, but also context. An MCP-on run and an MCP-off run are not the same experiment.</figcaption>
-</figure>
-
 That was one small server.
 
 Larger MCP configurations can add many more tools.
@@ -285,20 +264,9 @@ This matters because an MCP-heavy setup and an MCP-light setup are not really th
 
 MCP is one of the easiest ways to change the cost, capability, and behavior of a coding agent.
 
-That is the tradeoff:
+That is the tradeoff.
 
-```text
-More MCP:
-  more capability
-  more tools
-  larger prefix
-  more possible distraction
-
-Less MCP:
-  smaller prefix
-  lower cost
-  fewer capabilities
-```
+More MCP means more capability and more tools, but a larger prefix and more possible distraction. Less MCP means a smaller prefix and lower cost, but fewer capabilities.
 
 So when someone compares two coding agents, one of the first questions should be:
 
