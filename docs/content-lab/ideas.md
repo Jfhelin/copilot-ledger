@@ -25,3 +25,13 @@
 - Cache behavior
 - Image input
 - Bracket codebase / excessive context
+
+## Article Ideas (Future)
+
+- **Claude Code vs VS Code + Claude harness — how the harnesses differ.** Compare the
+  two ways of running Claude as a coding agent: the standalone Claude Code CLI vs the
+  VS Code Copilot Chat harness driving Claude. Focus on harness-level differences (not
+  the model): what each loads into context before you type (initial context window,
+  system prompt), how skills / MCP / tools are delivered, what the harness controls vs
+  the user, and the resulting cost/cache/tool-call behavior. Companion to Article 2
+  (`what-actually-differs`).
