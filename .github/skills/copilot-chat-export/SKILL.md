@@ -27,25 +27,41 @@ Activate when any of these are true:
 
 If you are not sure whether a file is a Copilot chat export, peek at the top-level keys with `jq 'keys' FILE` — a real export has at minimum `prompts`, `mcpServers`, `exportedAt`.
 
+> **Capture folders mix formats — confirm before digesting.** A single
+> directory (e.g. `~/CopilotLogExports/claude-captures/`) often holds VS Code
+> exports *alongside* unrelated captures: CLI/proxy **relay** dumps (per-request
+> files with top-level keys like `capturedAt`, `system`, `tools`, `messages` and
+> no `prompts`), `index.log`, scores, etc. `digest.mjs` only understands the VS
+> Code export schema and will choke on the others. Always verify the top-level
+> keys (`prompts` + `mcpServers` + `exportedAt`) before running the digest, and
+> never assume "every `.json` in this folder is an export." The Claude-harness
+> variant ("Claude Copilot Proxy", `metadata.model` like `claude-sonnet-4.5`,
+> integer roles, no system-role string) **is** a valid VS Code export and
+> digests normally — don't mistake it for a relay capture.
+
 ## Where the user usually keeps these files
 
 When the user names a file without a full path (e.g. "look at `04-plan-implement-cart.json`" or "`02-one-tool.json`"), search these locations in order before giving up. Use the first hit.
 
 1. `<repo>/packages/cost-view/public/sessions/<name>` — this project's bundled sample/working exports
 2. `~/Downloads/<name>`
-3. `~/CopilotLogExports/<name>`
+3. `~/CopilotLogExports/<name>` — **search recursively**; captures are usually filed in subfolders (e.g. `claude-captures/`, per-experiment dirs), not at the top level
 
 `<repo>` is the copilot-ledger checkout the skill is running in (the directory containing the `.github/` folder). The cost-view ships its example exports under `packages/cost-view/public/sessions/`, so a bare name like `02-one-tool.json` almost always lives there — check it first.
 
 Quick resolver (run from the repo root):
 
 ```bash
-for d in "packages/cost-view/public/sessions" "$HOME/Downloads" "$HOME/CopilotLogExports"; do
-  [ -f "$d/<name>" ] && echo "$d/$name" && break
+hit=""
+for d in "packages/cost-view/public/sessions" "$HOME/Downloads"; do
+  [ -f "$d/<name>" ] && hit="$d/<name>" && break
 done
+# CopilotLogExports nests captures in subfolders, so search it recursively
+[ -z "$hit" ] && hit="$(find "$HOME/CopilotLogExports" -name "<name>" -type f 2>/dev/null | head -1)"
+echo "$hit"
 ```
 
-If none contains the file, ask the user for the path rather than guessing further. If the user says "the latest export" or similar without naming a file, list the newest few `.json` files across all three directories with `ls -lt packages/cost-view/public/sessions/*.json ~/Downloads/*.json ~/CopilotLogExports/*.json 2>/dev/null | head` and let them pick.
+If more than one match comes back from the recursive search, list them and ask the user which one. If none contains the file, ask the user for the path rather than guessing further. If the user says "the latest export" or similar without naming a file, list the newest few `.json` files across all locations with `ls -lt packages/cost-view/public/sessions/*.json ~/Downloads/*.json 2>/dev/null; find ~/CopilotLogExports -name '*.json' -type f -print0 2>/dev/null | xargs -0 ls -lt 2>/dev/null | head` and let them pick.
 
 ## Procedure (run this every time the user points at a file)
 
