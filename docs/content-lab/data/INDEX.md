@@ -22,7 +22,7 @@ _Last updated: 2026-06-12._
 |---|---|---|---|
 | **Index** (this file) | `docs/content-lab/data/INDEX.md` | ✅ repo | The catalog you are reading |
 | **Distilled analysis** | `docs/content-lab/data/*.md` + `system-prompts/` | ✅ repo | The 6-deliverable dossier, taxonomy, narratives, 4 system prompts |
-| **DB snapshots** | `docs/content-lab/data/db/*.sql` | ✅ repo | Reloadable dumps of the analysis tables (`levers`, `captures`) — see DB note below |
+| **DB snapshots** | `docs/content-lab/data/db/` | ✅ repo | `runs.jsonl`/`runs.sql` run ledger + reloadable dumps (`levers`, `captures`) — see DB notes below |
 | **Raw / bulky captures** | `~/copilot-ledger-data/captures/` | ❌ external | Wire logs, transcripts, exports, 40-run metrics + scripts |
 | **Published article** | `docs/articles/more-than-a-model.md` (+ `figures/harnesses/*.svg`) | ✅ repo | The live Pages article this data backs |
 | **Pre-registrations** | `docs/content-lab/experiments/11-*.md`, `12-*.md`, `10-ask-vs-agent-mode.md` | ✅ repo | Experiment designs |
@@ -31,6 +31,36 @@ _Last updated: 2026-06-12._
 > reason over — so it is committed. Raw captures are large and contain absolute local
 > paths, so by project convention they stay out of git, consolidated into
 > `~/copilot-ledger-data/` so they survive session cleanup.
+
+---
+
+## 📒 The run ledger — `db/runs.jsonl` (the canonical "every run that happened" log)
+
+`docs/content-lab/data/db/runs.jsonl` is the **single shared log of every captured run**,
+one JSON object per line. It is the queryable spine of this catalog; this INDEX is its
+human companion. JSONL was chosen over a live database on purpose: it is append-only
+(no merge pain), diffs cleanly in PRs, needs zero infrastructure, and loads into any
+session's `sql` tool on demand.
+
+**Row schema:** `run_id, date, harness, task, model, mcp_on, condition, rep,
+source_path, prefix_tokens, requests, tool_calls, cost_usd, quality_score, notes`.
+
+**Query it** (loads the generated dump into the session DB just like the others):
+```sh
+sqlite3 session.db < docs/content-lab/data/db/runs.sql
+# e.g. SELECT harness, count(*), round(avg(cost_usd),3) FROM runs GROUP BY harness;
+```
+
+**Add a new run:** append a line to `runs.jsonl` (or add it to `build-runs.mjs`), then
+regenerate the dump:
+```sh
+node docs/content-lab/data/db/build-runs.mjs       > docs/content-lab/data/db/runs.jsonl
+node docs/content-lab/data/db/build-runs.mjs --sql > docs/content-lab/data/db/runs.sql
+```
+The 40 repeatability rows are derived from the committed `captures.sql` (so they rebuild
+in CI); structural / IDE session rows live in `STATIC_ROWS` inside `build-runs.mjs`
+because their raw sources are external. Current ledger: **48 rows**
+(40 repeatability + 2 structural + 2 CL-IDE + 4 CO-IDE).
 
 ---
 
@@ -45,6 +75,7 @@ To keep structured table data durable, dumps are committed here:
 
 | Table | Origin session | Durable dump | Rows |
 |---|---|---|---:|
+| `runs` | run ledger (built from below) | `db/runs.jsonl` + `db/runs.sql` | 48 |
 | `levers` | Article-2 lever taxonomy session | `db/levers.sql` | 15 (A–O) |
 | `captures` | 40-run repeatability experiment (`52203f3d…`) | `db/captures.sql` | 40 |
 
