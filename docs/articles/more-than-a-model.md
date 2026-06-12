@@ -214,13 +214,16 @@ They read files, search directories, run commands, edit code, create plans, call
 
 The tool catalog is the list of tools the model can see and call.
 
-In the captures, the tool catalogs differed quite a bit.
+In the captures, counting each harness's built-in tools (MCP off, no extensions), the catalogs differed quite a bit.
 
 ```text
 Copilot CLI:            19 tools
 Claude CLI:             27 tools
-Copilot VS Code agent:  56 tools
+Copilot in VS Code:    ~38 tools
+Claude Code in VS Code: engine-fixed roster (~27 + IDE tools)
 ```
+
+These are built-in floors. The Copilot-in-VS-Code session I captured actually exposed 56 tools, but 18 of those came from installed extensions (notebook and browser), not from Copilot — so the portable number is ~38. Claude Code in VS Code ships a fixed engine roster, so its count barely moves between machines; MCP and extensions only ever add on top.
 
 The difference was not only the number of tools.
 
