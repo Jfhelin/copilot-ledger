@@ -60,15 +60,21 @@ captures. Bulky/raw captures it references live in the external dir
 index in `docs/content-lab/data/`.
 
 Use it to avoid re-running sessions: if the number you need is already cataloged,
-cite it from there.
+cite it from there. The **queryable spine** of the catalog is the run ledger
+`docs/content-lab/data/db/runs.jsonl` (one row per run ever captured); load it with
+`sqlite3 session.db < docs/content-lab/data/db/runs.sql` to filter/aggregate.
 
 **You are responsible for keeping the catalog current.** A markdown index does not
 update itself — so whenever you produce a page or finding that involves data, in the
 same change:
 
-- If you generated a **new capture/dataset**, add a row/section to `INDEX.md` (what
+- If you generated a **new capture/dataset**, (a) append a row to the run ledger
+  `docs/content-lab/data/db/runs.jsonl` — or add it to `build-runs.mjs` and regenerate
+  both `runs.jsonl` and `runs.sql` — and (b) add a row/section to `INDEX.md` (what
   it measures, harness, model, MCP on/off, canonical path) and stage the raw file
   into `~/copilot-ledger-data/captures/`.
+- If you built a **new long-lived `sql` table**, dump it to `docs/content-lab/data/db/`
+  (the session DB is per-session and is lost on cleanup — see the INDEX DB note).
 - If you **closed a gap** listed under "Known gaps / open captures," update or remove
   that entry.
 - If a headline number changed or a dataset was retired, fix it in `INDEX.md` and bump
