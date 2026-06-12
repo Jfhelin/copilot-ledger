@@ -101,6 +101,14 @@ test("counts tool calls and the advertised tool catalog with schemas", () => {
   assert.equal(d.toolCatalog.count, 2);
 });
 
+test("reports full tool schemas sent over the wire", () => {
+  const d = runDigest();
+  assert.equal(typeof d.rollups.wireToolCount, "number");
+  assert.equal(d.rollups.wireToolCount, 2);
+  assert.deepEqual(d.rollups.wireToolCountRange, { min: 2, max: 2 });
+  assert.equal(d.rollups.wireToolCount, d.toolCatalog.count);
+});
+
 test("emits a per-call timeline with exact native cost split that sums to the call", () => {
   const d = runDigest();
   const tl = d.prompts[0].timeline;

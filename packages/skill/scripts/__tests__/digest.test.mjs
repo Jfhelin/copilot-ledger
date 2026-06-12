@@ -68,6 +68,17 @@ test("discovers models, tools, files and mcp servers", () => {
   assert.deepEqual(d.mcpServers.map((m) => m.label), ["github"]);
 });
 
+test("reports wire tool schema count separately from enabled and invoked tools", () => {
+  const d = runDigest();
+  assert.equal(typeof d.rollups.wireToolCount, "number");
+  assert.equal(d.rollups.wireToolCount, 2);
+  assert.equal(d.rollups.enabledToolCount, 2);
+  assert.equal(d.rollups.wireToolCountRange, null);
+  assert.ok(d.rollups.enabledToolCount >= d.rollups.wireToolCount);
+  assert.equal(d.rollups.toolCount, 2, "toolCount remains distinct tools invoked");
+  assert.match(d.rollups.wireToolCountNote, /rollups\.toolCount is distinct tools INVOKED/);
+});
+
 test("prices known models and reports credits", () => {
   const d = runDigest();
   assert.equal(d.rollups.cost.allModelsPriced, true);
@@ -220,6 +231,14 @@ test("splits tool-defs into sent (direct) vs deferred when virtual tools are act
     assert.equal(row.toolDefsCatalogCount, 5, "catalog is 5");
     assert.equal(row.toolDefsDeferredCount, 3, "3 catalog tools deferred");
     assert.equal(row.toolDefsDeferredIndexCount, 3, "index lists 3 names");
+    assert.equal(d.rollups.wireToolCount, 2, "rollup reports representative sent schema count");
+    assert.equal(d.rollups.enabledToolCount, 5, "rollup reports enabled catalog size");
+    assert.equal(d.rollups.wireToolCountRange, null, "single request has no varying range");
+    assert.equal(
+      d.rollups.enabledToolCount - d.rollups.wireToolCount,
+      3,
+      "rollup exposes the deferral gap",
+    );
     assert.ok(
       row.toolDefsApproxTokens < row.toolDefsCatalogIfFlatApproxTokens,
       "sent tokens are smaller than the flat-catalog worst case",

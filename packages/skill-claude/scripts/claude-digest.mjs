@@ -606,6 +606,17 @@ function buildPrefix() {
 // ---------------------------------------------------------------------------
 // Assemble digest (mirror VS Code top-level keys + Claude-specific additions)
 // ---------------------------------------------------------------------------
+const prefix = buildPrefix();
+const wireToolCount = prefix.available ? prefix.representative?.toolCount ?? 0 : null;
+const wireToolCounts = prefix.available ? (prefix.captures || []).map((c) => c.toolCount ?? 0) : [];
+const wireToolCountRange =
+  wireToolCounts.length > 1
+    ? { min: Math.min(...wireToolCounts), max: Math.max(...wireToolCounts) }
+    : null;
+const wireToolCountNote = prefix.available
+  ? "Full tool schemas transmitted over the wire, from a claude-relay.mjs capture. The transcript omits schemas; toolCatalogCount (advertised tool NAMES from deferred_tools_delta) may differ."
+  : "Unknown — the Claude CLI transcript does not include tool schemas. Run claude-relay.mjs to capture the wire request and re-run the digest to populate this.";
+
 const digest = {
   session: {
     digestVersion: DIGEST_VERSION,
@@ -640,6 +651,9 @@ const digest = {
     // the advertised catalog size (Claude-specific).
     toolCount: usedToolsArr.length,
     toolCatalogCount: toolNameSet.size,
+    wireToolCount,
+    wireToolCountRange,
+    wireToolCountNote,
     toolsUsedCount: usedToolsArr.length,
     wallSpanMs,
     firstTime,
@@ -700,14 +714,14 @@ const digest = {
     count: toolNameSet.size,
     names: [...toolNameSet].sort(),
     note:
-      "Tool NAMES advertised to the model (from deferred_tools_delta). The transcript does NOT include tool schemas; see prefix.representative (relay capture) for the schema token weight.",
+      "Advertised tool NAMES from deferred_tools_delta, not necessarily the full tool schemas transmitted over the wire. The transcript does NOT include schemas; compare with rollups.wireToolCount (relay capture only) and prefix.representative for schema token weight.",
   },
   skills: skillListing,
   mcpInstructions: {
     names: [...mcpInstructionNames].sort(),
     approxTokens: mcpInstructionsApproxTokens,
   },
-  prefix: buildPrefix(),
+  prefix,
   prompts: promptsOut,
 };
 

@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const DIGEST_VERSION = 7;
+const DIGEST_VERSION = 8;
 const CREDITS_PER_USD = 100; // GitHub AI Credits: 1 credit = $0.01 USD (UBB launch 2026-06-01)
 const credits = (usd) => Math.round(usd * CREDITS_PER_USD * 10) / 10; // 1 decimal credit
 
@@ -437,6 +437,8 @@ let totalToolDefsFullPriceUsd = 0;
 // virtual-tools grouping). Compared against totalToolDefsTokens (direct/sent)
 // this reveals what grouping saved.
 let totalToolDefsCatalogIfFlatTokens = 0;
+const wireToolCounts = [];
+let enabledToolCountMax = null;
 let totalToolArgsChars = 0;          // sum of toolCall.args char lengths (output-side tool payload)
 let totalVisibleTextChars = 0;       // sum of response.message[] char lengths
 // Globally distinct thinking events, deduped by plaintext text.
@@ -649,7 +651,8 @@ prompts.forEach((p, pi) => {
       // demand via tool_search. Sizing the bucket from the catalog would
       // over-count grouped runs ~6x, so we size from the DIRECT (sent) tools
       // only. The deferred names already ride in the message-text bucket.
-      const toolsAdvertised = Array.isArray(md.tools) ? md.tools : [];
+      const hasToolsArray = Array.isArray(md.tools);
+      const toolsAdvertised = hasToolsArray ? md.tools : [];
       const deferredNames = extractDeferredToolNames(log.requestMessages?.messages);
       for (const wf of extractWorkspaceFolders(log.requestMessages?.messages)) {
         const norm = wf.replace(/[\\/]+$/, "");
@@ -662,6 +665,10 @@ prompts.forEach((p, pi) => {
       // How many catalog tools were actually deferred (intersection), vs the
       // raw block size (which may include phantom/unknown names).
       const deferredFromCatalog = toolsAdvertised.length - directTools.length;
+      if (hasToolsArray) {
+        wireToolCounts.push(directTools.length);
+        enabledToolCountMax = Math.max(enabledToolCountMax ?? 0, toolsAdvertised.length);
+      }
       const toolsJsonLen = directTools.length > 0 ? JSON.stringify(directTools).length : 0;
       const toolDefsApproxTokens = Math.ceil(toolsJsonLen / 4);
       // Worst-case if the full catalog were sent flat (grouping off).
@@ -880,6 +887,12 @@ const modelsArr = [...modelStats.values()]
     savingsRatio: m.withoutCacheUsd > 0 ? round6((m.withoutCacheUsd - m.costUsd) / m.withoutCacheUsd) : 0,
   }));
 const toolsArr = [...toolStats.values()].sort((a, b) => b.calls - a.calls);
+const wireToolCountMin = wireToolCounts.length > 0 ? Math.min(...wireToolCounts) : null;
+const wireToolCountMax = wireToolCounts.length > 0 ? Math.max(...wireToolCounts) : null;
+const wireToolCountRange =
+  wireToolCountMin !== null && wireToolCountMax !== null && wireToolCountMin !== wireToolCountMax
+    ? { min: wireToolCountMin, max: wireToolCountMax }
+    : null;
 const filesArr = [...fileStats.values()].sort(
   (a, b) => b.reads + b.writes + b.lists - (a.reads + a.writes + a.lists)
 );
@@ -1040,6 +1053,11 @@ const digest = {
     primaryModel: modelsArr[0]?.name ?? null,
     modelCount: modelsArr.length,
     toolCount: toolsArr.length,
+    wireToolCount: wireToolCountMax,
+    wireToolCountRange,
+    enabledToolCount: enabledToolCountMax,
+    wireToolCountNote:
+      "Distinct full tool schemas actually sent over the wire (the 'direct' tools). When virtual-tools grouping is active (enabled tools over VS Code's threshold, default 128), the remaining enabledToolCount−wireToolCount tools are advertised name-only via <availableDeferredTools> and loaded on demand by tool_search. rollups.toolCount is distinct tools INVOKED, a different number.",
     fileCount: filesArr.length,
     totalRequestDurationMs: totalDurationMs,
     wallSpanMs,
