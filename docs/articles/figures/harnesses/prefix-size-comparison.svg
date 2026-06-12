@@ -1,30 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 334" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 470" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
   <title id="title">What the model sees before it starts</title>
-  <desc id="desc">Horizontal bar chart comparing the out-of-box prefix floor across three harnesses on the same model, with MCP off and no user-added skills: Copilot CLI about 15k tokens, Copilot in VS Code about 17k tokens (estimated), and Claude CLI about 27k tokens.</desc>
-
-  <rect x="0" y="0" width="760" height="334" fill="#ffffff"/>
+  <desc id="desc">Horizontal stacked bar chart of the turn-0 prefix in billed tokens for three harnesses on the same model (Claude Sonnet 4.5, MCP off, no loaded memory). Copilot CLI totals 16,200 tokens (system instructions 6,916, tool definitions 9,037, environment 100, first user request 147). Claude CLI totals 18,130 tokens; its billed run was cache-served so the exact component split is not captured, but tool definitions dominate. VS Code agent totals 20,598 tokens (system instructions 4,943, tool definitions 10,052, environment 1,805, skill descriptions 3,314, repository instructions 348, first user request 34). Tool definitions are the largest component everywhere, about 56 percent of the Copilot CLI prefix and 49 percent of the VS Code prefix. All three totals use the same Anthropic tokenizer and are directly comparable; the spread is about 1.27 times.</desc>
+  <defs>
+    <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="7" height="7" fill="#ede7f6"/>
+      <rect width="3.2" height="7" fill="#d1c4e9"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="1010" height="470" fill="#ffffff"/>
   <text x="40" y="40" font-size="20" font-weight="700" fill="#24292f">What the model sees before it starts</text>
-  <text x="40" y="64" font-size="13" fill="#57606a">Out-of-box floor (Claude Sonnet 4.5, MCP off, no user-added skills). Real usage adds tools on top.</text>
-
-  <!-- bars: scale max 50000 over 480px from x=220 -->
-  <g font-size="13" fill="#24292f">
-    <!-- Copilot CLI 14877 -> 143 -->
-    <text x="208" y="117" text-anchor="end" fill="#57606a">Copilot CLI</text>
-    <rect x="220" y="92" width="143" height="40" rx="5" fill="#0969da"/>
-    <text x="373" y="117" font-weight="700" fill="#24292f">~15k</text>
-
-    <!-- Copilot in VS Code ~16700 -> 160 -->
-    <text x="208" y="175" text-anchor="end" fill="#57606a">Copilot in VS Code</text>
-    <rect x="220" y="150" width="160" height="40" rx="5" fill="#8250df"/>
-    <text x="390" y="175" font-weight="700" fill="#24292f">~17k†</text>
-
-    <!-- Claude CLI 27000 -> 259 -->
-    <text x="208" y="233" text-anchor="end" fill="#57606a">Claude CLI</text>
-    <rect x="220" y="208" width="259" height="40" rx="5" fill="#0969da"/>
-    <text x="489" y="233" font-weight="700" fill="#24292f">~27k</text>
-  </g>
-
-  <line x1="220" y1="264" x2="700" y2="264" stroke="#d0d7de" stroke-width="1"/>
-  <text x="460" y="288" font-size="12" fill="#57606a" text-anchor="middle">Prefix tokens (before reasoning)</text>
-  <text x="220" y="310" font-size="11" fill="#8c959f">Blue = CLI harness · Purple = IDE harness · †estimated (measured 20.6k with a typical extension set)</text>
+  <text x="40" y="64" font-size="13" fill="#57606a">Turn-0 prefix in billed tokens (Claude Sonnet 4.5, same model; MCP off, no loaded memory; VS Code = one interactive session).</text>
+  <g font-size="13"><text x="198" y="129" text-anchor="end" fill="#57606a">Copilot CLI</text><rect x="210.0" y="104" width="188.0" height="40" rx="4" fill="#0969da"/><rect x="398.0" y="104" width="245.7" height="40" rx="0" fill="#8250df"/><rect x="643.7" y="104" width="2.7" height="40" rx="0" fill="#54aeff"/><rect x="646.4" y="104" width="4.0" height="40" rx="4" fill="#1a7f37"/><text x="660.431109816487" y="129" font-weight="700" fill="#24292f">~16.2k</text><text x="198" y="195" text-anchor="end" fill="#57606a">Claude CLI</text><rect x="210" y="170" width="492.9" height="40" rx="4" fill="url(#hatch)" stroke="#b39ddb"/><text x="220" y="195" font-size="11" fill="#6e4fb0">composition not captured (billed run was cache-served) — tool defs dominate</text><text x="712.9022235168463" y="195" font-weight="700" fill="#24292f">~18.1k</text><text x="198" y="261" text-anchor="end" fill="#57606a">VS Code (agent)</text><rect x="210.0" y="236" width="134.4" height="40" rx="4" fill="#0969da"/><rect x="344.4" y="236" width="273.3" height="40" rx="0" fill="#8250df"/><rect x="617.7" y="236" width="49.1" height="40" rx="0" fill="#54aeff"/><rect x="666.7" y="236" width="90.1" height="40" rx="0" fill="#bf8700"/><rect x="756.8" y="236" width="9.5" height="40" rx="0" fill="#bc4c00"/><rect x="766.3" y="236" width="2.8" height="40" rx="0" fill="#6e7781"/><rect x="769.1" y="236" width="0.9" height="40" rx="4" fill="#1a7f37"/><text x="780.0000000000001" y="261" font-weight="700" fill="#24292f">~20.6k</text></g>
+  <line x1="210" y1="290" x2="770" y2="290" stroke="#d0d7de" stroke-width="1"/>
+  <text x="490" y="308" font-size="12" fill="#57606a" text-anchor="middle">Billed prompt tokens (same Anthropic tokenizer &#8212; directly comparable). Numbers in legend: Copilot CLI &#183; VS Code.</text>
+  <g fill="#24292f"><rect x="40" y="320" width="13" height="13" rx="2" fill="#0969da"/><text x="60" y="331" font-size="12.5" fill="#24292f">System instructions <tspan fill="#57606a">&#8212; 6,916 &#183; 4,943</tspan></text><rect x="40" y="344" width="13" height="13" rx="2" fill="#8250df"/><text x="60" y="355" font-size="12.5" fill="#24292f">Tool definitions <tspan fill="#57606a">&#8212; 9,037 &#183; 10,052</tspan></text><rect x="40" y="368" width="13" height="13" rx="2" fill="#54aeff"/><text x="60" y="379" font-size="12.5" fill="#24292f">Environment details <tspan fill="#57606a">&#8212; 100 &#183; 1,805</tspan></text><rect x="40" y="392" width="13" height="13" rx="2" fill="#bf8700"/><text x="60" y="403" font-size="12.5" fill="#24292f">Skill descriptions <tspan fill="#57606a">&#8212; 0 &#183; 3,314</tspan></text><rect x="420" y="320" width="13" height="13" rx="2" fill="#bc4c00"/><text x="440" y="331" font-size="12.5" fill="#24292f">Repository instructions <tspan fill="#57606a">&#8212; 0 &#183; 348</tspan></text><rect x="420" y="344" width="13" height="13" rx="2" fill="#6e7781"/><text x="440" y="355" font-size="12.5" fill="#24292f">Memory (loaded) <tspan fill="#57606a">&#8212; 0 &#183; 102</tspan></text><rect x="420" y="368" width="13" height="13" rx="2" fill="#ffffff" stroke="#8c959f"/><text x="440" y="379" font-size="12.5" fill="#24292f">MCP tool schemas <tspan fill="#57606a">&#8212; 0 &#183; 0</tspan></text><rect x="420" y="392" width="13" height="13" rx="2" fill="#1a7f37"/><text x="440" y="403" font-size="12.5" fill="#24292f">First user request <tspan fill="#57606a">&#8212; 147 &#183; 34</tspan></text></g>
+  <text x="40" y="436" font-size="11" fill="#8c959f">Tool definitions are the largest component everywhere: ~56% of the Copilot CLI prefix, ~49% of VS Code's. VS Code alone adds skill + repo catalogs at the floor.</text>
+  <text x="40" y="454" font-size="11" fill="#8c959f">Bars are exact billed totals (one Anthropic tokenizer). Splits from captured payloads; tool schemas as actually sent. Claude's run was cache-served &#8212; total only.</text>
 </svg>
