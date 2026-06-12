@@ -22,6 +22,7 @@ _Last updated: 2026-06-12._
 |---|---|---|---|
 | **Index** (this file) | `docs/content-lab/data/INDEX.md` | ✅ repo | The catalog you are reading |
 | **Distilled analysis** | `docs/content-lab/data/*.md` + `system-prompts/` | ✅ repo | The 6-deliverable dossier, taxonomy, narratives, 4 system prompts |
+| **DB snapshots** | `docs/content-lab/data/db/*.sql` | ✅ repo | Reloadable dumps of the analysis tables (`levers`, `captures`) — see DB note below |
 | **Raw / bulky captures** | `~/copilot-ledger-data/captures/` | ❌ external | Wire logs, transcripts, exports, 40-run metrics + scripts |
 | **Published article** | `docs/articles/more-than-a-model.md` (+ `figures/harnesses/*.svg`) | ✅ repo | The live Pages article this data backs |
 | **Pre-registrations** | `docs/content-lab/experiments/11-*.md`, `12-*.md`, `10-ask-vs-agent-mode.md` | ✅ repo | Experiment designs |
@@ -30,6 +31,27 @@ _Last updated: 2026-06-12._
 > reason over — so it is committed. Raw captures are large and contain absolute local
 > paths, so by project convention they stay out of git, consolidated into
 > `~/copilot-ledger-data/` so they survive session cleanup.
+
+---
+
+## ⚠️ Database storage note (read before trusting any `sql` table)
+
+The Copilot CLI `sql` tool is backed by a **per-session SQLite file** at
+`~/.copilot/session-state/<session-id>/session.db`. **It is not shared between sessions
+and is not in the repo.** Every analysis table you build (e.g. `levers`, `captures`)
+lives only in the session that created it and is lost when that session is cleaned.
+
+To keep structured table data durable, dumps are committed here:
+
+| Table | Origin session | Durable dump | Rows |
+|---|---|---|---:|
+| `levers` | Article-2 lever taxonomy session | `db/levers.sql` | 15 (A–O) |
+| `captures` | 40-run repeatability experiment (`52203f3d…`) | `db/captures.sql` | 40 |
+
+Reload into any session DB with: `sqlite3 session.db < docs/content-lab/data/db/levers.sql`.
+The `levers` findings are also narrated in `harness-levers-taxonomy.md`; the `captures`
+metrics are also in `~/copilot-ledger-data/captures/repeatability-40run/captures.jsonl`.
+**When you build a new long-lived `sql` table, dump it here too.**
 
 ---
 
