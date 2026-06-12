@@ -3,7 +3,12 @@
   "totalPrompts": 2,
   "totalLogEntries": 4,
   "mcpServers": [
-    { "label": "github", "command": "github-mcp-server", "type": "stdio", "version": "1.0.0" }
+    {
+      "label": "github",
+      "command": "github-mcp-server",
+      "type": "stdio",
+      "version": "1.0.0"
+    }
   ],
   "prompts": [
     {
@@ -24,16 +29,60 @@
                 "cached_tokens": 9000,
                 "cache_creation_input_tokens": 1000
               }
-            }
+            },
+            "tools": [
+              {
+                "type": "function",
+                "function": {
+                  "name": "read_file",
+                  "description": "Read a file",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "filePath": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "function",
+                "function": {
+                  "name": "runSubagent",
+                  "description": "Run a subagent",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "description": {
+                        "type": "string"
+                      },
+                      "prompt": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
-          "response": { "message": [{ "type": "text", "text": "Looking into it." }] }
+          "response": {
+            "message": [
+              {
+                "type": "text",
+                "text": "Looking into it."
+              }
+            ]
+          }
         },
         {
           "kind": "toolCall",
           "time": "2026-06-01T10:00:05.000Z",
           "tool": "read_file",
           "id": "tool-1",
-          "args": { "filePath": "src/auth.ts" },
+          "args": {
+            "filePath": "src/auth.ts"
+          },
           "response": "export function login() {}"
         },
         {
@@ -70,7 +119,14 @@
               }
             }
           },
-          "response": { "message": [{ "type": "text", "text": "No races found." }] }
+          "response": {
+            "message": [
+              {
+                "type": "text",
+                "text": "No races found."
+              }
+            ]
+          }
         }
       ]
     }

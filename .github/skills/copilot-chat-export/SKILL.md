@@ -193,6 +193,7 @@ prefix-carry form above is what subsequent requests see.
 - **Conversation roles are integers, not strings.** 0=system, 1=user, 2=assistant, 3=tool.
 - **`completion_tokens` UNDER-REPORTS when extended thinking is on.** Copilot exports set `tokens: 0` on every thinking block and `completion_tokens_details.reasoning_tokens: 0` on every request, even when the response clearly contains thinking output. So `rollups.cost.*` is a LOWER BOUND for Anthropic models. The digest estimates the gap in `rollups.thinking` (raw byte counts of distinct thinking events) and `rollups.cost.thinkingUnderCount` (output-rate cost of plaintext thinking). Encrypted thinking blobs ride on the input side and are heavily cache-amortized, so the output-side plaintext is the dominant missing cost.
 - **A large `completionTokens` does not mean the model "wrote a lot to the user."** Tool-call arguments (the JSON / code body emitted into a tool call) are counted in `completion_tokens`. For implementation-heavy prompts, 80–95% of output bytes can be tool-call payloads (`rollups.toolCallPayloads`), with visible assistant text in the single digits. Caveman-style output reduction only addresses the visible-text slice.
+- **Tool counts have three meanings.** `rollups.toolCount` is distinct tools actually invoked. `rollups.wireToolCount` is the representative/max count of full tool schemas sent over the wire in one request. `rollups.enabledToolCount` is the max enabled catalog size (`metadata.tools`, direct + deferred). Do not mix these with `rollups.toolDefs`, which is token sizing for sent schemas.
 
 ## The digest schema (what `digest.mjs` produces)
 
@@ -208,7 +209,13 @@ prefix-carry form above is what subsequent requests see.
     prompts, requests, toolCalls,
     totalTokens, promptTokens, completionTokens,
     cachedTokens, cacheCreationTokens, cacheHitRate,
-    primaryModel, modelCount, toolCount, fileCount,
+    primaryModel, modelCount,
+    toolCount,              // distinct tools INVOKED in the session (from toolCall logs)
+    wireToolCount,          // max full tool schemas SENT over the wire in one request (direct tools); null if no request had metadata.tools
+    wireToolCountRange,     // { min, max } when per-request sent schema count varies; otherwise null
+    enabledToolCount,       // max enabled catalog size seen in metadata.tools (direct + deferred)
+    wireToolCountNote,      // disambiguates invoked vs wire vs enabled, including virtual-tools grouping
+    fileCount,
     totalRequestDurationMs, wallSpanMs, firstTime, lastTime,
     ttftMs: { p50, p95, max },
     requestDurationMs: { p50, p95, max },
@@ -411,7 +418,7 @@ Per-prompt `credits` and per-timeline `credits` are **rounded to 0.1 credit** in
 
 Tool schemas re-sent on every request are often the largest single line item after the conversation prefix. The schema doc above covers the fields (`rollups.toolDefs.*` and per-request `timeline[*].toolDefs*`). The one tip not in the schema: **compare `rollups.toolDefs.approxFullPriceUsd` against `rollups.cost.totalUsd` to gauge what the cache is buying you** on tool defs specifically. Token counts are 4-char-per-token approximations (±20%).
 
-**Sent vs catalog (virtual tools).** `metadata.tools` is the full *enabled catalog*, not the wire payload. When the enabled tool count crosses VS Code's virtual-tools threshold (`github.copilot.chat.virtualTools.threshold`, default 128), Copilot sends only a small *direct* subset as full schemas and advertises the rest *name-only* in an `<availableDeferredTools>` block, loading them on demand via `tool_search`. The digest sizes the tool-defs bucket from the **sent (direct)** tools only — `toolDefsCount` is what was sent, `toolDefsCatalogCount` is the catalog, `toolDefsDeferredCount` is what was deferred. Use `rollups.toolDefs.groupingSavedApproxTokens` (catalog-if-flat minus sent) to report what grouping saved. Do **not** quote the catalog count as "tools sent" — that over-counts grouped runs ~6x.
+**Sent vs catalog (virtual tools).** `metadata.tools` is the full *enabled catalog*, not the wire payload. When the enabled tool count crosses VS Code's virtual-tools threshold (`github.copilot.chat.virtualTools.threshold`, default 128), Copilot sends only a small *direct* subset as full schemas and advertises the rest *name-only* in an `<availableDeferredTools>` block, loading them on demand via `tool_search`. The digest sizes the tool-defs bucket from the **sent (direct)** tools only — `toolDefsCount` is what was sent, `toolDefsCatalogCount` is the catalog, `toolDefsDeferredCount` is what was deferred. At the rollup level, `wireToolCount` is the representative/max sent-schema count, `wireToolCountRange` shows variation when requests differ, and `enabledToolCount` is the max catalog size. Use `rollups.toolDefs.groupingSavedApproxTokens` (catalog-if-flat minus sent) to report what grouping saved. Do **not** quote the catalog count as "tools sent" — that over-counts grouped runs ~6x.
 
 ## Drilling into the raw file
 
@@ -454,6 +461,7 @@ When you need to read a single message body that is long, project just `.content
 | "How much of output was tool-call payloads vs visible text?" | `rollups.toolCallPayloads.{approxTokensTotal, visibleTextApproxTokens, approxShareOfCompletion}`; per-prompt `toolCallArgsApproxTokens` / `visibleTextApproxTokens`. |
 | "Is that a lot of credits?" | Compare to `pricing.monthlyAllowances` — e.g. Pro = 1,000/mo, Business = 1,900/user/mo. |
 | "How much of cost is tool definitions?" | `rollups.toolDefs.approxFullPriceUsd` (worst case) and `approxShareOfPromptTokens`. Per-call: `timeline[*].toolDefsApproxFullPriceUsd`. |
+| "How many tools were sent vs enabled vs invoked?" | `rollups.wireToolCount` = full schemas sent over the wire (direct tools); `rollups.enabledToolCount` = enabled catalog max; `rollups.toolCount` = distinct invoked tools. `rollups.toolDefs` is token sizing, not a count. |
 | "What would this cost on model X?" | Recompute with rates from `pricing.table[]` against the token fields (`promptTokens`, `cachedTokens`, `cacheCreationTokens`, `completionTokens`) on each request. |
 | "Was caching working?" | `rollups.cacheHitRate` + per-prompt `cachedTokens / promptTokens`. Per-call: `timeline[*].cacheHitRate` and `cacheSavingsUsd`. |
 | "Was there a cold-start or cache miss anywhere?" | `rollups.cacheAnomalies.items` — each entry has the ref, hit rate, cache-write credits paid to re-warm, and a `causes` hint (tool-defs delta, time-gap, or first-call). Cold starts on large prefixes are usually the single biggest single cache lever in a run. |

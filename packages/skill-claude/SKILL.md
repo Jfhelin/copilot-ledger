@@ -184,7 +184,16 @@ digest; the fields below are the Claude-specific ones to know.
 - `rollups` — `prompts` (real turns), `subagentPrompts`, `orphanPrompts`
   (assistant-before-user, excluded from `prompts`), `requests`, `toolCalls`,
   `promptTokens` (TOTAL input), `completionTokens`, `cachedTokens`, `cacheCreationTokens`,
-  `cacheHitRate`, `primaryModel`, `toolCount`, `cost`, `thinking`.
+  `cacheHitRate`, `primaryModel`, `toolCount`, `toolCatalogCount`,
+  `wireToolCount`, `wireToolCountRange`, `cost`, `thinking`.
+- `rollups.toolCatalogCount` — advertised tool **names** from transcript
+  `deferred_tools_delta` attachments. This is names-only and may differ from what was
+  fully transmitted over the wire.
+- `rollups.wireToolCount` — full tool schemas actually transmitted over the wire, from
+  the representative `claude-relay.mjs` capture. It is `null` without a paired relay
+  capture because the Claude CLI transcript does not include schemas. When multiple
+  captures are paired, `rollups.wireToolCountRange` reports `{ min, max }` across their
+  schema counts.
 - `prefix` (capture-derived) — `available`, `matchedByTimeAndModel`, `representative`
   with `systemApproxTokens`, `toolDefsApproxTokens`, `toolCount`, `messagesApproxTokens`,
   `prefixApproxTokens`, `toolDefsShareOfPrefix`, `topTools[]`. When absent, carries a
@@ -243,6 +252,8 @@ Both skills emit the same schema, so a comparison is a field-by-field diff:
 - **Cost**: compare in token-cost terms only — Claude is modelled API pricing, Copilot is
   GitHub credits. Never present Claude `credits` as GitHub credits.
 - **Tools**: `toolCount` / `toolsUsed` and (with a capture) per-tool schema token weight.
+  For catalog size comparisons, prefer `rollups.wireToolCount` when present; it counts
+  full schemas sent over the wire, while `toolCatalogCount` only counts advertised names.
 
 To make the comparison fair, run the **same task** on both agents.
 

@@ -11,7 +11,6 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import os from "node:os";
 import fs from "node:fs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -75,6 +74,8 @@ test("counts tool calls, tool catalog, skills and thinking", () => {
   assert.equal(d.rollups.toolCount, 1);
   assert.deepEqual(d.toolCatalog.names, ["Bash", "Edit", "Read"]);
   assert.equal(d.toolCatalog.count, 3);
+  assert.match(d.toolCatalog.note, /Advertised tool NAMES/);
+  assert.match(d.toolCatalog.note, /rollups\.wireToolCount/);
   assert.equal(d.skills.skillCount, 2);
   assert.equal(d.rollups.thinking.totalBlocks, 1);
   assert.equal(d.rollups.thinking.present, true);
@@ -126,6 +127,10 @@ test("prices the session and reports modelled credits", () => {
 test("prefix is absent with --no-capture, present when a capture is paired", () => {
   const without = runDigest(["--no-capture"]);
   assert.equal(without.prefix.available, false);
+  assert.equal(without.rollups.wireToolCount, null);
+  assert.equal(without.rollups.wireToolCountRange, null);
+  assert.match(without.rollups.wireToolCountNote, /transcript does not include tool schemas/);
+  assert.match(without.rollups.wireToolCountNote, /claude-relay\.mjs/);
 
   const withCap = runDigest(["--capture", capture]);
   assert.equal(withCap.prefix.available, true);
@@ -134,12 +139,17 @@ test("prefix is absent with --no-capture, present when a capture is paired", () 
   assert.equal(rep.toolDefsApproxTokens, 3000);
   assert.equal(rep.toolCount, 3);
   assert.equal(rep.topTools[0].name, "Bash");
+  assert.equal(withCap.rollups.wireToolCount, 3);
+  assert.equal(withCap.rollups.wireToolCountRange, null);
+  assert.match(withCap.rollups.wireToolCountNote, /Full tool schemas transmitted over the wire/);
 });
 
 test("refuses to attribute an unrelated capture from a directory", () => {
   // A capture dir whose only file is from a different day/model must NOT be
   // attributed as this session's prefix.
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "claude-cap-"));
+  const tmp = path.join(here, "fixtures", ".generated-unrelated-capture-dir");
+  fs.rmSync(tmp, { recursive: true, force: true });
+  fs.mkdirSync(tmp, { recursive: true });
   try {
     fs.writeFileSync(
       path.join(tmp, "unrelated.json"),
@@ -156,7 +166,29 @@ test("refuses to attribute an unrelated capture from a directory", () => {
     const d = JSON.parse(out);
     assert.equal(d.prefix.available, false);
     assert.equal(d.prefix.reason, "no-paired-capture");
+    assert.equal(d.rollups.wireToolCount, null);
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+test("reports a wire tool count range across paired relay captures", () => {
+  const capDir = path.join(here, "fixtures", ".generated-paired-capture-dir");
+  fs.rmSync(capDir, { recursive: true, force: true });
+  fs.mkdirSync(capDir, { recursive: true });
+  try {
+    const base = JSON.parse(fs.readFileSync(capture, "utf8"));
+    fs.writeFileSync(path.join(capDir, "small.json"), JSON.stringify({
+      ...base,
+      sizing: { ...base.sizing, toolCount: 2 },
+      tools: base.tools.slice(0, 2),
+    }));
+    fs.writeFileSync(path.join(capDir, "large.json"), JSON.stringify(base));
+    const d = runDigest(["--capture", capDir]);
+    assert.equal(d.prefix.available, true);
+    assert.equal(d.rollups.wireToolCount, 3);
+    assert.deepEqual(d.rollups.wireToolCountRange, { min: 2, max: 3 });
+  } finally {
+    fs.rmSync(capDir, { recursive: true, force: true });
   }
 });

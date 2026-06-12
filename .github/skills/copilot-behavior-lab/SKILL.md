@@ -130,6 +130,17 @@ if you'll reuse it.) Pull the fields you need for the page:
   (schema overhead), or a single expensive prompt (`prompts[].credits`).
 - What happened: walk `timeline[]` / per-prompt `tools`, `requestCount`,
   `finalAssistantPreview`.
+- **Tool counts (tools-over-the-wire vs catalog).** Tools can be *virtualized*:
+  the enabled/advertised catalog is not the count whose full schemas are sent in
+  the request body. When you claim "N tools sent over the wire," cite
+  `rollups.wireToolCount` — **not** the enabled/advertised catalog. VS Code Copilot
+  defers tools above a threshold (`virtualTools.threshold`, default 128), sending a
+  small *direct* subset as full schemas and advertising the rest name-only via
+  `<availableDeferredTools>`; quoting the catalog as "tools sent" over-counts grouped
+  runs ~6x. Use `enabledToolCount` for the catalog and `rollups.toolDefs.groupingSavedApproxTokens`
+  for what grouping saved. (Copilot/Claude CLIs send flat, so wire == catalog; Claude
+  CLI's `wireToolCount` is `null` without a relay capture — say "unknown," don't guess.)
+  See the digester skills' "Sent vs catalog (virtual tools)" notes for per-harness detail.
 - Evidence refs: cite `p<n>` / `p<n>.l<n>` for every concrete claim.
 
 ### 3. Read the templates — they are the source of truth for structure

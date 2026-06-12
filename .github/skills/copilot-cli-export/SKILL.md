@@ -145,8 +145,9 @@ fields to know:
 - `rollups` — `prompts`, `orphanPrompts`, `requests`, `responsesWithUsage`,
   `responsesWithNativeBilling`, `nativeBillingComplete`, `toolCalls`, `freshInputTokens`,
   `promptTokens` (TOTAL input), `completionTokens`, `cachedTokens`, `cacheCreationTokens`,
-  `reasoningTokens`, `cacheHitRate`, `primaryModel`, `toolCount`, `toolCatalogCount`, `cost`,
-  `tokenSemantics`.
+  `reasoningTokens`, `cacheHitRate`, `primaryModel`, `toolCount`, `toolCatalogCount`,
+  `wireToolCount` / `wireToolCountRange` (full tool schemas actually sent in `Wire request`
+  bodies), `cost`, `tokenSemantics`.
 - `rollups.cost` — **two parallel, explicitly-labelled blocks**:
   - `native` — **authoritative**. `credits` (= Σ `total_nano_aiu`/1e9), `totalNanoAiu`,
     `byTypeCredits` (input/cache_read/cache_write/output), `withoutCacheCounterfactual`

@@ -347,6 +347,8 @@ let reconcileMismatch = 0;
 
 // Prefix-shape candidate (representative wire request = largest tool catalog)
 let repRequest = null;
+let wireToolCountMin = null;
+let wireToolCountMax = null;
 
 let current = null;
 function newPrompt(text, isOrphan = false) {
@@ -384,6 +386,8 @@ for (const b of timeline) {
   if (b.kind === "request") {
     const obj = b.obj;
     const tools = Array.isArray(obj.tools) ? obj.tools : [];
+    wireToolCountMin = wireToolCountMin == null ? tools.length : Math.min(wireToolCountMin, tools.length);
+    wireToolCountMax = wireToolCountMax == null ? tools.length : Math.max(wireToolCountMax, tools.length);
     if (!repRequest || tools.length > (repRequest.tools?.length ?? 0)) repRequest = obj;
 
     const uc = userTypedMessages(obj.messages).length;
@@ -683,6 +687,11 @@ function buildPrefix() {
 const toolCatalogNames = repRequest && Array.isArray(repRequest.tools)
   ? repRequest.tools.map((t) => t.name).filter(Boolean).sort()
   : [];
+const wireToolCountRange = wireToolCountMin == null || wireToolCountMax == null
+  ? null
+  : { min: wireToolCountMin, max: wireToolCountMax };
+const wireToolCountNote =
+  "Count of full tool schemas actually transmitted in the Wire request body. The Copilot CLI log includes full schemas, so this equals the advertised catalog (no virtual-tools deferral observed). Other harnesses may advertise more tools than they send.";
 
 // ---------------------------------------------------------------------------
 // Assemble digest
@@ -722,6 +731,9 @@ const digest = {
     modelCount: modelsArr.length,
     toolCount: usedToolsArr.length,
     toolCatalogCount: toolCatalogNames.length,
+    wireToolCount: wireToolCountMax,
+    wireToolCountRange,
+    wireToolCountNote,
     toolsUsedCount: usedToolsArr.length,
     cost,
     tokenSemantics:
@@ -752,7 +764,7 @@ const digest = {
     count: toolCatalogNames.length,
     names: toolCatalogNames,
     note:
-      "Tool NAMES advertised to the model in the representative Wire request. Unlike the Claude transcript, the Copilot CLI log DOES include full tool schemas; see prefix.representative for their token weight.",
+      "Tool NAMES advertised to the model in the representative Wire request. For Copilot CLI, the advertised catalog equals rollups.wireToolCount because the log includes full schemas in the Wire request body; see prefix.representative for their token weight.",
   },
   prefix: buildPrefix(),
   prompts: promptsOut,
