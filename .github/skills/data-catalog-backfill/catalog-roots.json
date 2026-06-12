@@ -1,0 +1,35 @@
+{
+  "_comment": "Machine-readable mirror of INDEX.md's capture inventory. The data-catalog-backfill skill keeps this in sync with INDEX.md. A capture file is 'covered' if a runs.jsonl source_path OR one of these datasetGlobs is a path prefix/substring of it. datasetGlobs are locations cataloged at the DATASET level in INDEX (not as individual ledger rows). sessionMarkers selects which ~/.copilot/session-state/<id>/files dirs are research sessions worth scanning.",
+  "datasetGlobs": [
+    "/copilot-ledger-data/captures/",
+    "/CopilotLogExports/claude-captures/",
+    "/CopilotLogExports/e3-T1-runs/",
+    "/CopilotLogExports/matched-pair-2.1.112/",
+    "/CopilotLogExports/t6_",
+    "/CopilotLogExports/hi18.json",
+    "/CopilotLogExports/hi2_18.json",
+    "/CopilotLogExports/hi3_21.json",
+    "/CopilotLogExports/hi4_0.json",
+    "/CopilotLogExports/hi_116.json",
+    "/CopilotLogExports/hi_140.json",
+    "/CopilotLogExports/hi_VSCInsider_claude.json",
+    "/CopilotLogExports/hi_skillCleaned",
+    "/CopilotLogExports/03-workiq-",
+    "/CopilotLogExports/Claudeok.json",
+    "/CopilotLogExports/claudeok-scrubbed.json",
+    "/CopilotLogExports/VSCode_ClaudeArm",
+    "/CopilotLogExports/VSCodeCopilote.json",
+    "/CopilotLogExports/ExpenseReportMunich3",
+    "/.claude/projects/-private-tmp-octocat-supply-ak/",
+    "/.claude/projects/-Users-jfhelin-Code-GitHub-octodemo-octocat-supply-psychic-disco/",
+    "/.claude/projects/-Users-jfhelin-Code-GitHub-octodemo-octocat-supply-jubilant-octo-palm-tree/",
+    "/.claude/projects/-Users-jfhelin/",
+    "/.claude/projects/-private-tmp-octocat-mcp/",
+    "/.claude/projects/-private-tmp/"
+  ],
+  "knownResearchSessions": [
+    "52203f3d-6f24-4a87-8137-bd8dc637087c",
+    "6dbe2d2c-97a6-4ca8-acbe-32d4754c1b13"
+  ],
+  "sessionMarkers": ["capture/runs", "structural", "raw-captures", "system-prompts", "claudemd-only-test", "agentsmd-test", "bothfiles-test", "smoke"]
+}

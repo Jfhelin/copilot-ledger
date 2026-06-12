@@ -117,23 +117,97 @@ const STATIC_ROWS = [
   {
     run_id: "CO-IDE-t6_A_agent", date: "2026-06-09", harness: "CO-IDE", task: TASK,
     model: "claude-sonnet-4.5", mcp_on: true, condition: "agent", rep: 1,
-    source_path: "~/copilot-ledger-data/captures/co-ide-exports/t6_A_agent_sonnet_warm_r1.json",
+    source_path: "~/copilot-ledger-data/captures/ask-vs-agent-t6/t6_A_agent_sonnet_warm_r1.json",
     prefix_tokens: null, requests: 3, tool_calls: null, cost_usd: null, quality_score: null,
     notes: "Ask-vs-agent experiment (exp 10), AGENT mode, warm. 8 MCP servers; fires gpt-4o-mini aux calls.",
   },
   {
     run_id: "CO-IDE-t6_A_ask", date: "2026-06-09", harness: "CO-IDE", task: TASK,
     model: "claude-sonnet-4.5", mcp_on: true, condition: "ask", rep: 1,
-    source_path: "~/copilot-ledger-data/captures/co-ide-exports/t6_A_ask_sonnet_warm_r1.json",
+    source_path: "~/copilot-ledger-data/captures/ask-vs-agent-t6/t6_A_ask_sonnet_warm_r1.json",
     prefix_tokens: null, requests: 3, tool_calls: null, cost_usd: null, quality_score: null,
     notes: "Ask-vs-agent experiment (exp 10), ASK mode, warm. 8 MCP servers.",
   },
   {
     run_id: "CO-IDE-t6_B_agent", date: "2026-06-09", harness: "CO-IDE", task: TASK,
     model: "claude-sonnet-4.5", mcp_on: true, condition: "agent", rep: 1,
-    source_path: "~/copilot-ledger-data/captures/co-ide-exports/t6_B_agent_sonnet_warm_r1.json",
+    source_path: "~/copilot-ledger-data/captures/ask-vs-agent-t6/t6_B_agent_sonnet_warm_r1.json",
     prefix_tokens: null, requests: 3, tool_calls: null, cost_usd: null, quality_score: null,
     notes: "Ask-vs-agent experiment (exp 10), AGENT mode, condition B, warm. 8 MCP servers.",
+  },
+  {
+    run_id: "CO-IDE-t6_A_agent_cold", date: "2026-06-09", harness: "CO-IDE", task: TASK,
+    model: "claude-sonnet-4.5", mcp_on: true, condition: "agent", rep: 1,
+    source_path: "~/copilot-ledger-data/captures/ask-vs-agent-t6/t6_A_agent_sonnet_cold_r1.json",
+    prefix_tokens: null, requests: 3, tool_calls: null, cost_usd: null, quality_score: null,
+    notes: "Ask-vs-agent experiment (exp 10), AGENT mode, cold. 8 MCP servers.",
+  },
+  {
+    run_id: "CO-IDE-t6_A_ask_cold", date: "2026-06-09", harness: "CO-IDE", task: TASK,
+    model: "claude-sonnet-4.5", mcp_on: true, condition: "ask", rep: 1,
+    source_path: "~/copilot-ledger-data/captures/ask-vs-agent-t6/t6_A_ask_sonnet_cold_r1.json",
+    prefix_tokens: 19689, requests: 3, tool_calls: null, cost_usd: null, quality_score: null,
+    notes: "Ask-vs-agent experiment (exp 10), ASK mode, cold. Cold prefix = first claude req prompt_tokens, cached_tokens==0.",
+  },
+  {
+    run_id: "CO-IDE-t6_B_ask", date: "2026-06-09", harness: "CO-IDE", task: TASK,
+    model: "claude-sonnet-4.5", mcp_on: true, condition: "ask", rep: 1,
+    source_path: "~/copilot-ledger-data/captures/ask-vs-agent-t6/t6_B_ask_sonnet_warm_r1.json",
+    prefix_tokens: 17687, requests: 3, tool_calls: null, cost_usd: null, quality_score: null,
+    notes: "Ask-vs-agent experiment (exp 10), ASK mode, condition B, warm.",
+  },
+
+  // --- e3: Sonnet 4.5 vs 4.6 model comparison, task T1, MCP off, 3 reps each (Claude CLI headless) ---
+  {
+    run_id: "e3-T1-45-off-1", date: "2026-06-09", harness: "CL-CLI", task: "e3-T1",
+    model: "claude-sonnet-4-5-20250929", mcp_on: false, condition: "T1-off", rep: 1,
+    source_path: "~/copilot-ledger-data/captures/e3-model-comparison/e3-T1-45-off-1/",
+    prefix_tokens: 26733, requests: 18, tool_calls: null, cost_usd: 0.843, quality_score: null,
+    notes: "Model-comparison e3, Sonnet 4.5, 26 tools, toolDefs ~72% of prefix.",
+  },
+  {
+    run_id: "e3-T1-45-off-2", date: "2026-06-09", harness: "CL-CLI", task: "e3-T1",
+    model: "claude-sonnet-4-5-20250929", mcp_on: false, condition: "T1-off", rep: 2,
+    source_path: "~/copilot-ledger-data/captures/e3-model-comparison/e3-T1-45-off-2/",
+    prefix_tokens: 26733, requests: 11, tool_calls: null, cost_usd: 0.1931, quality_score: null,
+    notes: "Model-comparison e3, Sonnet 4.5.",
+  },
+  {
+    run_id: "e3-T1-45-off-3", date: "2026-06-09", harness: "CL-CLI", task: "e3-T1",
+    model: "claude-sonnet-4-5-20250929", mcp_on: false, condition: "T1-off", rep: 3,
+    source_path: "~/copilot-ledger-data/captures/e3-model-comparison/e3-T1-45-off-3/",
+    prefix_tokens: 26733, requests: 17, tool_calls: null, cost_usd: 0.3951, quality_score: null,
+    notes: "Model-comparison e3, Sonnet 4.5.",
+  },
+  {
+    run_id: "e3-T1-46-off-1", date: "2026-06-09", harness: "CL-CLI", task: "e3-T1",
+    model: "claude-sonnet-4-6", mcp_on: false, condition: "T1-off", rep: 1,
+    source_path: "~/copilot-ledger-data/captures/e3-model-comparison/e3-T1-46-off-1/",
+    prefix_tokens: 26733, requests: 9, tool_calls: null, cost_usd: 0.4152, quality_score: null,
+    notes: "Model-comparison e3, Sonnet 4.6.",
+  },
+  {
+    run_id: "e3-T1-46-off-2", date: "2026-06-09", harness: "CL-CLI", task: "e3-T1",
+    model: "claude-sonnet-4-6", mcp_on: false, condition: "T1-off", rep: 2,
+    source_path: "~/copilot-ledger-data/captures/e3-model-comparison/e3-T1-46-off-2/",
+    prefix_tokens: 26733, requests: 3, tool_calls: null, cost_usd: 0.0476, quality_score: null,
+    notes: "Model-comparison e3, Sonnet 4.6.",
+  },
+  {
+    run_id: "e3-T1-46-off-3", date: "2026-06-09", harness: "CL-CLI", task: "e3-T1",
+    model: "claude-sonnet-4-6", mcp_on: false, condition: "T1-off", rep: 3,
+    source_path: "~/copilot-ledger-data/captures/e3-model-comparison/e3-T1-46-off-3/",
+    prefix_tokens: 26733, requests: 3, tool_calls: null, cost_usd: 0.0473, quality_score: null,
+    notes: "Model-comparison e3, Sonnet 4.6.",
+  },
+
+  // --- matched-pair baseline: Claude CLI pinned to VS Code's version (2.1.112), MCP off ---
+  {
+    run_id: "matched-pair-2.1.112", date: "2026-06-09", harness: "CL-CLI", task: "hi",
+    model: "claude-sonnet-4-5-20250929", mcp_on: false, condition: "structural", rep: null,
+    source_path: "~/copilot-ledger-data/captures/matched-pair-baseline/",
+    prefix_tokens: 26556, requests: 2, tool_calls: null, cost_usd: 0.216, quality_score: null,
+    notes: "CLI-side counterpart to VS Code Claudeok.json, version+model held constant (claude-code@2.1.112, sdk-cli entrypoint). 26 tools.",
   },
 ];
 
