@@ -32,12 +32,11 @@ Those decisions matter.
 
 ## What I looked at
 
-I looked at four harnesses:
+I looked at three harnesses:
 
 - Copilot CLI
 - Claude CLI
 - Copilot coding agent in VS Code
-- Claude Code in VS Code
 
 The goal was not to benchmark them or rank them.
 
@@ -82,23 +81,22 @@ In the captures, the “before reasoning” payload varied a lot.
 Copilot CLI:            ~15k tokens
 Copilot in VS Code:     ~17k tokens
 Claude CLI:             ~27k tokens
-Claude Code in VS Code: ~46k tokens
 ```
 
 Same model.
 
 Same kind of task.
 
-Roughly a 3x difference in what the model sees before it even starts answering.
+Nearly a 2x difference in what the model sees before it even starts answering.
 
 <figure>
-  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart comparing the out-of-box prefix floor across four harnesses: Copilot CLI about 15k tokens, Copilot in VS Code about 17k tokens (estimated), Claude CLI about 27k tokens, and Claude Code in VS Code about 46k tokens, all with MCP off and no user-added skills.">
-  <figcaption>The out-of-box floor, MCP off and no user-added skills: the model was the same, but the pre-reasoning payload ranged from about 15k to 46k tokens. This is the floor — real usage only adds to it.</figcaption>
+  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart comparing the out-of-box prefix floor across three harnesses: Copilot CLI about 15k tokens, Copilot in VS Code about 17k tokens (estimated), and Claude CLI about 27k tokens, all with MCP off and no user-added skills.">
+  <figcaption>The out-of-box floor, MCP off and no user-added skills: the model was the same, but the pre-reasoning payload ranged from about 15k to 27k tokens. This is the floor — real usage only adds to it.</figcaption>
 </figure>
 
 That difference came mostly from harness choices: system prompt size, tool catalog verbosity, IDE context, and how much extra environment information is injected.
 
-These four numbers are the floor — what each harness loads with MCP off, no memory file, and no user-added skills. It is the most portable number I can give you, because everything above it depends on your machine.
+These three numbers are the floor — what each harness loads with MCP off, no memory file, and no user-added skills. It is the most portable number I can give you, because everything above it depends on your machine.
 
 And there is a lot that sits above it. The biggest variable, the tool catalog, is partly out of the harness's hands. In an IDE especially, installed extensions add their own tools. The Copilot-in-VS-Code session I captured actually measured about 21k tokens across 56 tools — but 18 of those came from notebook and browser extensions, not from Copilot itself. Strip those extension tools and the floor is roughly 17k (the estimated bar above). Turn MCP on instead and that same harness jumped to about 46k tokens across 95 tools. Add a memory file or a few skills and it grows again.
 
@@ -190,7 +188,7 @@ In the captures, the system prompts were not the same.
 
 Copilot CLI leaned toward autonomy. It told the agent to proceed in a non-interactive way and not ask for confirmation.
 
-The Claude harnesses leaned more cautious. They included instructions to confirm before irreversible actions.
+The Claude CLI leaned more cautious. It included instructions to confirm before irreversible actions.
 
 Neither choice is inherently right or wrong.
 
@@ -220,10 +218,9 @@ In the captures, counting each harness's built-in tools (MCP off, no extensions)
 Copilot CLI:            19 tools
 Claude CLI:             27 tools
 Copilot in VS Code:    ~38 tools
-Claude Code in VS Code: engine-fixed roster (~27 + IDE tools)
 ```
 
-These are built-in floors. The Copilot-in-VS-Code session I captured actually exposed 56 tools, but 18 of those came from installed extensions (notebook and browser), not from Copilot — so the portable number is ~38. Claude Code in VS Code ships a fixed engine roster, so its count barely moves between machines; MCP and extensions only ever add on top.
+These are built-in floors. The Copilot-in-VS-Code session I captured actually exposed 56 tools, but 18 of those came from installed extensions (notebook and browser), not from Copilot — so the portable number is ~38. MCP and extensions only ever add on top.
 
 The difference was not only the number of tools.
 
@@ -489,16 +486,18 @@ An IDE is not just a CLI inside a window.
 
 It can add workspace context, repository state, editor state, instructions, skills, MCP tools, and product-specific agent behavior.
 
-In the captures, Claude Code in VS Code had a much larger cold prefix than Claude CLI:
+The built-in floor for Copilot in VS Code sits only a little above the Copilot CLI:
 
 ```text
-Claude CLI:             ~27k tokens
-Claude Code in VS Code: ~46k tokens
+Copilot CLI:        ~15k tokens
+Copilot in VS Code: ~17k tokens
 ```
+
+But the IDE is where the environment piles on. That same Copilot-in-VS-Code session measured about 21k tokens once a couple of installed extensions added their own tools, and jumped to about 46k with MCP enabled — far above the CLI floor on the identical harness and model.
 
 That does not mean the IDE is worse.
 
-It means the IDE is giving the model more context before it starts.
+It means the IDE is giving the model more context before it starts, and exposes more surface for your environment to add even more.
 
 That context may help the agent behave better in a real developer workflow.
 
