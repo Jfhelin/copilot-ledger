@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 580" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="title">Who controls what?</title>
+  <desc id="desc">A table of coding-agent levers showing which are controlled mostly by the model provider and which mostly by the harness developer. Model weights and training are the model provider's; system prompt, tools, MCP, skills, memory, orchestration, caching, context management, sampling, and routing are mostly the harness developer's.</desc>
+
+  <rect x="0" y="0" width="760" height="580" fill="#ffffff"/>
+  <text x="40" y="36" font-size="20" font-weight="700" fill="#24292f">Who controls what?</text>
+
+  <!-- subtle highlight behind the harness-developer column -->
+  <rect x="500" y="64" width="220" height="478" fill="#ddf4ff" opacity="0.45"/>
+
+  <!-- zebra rows -->
+  <g fill="#f6f8fa">
+    <rect x="40" y="100" width="680" height="36"/>
+    <rect x="40" y="172" width="680" height="36"/>
+    <rect x="40" y="244" width="680" height="36"/>
+    <rect x="40" y="316" width="680" height="36"/>
+    <rect x="40" y="388" width="680" height="36"/>
+    <rect x="40" y="460" width="680" height="36"/>
+  </g>
+
+  <!-- header -->
+  <text x="52" y="88" font-size="13" font-weight="700" fill="#24292f">Lever</text>
+  <text x="312" y="88" font-size="13" font-weight="700" fill="#24292f">Model provider</text>
+  <text x="512" y="88" font-size="13" font-weight="700" fill="#0969da">Harness developer</text>
+
+  <!-- column separators -->
+  <line x1="300" y1="64" x2="300" y2="542" stroke="#d0d7de" stroke-width="1"/>
+  <line x1="500" y1="64" x2="500" y2="542" stroke="#d0d7de" stroke-width="1"/>
+  <line x1="40" y1="100" x2="720" y2="100" stroke="#d0d7de" stroke-width="1"/>
+  <line x1="40" y1="542" x2="720" y2="542" stroke="#d0d7de" stroke-width="1"/>
+
+  <g font-size="13">
+    <!-- Model weights -->
+    <text x="52" y="123" fill="#24292f">Model weights</text>
+    <text x="312" y="123" fill="#1a7f37">✓ Yes</text>
+    <text x="512" y="123" fill="#57606a">— No</text>
+    <!-- Training -->
+    <text x="52" y="159" fill="#24292f">Training</text>
+    <text x="312" y="159" fill="#1a7f37">✓ Yes</text>
+    <text x="512" y="159" fill="#57606a">— No</text>
+    <!-- System prompt -->
+    <text x="52" y="195" fill="#24292f">System prompt</text>
+    <text x="312" y="195" fill="#57606a">— No</text>
+    <text x="512" y="195" fill="#1a7f37">✓ Yes</text>
+    <!-- Tools -->
+    <text x="52" y="231" fill="#24292f">Tools</text>
+    <text x="312" y="231" fill="#57606a">API shape</text>
+    <text x="512" y="231" fill="#24292f">Tool choice &amp; descriptions</text>
+    <!-- MCP -->
+    <text x="52" y="267" fill="#24292f">MCP</text>
+    <text x="312" y="267" fill="#57606a">Protocol support</text>
+    <text x="512" y="267" fill="#24292f">Servers &amp; exposure</text>
+    <!-- Skills -->
+    <text x="52" y="303" fill="#24292f">Skills</text>
+    <text x="312" y="303" fill="#57606a">— No</text>
+    <text x="512" y="303" fill="#1a7f37">✓ Yes</text>
+    <!-- Memory -->
+    <text x="52" y="339" fill="#24292f">Memory</text>
+    <text x="312" y="339" fill="#57606a">— No</text>
+    <text x="512" y="339" fill="#1a7f37">✓ Yes</text>
+    <!-- Caching -->
+    <text x="52" y="375" fill="#24292f">Caching</text>
+    <text x="312" y="375" fill="#57606a">Primitive</text>
+    <text x="512" y="375" fill="#24292f">Breakpoint placement</text>
+    <!-- Context management -->
+    <text x="52" y="411" fill="#24292f">Context management</text>
+    <text x="312" y="411" fill="#57606a">Stateless API</text>
+    <text x="512" y="411" fill="#24292f">Summarization / compaction</text>
+    <!-- Orchestration -->
+    <text x="52" y="447" fill="#24292f">Orchestration</text>
+    <text x="312" y="447" fill="#57606a">— No</text>
+    <text x="512" y="447" fill="#1a7f37">✓ Yes</text>
+    <!-- Sampling -->
+    <text x="52" y="483" fill="#24292f">Sampling</text>
+    <text x="312" y="483" fill="#57606a">Ranges / defaults</text>
+    <text x="512" y="483" fill="#24292f">Selected values</text>
+    <!-- Routing -->
+    <text x="52" y="519" fill="#24292f">Routing</text>
+    <text x="312" y="519" fill="#57606a">Serves model</text>
+    <text x="512" y="519" fill="#24292f">Endpoint / proxy choices</text>
+  </g>
+
+  <text x="40" y="566" font-size="12" fill="#57606a">The model provider owns the engine; the harness developer decides much of what the model sees.</text>
+</svg>
