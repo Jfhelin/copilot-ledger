@@ -37,6 +37,7 @@ const FILES = [
   "SKILL.md",
   join("scripts", "claude-digest.mjs"),
   join("scripts", "claude-relay.mjs"),
+  join("scripts", "verify-capture.mjs"),
 ];
 
 const check = process.argv.includes("--check");

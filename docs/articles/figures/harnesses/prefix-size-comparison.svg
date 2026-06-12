@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 392" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 334" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
   <title id="title">What the model sees before it starts</title>
-  <desc id="desc">Horizontal bar chart comparing the out-of-box prefix floor across four harnesses on the same model, with MCP off and no user-added skills: Copilot CLI about 15k tokens, Copilot in VS Code about 17k tokens (estimated), Claude CLI about 27k tokens, and Claude Code in VS Code about 46k tokens.</desc>
+  <desc id="desc">Horizontal bar chart comparing the out-of-box prefix floor across three harnesses on the same model, with MCP off and no user-added skills: Copilot CLI about 15k tokens, Copilot in VS Code about 17k tokens (estimated), and Claude CLI about 27k tokens.</desc>
 
-  <rect x="0" y="0" width="760" height="392" fill="#ffffff"/>
+  <rect x="0" y="0" width="760" height="334" fill="#ffffff"/>
   <text x="40" y="40" font-size="20" font-weight="700" fill="#24292f">What the model sees before it starts</text>
   <text x="40" y="64" font-size="13" fill="#57606a">Out-of-box floor (Claude Sonnet 4.5, MCP off, no user-added skills). Real usage adds tools on top.</text>
 
@@ -22,14 +22,9 @@
     <text x="208" y="233" text-anchor="end" fill="#57606a">Claude CLI</text>
     <rect x="220" y="208" width="259" height="40" rx="5" fill="#0969da"/>
     <text x="489" y="233" font-weight="700" fill="#24292f">~27k</text>
-
-    <!-- Claude Code in VS Code 46400 -> 445 -->
-    <text x="208" y="291" text-anchor="end" fill="#57606a">Claude Code in VS Code</text>
-    <rect x="220" y="266" width="445" height="40" rx="5" fill="#8250df"/>
-    <text x="675" y="291" font-weight="700" fill="#24292f">~46k</text>
   </g>
 
-  <line x1="220" y1="322" x2="700" y2="322" stroke="#d0d7de" stroke-width="1"/>
-  <text x="460" y="346" font-size="12" fill="#57606a" text-anchor="middle">Prefix tokens (before reasoning)</text>
-  <text x="220" y="368" font-size="11" fill="#8c959f">Blue = CLI harness · Purple = IDE harness · †estimated (measured 20.6k with a typical extension set)</text>
+  <line x1="220" y1="264" x2="700" y2="264" stroke="#d0d7de" stroke-width="1"/>
+  <text x="460" y="288" font-size="12" fill="#57606a" text-anchor="middle">Prefix tokens (before reasoning)</text>
+  <text x="220" y="310" font-size="11" fill="#8c959f">Blue = CLI harness · Purple = IDE harness · †estimated (measured 20.6k with a typical extension set)</text>
 </svg>
