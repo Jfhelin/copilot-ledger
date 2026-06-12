@@ -83,6 +83,12 @@ same change:
 Treat updating `INDEX.md` as part of "done," the same way the article isn't done until
 it's registered in `articles.config.mjs`.
 
+> **Completeness check.** To prove nothing logged was left out of the catalog, run the
+> `data-catalog-backfill` skill's auditor
+> (`node .github/skills/data-catalog-backfill/scan-captures.mjs`). It reconciles every
+> capture file on disk against the run ledger + INDEX inventory and must report
+> `UNACCOUNTED: 0`. Run it after any new batch of captures.
+
 ## The producing workflow
 
 When the user asks to produce a page / experiment / post / video bundle:
