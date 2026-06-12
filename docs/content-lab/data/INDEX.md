@@ -59,8 +59,8 @@ node docs/content-lab/data/db/build-runs.mjs --sql > docs/content-lab/data/db/ru
 ```
 The 40 repeatability rows are derived from the committed `captures.sql` (so they rebuild
 in CI); structural / IDE session rows live in `STATIC_ROWS` inside `build-runs.mjs`
-because their raw sources are external. Current ledger: **58 rows**
-(40 repeatability + 2 structural + 6 ask/agent t6 + 1 CO-IDE MCP-on + 2 CL-IDE +
+because their raw sources are external. Current ledger: **59 rows**
+(40 repeatability + 2 structural + 6 ask/agent t6 + 2 CO-IDE (MCP-on + MCP-off) + 2 CL-IDE +
 6 e3 model-comparison + 1 matched-pair).
 
 ---
@@ -76,7 +76,7 @@ To keep structured table data durable, dumps are committed here:
 
 | Table | Origin session | Durable dump | Rows |
 |---|---|---|---:|
-| `runs` | run ledger (built from below) | `db/runs.jsonl` + `db/runs.sql` | 58 |
+| `runs` | run ledger (built from below) | `db/runs.jsonl` + `db/runs.sql` | 59 |
 | `levers` | Article-2 lever taxonomy session | `db/levers.sql` | 15 (A–O) |
 | `captures` | 40-run repeatability experiment (`52203f3d…`) | `db/captures.sql` | 40 |
 
@@ -89,12 +89,17 @@ metrics are also in `~/copilot-ledger-data/captures/repeatability-40run/captures
 
 ## The four harnesses (all on Claude Sonnet 4.5)
 
-| Code | Harness | Cold prefix (MCP-off) | Canonical capture |
-|---|---|---:|---|
-| **CO-CLI** | Copilot CLI (headless) | ~14.9k tok | `structural-prefix/copilot/digest.json` |
-| **CL-CLI** | Claude CLI (headless) | ~27.2k tok | `structural-prefix/claude/digest.json` |
-| **CO-IDE** | Copilot coding agent (VS Code) | **GAP — MCP-off run pending** | `co-ide-exports/t6_B_agent_sonnet_warm_r1.json` (MCP-**on**, 56 tools, cold 46,428) |
-| **CL-IDE** | Claude Code in VS Code (extension) | ~46.4k tok | `cl-ide-transcripts/CL-IDE_extension_OFF.jsonl` |
+| Code | Harness | Cold prefix (MCP-off) | Out-of-box floor (derived) | Canonical capture |
+|---|---|---:|---:|---|
+| **CO-CLI** | Copilot CLI (headless) | ~14.9k tok | **~15k** (exact; 0 skills) | `structural-prefix/copilot/digest.json` |
+| **CL-CLI** | Claude CLI (headless) | ~27.2k tok | **~27k** (exact; incl. 13 built-in skills) | `structural-prefix/claude/digest.json` |
+| **CO-IDE** | Copilot coding agent (VS Code) | ~20.6k tok | **~17k** (estimate; −18 extension tools) | `co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json` (Agent mode, 56 native tools, turn-0 prefix 20,598) |
+| **CL-IDE** | Claude Code in VS Code (extension) | ~46.4k tok | **~46k** (exact total; −2 repo skills ≈ unchanged) | `cl-ide-transcripts/CL-IDE_extension_OFF.jsonl` |
+
+The **floor** column is what `docs/articles/figures/harnesses/prefix-size-comparison.svg` plots: MCP off, no
+user-added skills, extension-contributed tools removed. CO-IDE is the only estimate — its measured 20.6k includes
+18 notebook/browser extension tools (~3.9k by chars/4); strip them for the ~17k floor. The other three floors are
+derived directly from the captures (built-in skills count as out-of-box; only user/repo/extension additions are removed).
 
 ---
 
@@ -111,8 +116,9 @@ The controlled headless capture: same task × 2 conditions (BARE/TRIM) × 2 harn
 - **Headline:** Copilot ~$0.13/run vs Claude ~$0.36 (~2.8×); quality a statistical tie (21.0 vs 20.4 / 27); the "port tell" (all 40 said 5173, real is 5137).
 
 ### `co-ide-exports/` — Copilot-in-VS-Code Chat exports (`copilot_usage` schema)
-- `CO-IDE_CopilotChat_sonnet4.5_MCPon.json` — **canonical CO-IDE**, MCP-on Sonnet sample; turn-0 cold `prompt_tokens` = **46,428** (`cached_tokens=0`), 56 tools.
-- **Read the cold prefix** from `prompts[i].logs[j].metadata.usage.prompt_tokens` where `prompt_tokens_details.cached_tokens == 0` on the first `claude-sonnet` request.
+- `CO-IDE_agent_sonnet_MCPoff.json` — **canonical CO-IDE MCP-off** (the 4th bar of `prefix-size-comparison.svg`). Agent mode, Sonnet 4.5, workspace `.vscode/mcp.json` parked. Turn-0 prefix `prompt_tokens` = **20,598** with **56 native tools** and **zero `mcp__*` tools**. (Captured warm, so turn-0 `cached_tokens`>0, but `prompt_tokens` is the full prefix the model sees; corroborated by `t6_B`'s byte-identical 56-tool set at 20,571.)
+- `CO-IDE_CopilotChat_sonnet4.5_MCPon.json` — MCP-**on** contrast; turn-0 cold `prompt_tokens` = **46,428** (`cached_tokens=0`) with **95 flat tools** (56 native + 39 `mcp__bicep/github/pylance`). Shows MCP flooding the prefix when tools are sent flat rather than grouped behind `tool_search`.
+- **Read the cold prefix** from `prompts[i].logs[j].metadata.usage.prompt_tokens` (tool count is in `metadata.tools`) on the first `claude-sonnet` request — ideally where `prompt_tokens_details.cached_tokens == 0`.
 
 ### `ask-vs-agent-t6/` — ask-vs-agent matched set (CO-IDE, experiment 10)
 Six VS Code Copilot Chat exports, Sonnet 4.5, 8 MCP servers: `t6_{A,B}_{ask,agent}_sonnet_{cold,warm}_r1.json`.
@@ -164,7 +170,7 @@ The 8 datasets documented above: `repeatability-40run`, `structural-prefix`,
 ### B. `~/CopilotLogExports/` — VS Code / relay / CLI capture workbench
 | Group | Files | Status | What it is |
 |---|---|---|---|
-| `e3-T1-runs/`, `matched-pair-2.1.112/`, `t6_*.json` | 6 dirs + 1 dir + 6 | ✅ copied to B→A | Originals of the consolidated e3 / matched-pair / ask-agent sets |
+| `e3-T1-runs/`, `matched-pair-2.1.112/`, `t6_*.json`, `CO-IDE_agent_sonnet_MCPoff.json` | 6 dirs + 1 dir + 6 + 1 | ✅ copied to B→A | Originals of the consolidated e3 / matched-pair / ask-agent / CO-IDE-MCP-off sets |
 | `claude-captures/` | 90 JSON + `index.log` (8 MB) | 📍 in place | Claude relay prefix-capture pool (system+tool schemas per request); `structural-prefix` and `matched-pair` digests sample from it |
 | Tool/skill scaling probes: `hi18, hi2_18, hi3_21, hi4_0, hi_116, hi_140, hi_VSCInsider_claude, hi_skillCleaned{,2,3}, 03-workiq-{142,316}-tools, 03-workiq-not-started` | 13 | 🧪 in place | VS Code captures at varying tool/MCP/skill counts — the evidence behind levers C/D/E (e.g. Insider 401 tools/93% prefix, workiq 142 vs 316 tools) |
 | Claude-in-VS-Code: `Claudeok.json, claudeok-scrubbed.json, VSCode_ClaudeArm{A,B,B2}.json`, `VSCodeCopilote.json` | 6 | 🧪 in place | VS Code Copilot-proxy Claude runs (lever N transport; `Claudeok` = matched-pair's IDE counterpart) |
@@ -210,13 +216,13 @@ cataloged; treat as noise unless a specific run is needed.
 
 ## Known gaps / open captures
 
-- **CO-IDE MCP-off cold prefix** — *pending a manual capture.* All existing CO-IDE
-  exports are MCP-on. Capture plan: open `octocat_supply-psychic-disco` (its workspace
-  `.vscode/mcp.json` is currently parked as `.vscode/mcp.json.parked` — restore it after),
-  Agent mode + Sonnet 4.5, **toggle off all MCP servers but keep native tools on**, run the
-  verbatim prompt, export to `~/CopilotLogExports/CO-IDE_agent_sonnet_MCPoff.json`, then read
-  turn-0 `usage.prompt_tokens` (where `cached_tokens=0`). This fills the 4th bar in
-  `figures/harnesses/prefix-size-comparison.svg`.
+- **CO-IDE MCP-off cold prefix** — ✅ *closed 2026-06-12.* Captured via Agent mode + Sonnet 4.5
+  in `octocat_supply-psychic-disco` with the workspace `.vscode/mcp.json` parked (restored
+  after). Result: **~20.6k tokens, 56 native tools** — now the 4th bar in
+  `figures/harnesses/prefix-size-comparison.svg`. Canonical file:
+  `co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json`. Finding: with MCP off, CO-IDE's prefix
+  (~20.6k) sits just above Copilot CLI and well below the MCP-flooded ~46k; the earlier
+  46,428 figure was an MCP-on (95-tool) capture, not the MCP-off baseline.
 - **Ask-vs-agent article** — pre-reg exists (`experiments/10-ask-vs-agent-mode.md`) and
   matched `t6_*` ask/agent data is in `ask-vs-agent-t6/`, but no article written.
 

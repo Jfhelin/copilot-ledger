@@ -112,7 +112,14 @@ const STATIC_ROWS = [
     model: "claude-sonnet-4.5", mcp_on: true, condition: "MCPon", rep: null,
     source_path: "~/copilot-ledger-data/captures/co-ide-exports/CO-IDE_CopilotChat_sonnet4.5_MCPon.json",
     prefix_tokens: 46428, requests: 1, tool_calls: null, cost_usd: null, quality_score: null,
-    notes: "Cold prefix = first claude-sonnet request prompt_tokens with cached_tokens==0. 4 MCP servers, 56 tools. MCP-off CO-IDE run still a GAP.",
+    notes: "Cold prefix = first claude-sonnet request prompt_tokens with cached_tokens==0. MCP flooded the prefix flat: 95 tools incl. 39 mcp__bicep/github/pylance tools. Contrast CO-IDE-MCPoff (~20.6k, 56 native tools).",
+  },
+  {
+    run_id: "CO-IDE-MCPoff", date: "2026-06-12", harness: "CO-IDE", task: TASK,
+    model: "claude-sonnet-4.5", mcp_on: false, condition: "MCPoff", rep: null,
+    source_path: "~/copilot-ledger-data/captures/co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json",
+    prefix_tokens: 20598, requests: 3, tool_calls: 6, cost_usd: null, quality_score: null,
+    notes: "Closes the CO-IDE MCP-off gap (4th bar of prefix-size-comparison.svg). Cold prefix = turn-0 first claude-sonnet request prompt_tokens=20598 (cached from a warm-up, but that is the full prefix the model sees). 56 native VS Code Copilot tools, ZERO mcp__ tools; workspace .vscode/mcp.json parked during capture. Matches t6_B's identical 56-tool set (20571).",
   },
   {
     run_id: "CO-IDE-t6_A_agent", date: "2026-06-09", harness: "CO-IDE", task: TASK,
