@@ -339,12 +339,14 @@ tools). The model is constant; **the prefix is a harness/config decision.**
 # DELIVERABLE 3 — Tool Discovery Flow
 
 > **CORRECTION (2026-06-11):** an earlier draft claimed CO-IDE used progressive
-> disclosure (0→1→23). That was an **artifact** — those were three *separate* prompts in
-> `hi18.json` (a title-gen on gpt-4o-mini → a 1-tool aux on gpt-4o-mini → the real
-> 23-tool Claude agent turn), not progressive reveal within one turn. Direct inspection
-> of a multi-turn agent run (`t6_B_agent_sonnet_warm_r1.json`) shows **VS Code Copilot
-> sends a FLAT catalog with full `input_schema` for every tool** (56/56 carried full
-> schemas). **All four harnesses are flat in our captures.**
+> disclosure (0→1→23). The *0→1→23* sequence was an **artifact** — those were three
+> *separate* prompts in `hi18.json` (a title-gen on gpt-4o-mini → a 1-tool aux on
+> gpt-4o-mini → the real 23-tool Claude agent turn), not progressive reveal within one
+> turn. **However** (further correction, see DELIVERABLE 3 below): direct inspection of a
+> multi-turn agent run (`t6_B_agent_sonnet_warm_r1.json`) shows the export carries all 56
+> tools as a **catalog**, but each tool object's **`defer_loading`** flag splits them
+> **23 sent / 33 deferred** on the wire — so CO-IDE agent mode *does* defer (via
+> `tool_search`). The two CLIs remain flat.
 
 ### CO-CLI — **flat**
 - Every request: 19 tools, full schemas. Constant catalog.
@@ -352,13 +354,21 @@ tools). The model is constant; **the prefix is a harness/config decision.**
 ### CL-CLI — **flat**
 - Every request: 27 tools, full schemas. Constant.
 
-### CO-IDE — **flat** (corrected)
-- Agent turn (`t6_B`, claude-sonnet-4.5): **56 tools, all with full description +
-  input_schema, on every request** (e.g. `create_file`, …). No deferral observed.
-- Tool count varies with config/MCP (23 in hi18, 56 in t6_B) — but always flat.
-- *Caveat:* VS Code Copilot has a documented **"virtual tools" grouping** feature that
-  activates only above ~128 enabled tools; we have **no capture** of it triggering, so we
-  cannot show virtualization empirically. *(Medium confidence it exists; not observed.)*
+### CO-IDE — **deferred** (corrected)
+- Agent turn (`t6_B`, claude-sonnet-4.5): export carries **56 tools** in `metadata.tools`,
+  but that array is the full **catalog**, not the wire payload. Each tool object has a
+  **`defer_loading`** flag: **23 tools omit it (sent on the first request) and 33 set
+  `defer_loading: true` (deferred)**. The deferred 33 load on demand when the agent calls
+  the built-in **`tool_search`** tool. 23 active ≈ 9,174 tok (chars/4; 10,052 exact); full
+  catalog ≈ 16,190 tok (chars/4) if sent flat.
+- Reproduced on **both** agent-mode captures (`CO-IDE_agent_sonnet_MCPoff` and `t6_B`):
+  23 active / 33 deferred on every main-agent request.
+- The MCP-**on** Copilot **Chat** capture (`CO-IDE_CopilotChat_sonnet4.5_MCPon`, 95 tools)
+  shows **0** `defer_loading` — so deferral is an **agent-mode** behavior, not universal.
+- *Earlier note retracted:* the prior "flat, no deferral" reading inspected schema presence
+  in the catalog and missed the `defer_loading` flag. VS Code's documented "virtual tools"
+  grouping (above ~128 tools) is a **different** mechanism and is not what produced this
+  23/33 split.
 
 ### CL-IDE — **flat** (extension, MCP-off)
 - Multi-turn `sdk-ts` run: the model used native tools (`Read`/`Glob`/`Bash`) throughout;
@@ -367,10 +377,12 @@ tools). The model is constant; **the prefix is a harness/config decision.**
   CL-CLI flat 27-tool family). Cold prefix ~46.4k carries the full catalog once, then it is
   cache-read each turn.
 
-**Verdict:** **All four ship flat catalogs** in every captured Sonnet run. The differences
-are *count* (19 → 27 → 56 native) driven by native tool set + MCP load, not delivery
-strategy. Progressive disclosure was **not observed in any harness**. *(High confidence —
-counts and full schemas seen directly in wire/relay/export bodies.)*
+**Verdict:** The **two CLIs ship flat catalogs** (19 / 27 full schemas every request).
+**Copilot in VS Code agent mode defers**: 23 of 56 native tools sent first, 33 behind
+`tool_search` (`defer_loading: true`) — reproduced across both agent captures, while the
+MCP-on Chat capture stays flat at 95. So delivery strategy *does* differ: count alone
+(19 → 27 → 56) understates how much VS Code keeps off the first request. *(High confidence —
+counts and the `defer_loading` flag seen directly in wire/relay/export bodies.)*
 
 ---
 
@@ -489,9 +501,12 @@ now direct multi-turn captures of the same prompt + model.)*
 1. Same model, ~3× spread in pre-reasoning prefix MCP-off (≈15k CO-CLI → ≈27k CL-CLI →
    ≈46k CL-IDE), driven by tool-catalog verbosity + IDE context injection; MCP then adds
    linearly on top (+14 tools / +1,876 tok per small server). *[wire/relay/transcript bodies]*
-2. **All four harnesses ship FLAT tool catalogs** (full schemas every turn) in every
-   captured Sonnet run — 19 / 27 / 56 (native counts). *(Corrected: the earlier
-   "CO-IDE defers 0→1→23" was an artifact of three separate prompts.)*
+2. **The two CLIs ship FLAT tool catalogs** (full schemas every turn) — 19 / 27. **Copilot
+   in VS Code agent mode DEFERS**: of 56 native tools, 23 are sent on the first request and
+   33 carry `defer_loading: true`, loading on demand via `tool_search` (reproduced on both
+   agent captures; the MCP-on Chat capture stays flat at 95). *(Corrected twice: the earlier
+   "CO-IDE defers 0→1→23" was an artifact of three separate prompts; the later "all flat, no
+   deferral" reading missed the per-tool `defer_loading` flag.)*
 3. Claude's tool catalog is **2.3×** Copilot CLI's (18.9k vs 8.1k), descs ~2,145 vs
    smaller — pure verbosity choice.
 4. Claude carries **13 skills**, not zero (corrects prior draft).
@@ -545,7 +560,7 @@ transcripts, `e3-T1-runs/`, `matched-pair-2.1.112/`):
 | CO-CLI multi-turn | ✅ have | `structural/copilot/` |
 | CL-CLI multi-turn | ✅ have (abundant) | `~/.claude/projects/` (all `sdk-cli`) |
 | **CO-IDE multi-turn + cache + cost** | ✅ **now filled** | `t6_B_agent_sonnet_warm_r1.json` (agent mode, Sonnet, native billing) |
-| Tool-discovery flow | ✅ resolved (all flat; virtualization claim retracted) | t6_B + hi18 re-reading |
+| Tool-discovery flow | ✅ resolved (CLIs flat; CO-IDE agent defers 23/56 via `defer_loading`+`tool_search`) | t6_B + MCPoff `defer_loading` flags |
 | **CL-IDE multi-turn** | ✅ **now filled** | extension `sdk-ts` transcripts `3864bdcd` + `ad52a532` (Sonnet 4.5, verbatim prompt, octocat) |
 | **MCP off→on (within-harness, isolated)** | ✅ **now measured** | CL-CLI relay +14 tools/+1,876 tok; CO-CLI +30% credits (§1.6) |
 | IDE sampling params (temp/max_tokens) | ❌ **unobtainable from exports** | export schema omits them (format limit) |

@@ -165,18 +165,22 @@ is not separately measurable in that capture.
 |---|---:|---:|---:|---:|---:|---:|
 | Copilot CLI | 6,657 | 8,064 | <150 (in system) | 0 (loaded on demand) | 156 | ~14,877 |
 | Claude CLI | 7,015 | 18,877 | ~300 (in first msg) | ~1,094 (in first msg) | 1,325 | ~27,217 |
-| Copilot in VS Code | — (not separable in export) | ~16,622 (tools array, chars/4) | — | ~3,314 — 16 skills + 8 agents folded into system (mostly repo/installed-ext) | — | 20,598 (API total) |
+| Copilot in VS Code | — (not separable in export) | ~9,200 (23 of 56 sent; 33 deferred) | — | ~3,314 — 16 skills + 8 agents folded into system (mostly repo/installed-ext) | — | 20,598 (API total) |
 
 For the two CLI surfaces the split is read directly from the request body. For
 Copilot in VS Code the export gives the **total** (`prompt_tokens` = 20,598) and the
-tools array (56 tools, `chars / 4` ≈ 16,622) but folds system instructions, skills,
-and workspace context into one opaque block, so those rows are left unattributed
-rather than guessed.
+tools array, but folds system instructions, skills, and workspace context into one
+opaque block, so those rows are left unattributed rather than guessed.
 
-> Note on the Copilot-in-VS-Code total: of its 56 native tools, **18 come from
-> notebook and browser extensions**, not Copilot itself (~3.9k tokens by `chars / 4`).
-> Strip those and the product floor is closer to **~17k tokens**. The 20,598 figure
-> is the as-measured catalog, not the bare Copilot floor.
+> Note on the Copilot-in-VS-Code tool block: all 56 tools are **native to VS Code** —
+> there is no MCP and no third-party extension surface in this capture. But the harness
+> does **not** send all 56 on the first request. Each tool object carries a
+> `defer_loading` flag: **23 tools ship on the wire at turn 1** (~9,200 tokens by
+> `chars / 4`; 10,052 by the exact Anthropic tokenizer) and the remaining **33 are
+> deferred** (~7,000 tokens) and pulled in only when the agent calls the built-in
+> `tool_search` tool. So the 56-tool catalog *would* be ~16,600 tokens if sent flat,
+> but the actual first-call tool block is roughly half that. The full mechanism is
+> described in the next section.
 
 <figure>
   <img
@@ -190,7 +194,7 @@ rather than guessed.
 
 In the captures collected here, the developer’s actual prompt was a very small part of the request — on the order of tens of tokens against a 15k–27k prefix.
 
-In all three captures the **single largest component was the tool definitions**: 54.2% of the Copilot CLI prefix, 69.4% of the Claude CLI prefix, and an estimated ~16.6k of the 20.6k Copilot-in-VS-Code total. System instructions were the next largest block (roughly 6.7k–7.0k tokens on the two CLIs). The user message and conversation history were the smallest measurable parts.
+In both CLI captures the **single largest component was the tool definitions**: 54.2% of the Copilot CLI prefix and 69.4% of the Claude CLI prefix, since both CLIs send their whole catalog flat. Copilot in VS Code behaves differently — it sends only 23 of its 56 tools on the first request (~9,200 tokens, about 45% of its prefix) and defers the rest, so for that surface the folded system-and-context block is the larger share. System instructions were the next largest block on the two CLIs (roughly 6.7k–7.0k tokens). The user message and conversation history were the smallest measurable parts.
 
 That observation changes how we should interpret prompt advice.
 
@@ -219,12 +223,15 @@ For every environment, the investigation should record:
 |---|---:|---:|---:|
 | Copilot CLI | 19 | 19 / 19 (flat) | 8,064 |
 | Claude CLI | 27 | 27 / 27 (flat) | 18,877 |
-| Copilot in VS Code | 56 (38 Copilot + 18 extension) | 56 / 56 (flat) | ~16,622 (chars/4 of tools array) |
+| Copilot in VS Code | 56 | 23 / 56 (33 deferred) | ~9,200 sent (catalog ~16,600 if flat) |
 
 Tool counts and full schemas are read directly from the request body for the two
-CLIs and from the export's `tools` array for Copilot in VS Code. The
-Copilot-in-VS-Code tool-definition figure is a `chars / 4` estimate; the others are
-the digest's own `chars / 4` shape numbers. A more detailed description may help it select the correct tool and construct valid arguments.
+CLIs and from the export's `tools` array for Copilot in VS Code. The two CLIs send
+their entire catalog flat, so enabled tools and first-request schemas are the same
+number. Copilot in VS Code is different: it enables 56 tools but marks 33 of them
+`defer_loading`, sending only 23 full schemas (~9,200 tokens by `chars / 4`) on the
+first request — the mechanism is detailed two sections down. A more detailed
+description may help the model select the correct tool and construct valid arguments.
 
 But there are possible costs:
 
@@ -263,27 +270,41 @@ This article reports the observed strategy for each environment from the reconci
 |---|---|---|
 | Copilot CLI | Flat — 19 full schemas on every request | Wire body: 19/19 schemas present, constant catalog |
 | Claude CLI | Flat — 27 full schemas on every request | Relay body: 27/27 schemas present, constant catalog |
-| Copilot in VS Code | Flat — 56 full schemas on every request | Export (`t6_B` agent turn): 56/56 carried full `input_schema`; no deferral observed |
+| Copilot in VS Code | **Deferred** — 23 of 56 full schemas sent; 33 loaded on demand | Export: each tool object's `defer_loading` flag — 23 absent (sent), 33 true (deferred) |
 
-In every captured Sonnet run, all three environments ship a **flat catalog**: full
-descriptions and JSON schemas for every enabled tool, on every request. None used
-progressive disclosure, name-only advertising, or a tool-search step in these
-captures. The differences are in tool **count** (19 → 27 → 56), not delivery.
+The two CLIs ship a **flat catalog**: full descriptions and JSON schemas for every
+enabled tool, on every request. Copilot in VS Code does not. Each of its 56 tool
+objects carries a `defer_loading` boolean, and the harness sends only the 23 tools
+where that flag is absent — the core file, search, terminal, edit, and planning
+tools, plus one special tool, **`tool_search`**. The other 33 tools (`defer_loading: true`)
+are *not* sent as full schemas on the first request; the model discovers and
+activates them by calling `tool_search` when a task needs them.
+
+This is genuine progressive disclosure, and it has a clear cost effect. The 23
+active schemas are ~9,200 tokens by `chars / 4` (10,052 by the exact Anthropic
+tokenizer); the full 56-tool catalog would be ~16,600 tokens if sent flat. Deferring
+33 tools keeps roughly 7,000 tokens out of the first request — paid for later, and
+only if those tools are actually needed.
+
+The pattern reproduces across both agent-mode captures (`CO-IDE_agent_sonnet_MCPoff`
+and `t6_B_agent_sonnet_warm_r1`): 23 active / 33 deferred on every main-agent
+request. (An older Copilot **Chat** capture with MCP on carried 95 tools all flat,
+so deferral appears to be an agent-mode behavior, not a universal one.)
+
+The harness with the **largest** tool catalog therefore carries one of the
+**smallest** first-call tool blocks — the opposite of what a raw tool count would
+suggest. Counting enabled tools tells you what the agent *can* do; it does not tell
+you how much context the model actually receives up front.
 
 <figure>
   <img
     src="./figures/context-footprint/tool-catalog-delivery.svg"
-    alt="Bar chart of enabled tool counts — Copilot CLI 19, Claude CLI 27, Copilot in VS Code 56 — all delivered as flat catalogs with full schemas on every request."
+    alt="Tool delivery by harness: Copilot CLI sends all 19 tools flat, Claude CLI sends all 27 flat, and Copilot in VS Code sends 23 of its 56 tools on the first request while deferring 33 that load on demand via tool_search."
   >
   <figcaption>
-    The harnesses differ in how many tools they enable, not in how they deliver them: every one ships a flat catalog in these captures.
+    Two CLIs ship every tool flat; Copilot in VS Code sends 23 of 56 and defers the rest, so the biggest catalog is not the biggest first-call block.
   </figcaption>
 </figure>
-
-> One caveat for Copilot in VS Code: it has a documented "virtual tools" grouping
-> feature that activates only above ~128 enabled tools. No capture here triggered
-> it, so this article cannot show virtualization empirically — at 56 tools the
-> catalog was still flat.
 
 > Tool capability and tool delivery are different things.
 
@@ -328,16 +349,18 @@ The comparison should therefore distinguish:
 
 Do not attribute all additional IDE context to the harness itself. Some of it comes from the current workspace and some from optional configuration.
 
-In the Copilot-in-VS-Code capture (the one IDE surface in this article), the largest
-single block was still the **tool catalog** — 56 native tools, ~16.6k tokens by
-`chars / 4` — and **18 of those 56 tools came from notebook and browser extensions**,
-not Copilot. That is the clearest example of the attribution point: a large chunk of
-the "IDE footprint" is *user-installed extension surface*, not a product default.
+In the Copilot-in-VS-Code capture (the one IDE surface in this article), all 56 tools
+are **native to VS Code** — there is no MCP server and no third-party tool surface in
+this run. The attribution point here is about *delivery*, not vendor: of those 56
+native tools, only **23 are sent on the first request** (~9,200 tokens by `chars / 4`)
+and **33 are deferred** behind `tool_search`. So the first-call "IDE footprint" is
+roughly half the full catalog — the rest is real capability the agent can reach, but
+it is not paid for until used.
 
 | IDE component | Attribution |
 |---|---|
-| Core Copilot tool schemas (38) | Product default |
-| Notebook + browser extension tools (18) | User-configured (installed extensions) |
+| Tool schemas sent on first call (23) | Native — core file/search/terminal/edit/planning tools + `tool_search` |
+| Tool schemas deferred (33) | Native — loaded on demand via `tool_search` (`defer_loading: true`) |
 | System instructions + skill/agent catalog (16 skills + 8 agents) | Mostly repo `.github` + installed extensions (folded into system) |
 | Git branch / status, workspace metadata | Workspace-derived |
 | `prompt_tokens` system-vs-context split | Not observable from the export |
@@ -349,10 +372,10 @@ rather than estimated.
 <figure>
   <img
     src="./figures/context-footprint/ide-context-breakdown.svg"
-    alt="Breakdown of Copilot in VS Code's 56 baseline tools: 38 core Copilot tools (product default) plus 18 notebook and browser extension tools (user-installed), with system and skills folded into an opaque block."
+    alt="Breakdown of Copilot in VS Code's 56 native tools: 23 sent on the first request and 33 deferred behind tool_search, with system instructions and skills folded into an opaque block."
   >
   <figcaption>
-    A large share of the "IDE footprint" is user-installed extension surface, not a product default.
+    All 56 tools are native to VS Code; only 23 ship on the first request, with 33 deferred behind tool_search.
   </figcaption>
 </figure>
 

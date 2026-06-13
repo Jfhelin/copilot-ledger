@@ -269,3 +269,24 @@ does not establish quality difference.
 - [ ] Decide fate of `what-actually-differs` stub.
 - [x] Build `mcp-delta-callout.svg` (optional).
 - [ ] Add the glossary + explicit evidence labels if not yet present.
+
+## RESOLVED (2026-06-12) — VS Code tool catalog: virtualized, not flat
+
+The "Tools are part of the prompt" data was corrected. All **56** VS Code tools are
+**native** (no MCP, no third-party extension surface in the capture) — the earlier
+"38 Copilot + 18 extension" split was wrong. More importantly, VS Code agent mode
+**defers**: each tool object carries a `defer_loading` flag, and only **23 ship on the
+first request** (~9,200 tok chars/4; 10,052 exact) while **33 are deferred** and loaded
+on demand via the built-in **`tool_search`** tool (full catalog ≈16,600 tok if flat).
+
+- **Article 2** (`more-than-a-model.md`): on-wire numbers only — 56 tools (23 sent first
+  call), ~9,200 tokens; points to Article 3 for the mechanism. Minimal explanation.
+- **Article 3** (`what-your-ide-sends.md`): full virtualization explanation lives here —
+  rewrote the delivery section (no longer "all flat"), the footprint/enabled-tools/
+  attribution tables, and three figures.
+- Figures updated: `tool-catalog-size.svg`, `tool-catalog-delivery.svg`,
+  `ide-context-breakdown.svg`, `first-call-composition.svg`.
+- Data note (`harness-data-FINAL.md`): DELIVERABLE 3 verdict, DELIVERABLE 6 finding #2,
+  and the gap table corrected from "all flat" to "CO-IDE agent defers 23/56".
+- Reproduced on both agent captures (`CO-IDE_agent_sonnet_MCPoff`, `t6_B`); MCP-on Chat
+  capture (95 tools) shows 0 deferred → deferral is an agent-mode behavior.
