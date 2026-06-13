@@ -337,16 +337,6 @@ MCP load is a config/deployment choice, not a harness-architecture difference.
 reports only the DELTA in this section, so the two do not conflict.)
 -->
 
-<figure>
-  <img
-    src="./figures/harnesses/mcp-delta-callout.svg"
-    alt="Callout showing that enabling one filesystem MCP server added 14 tools and approximately 1,876 prefix tokens in the captured configuration."
-  >
-  <figcaption>
-    MCP is capability, but it is also context. An MCP-on run and an MCP-off run are different experimental configurations.
-  </figcaption>
-</figure>
-
 That does not make MCP inefficient. It means capability has a context cost.
 
 An agent with several MCP servers enabled is not directly comparable with one running only its built-in tools. The first agent may be able to perform much more work, but it also starts with a larger capability surface.
