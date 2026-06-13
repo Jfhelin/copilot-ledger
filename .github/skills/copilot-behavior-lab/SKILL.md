@@ -43,6 +43,32 @@ Practical consequences:
 - Every number on a finished page must trace back to a digest field or a canvas
   view. No invented figures.
 
+## The flagship article series (read this before planning article work)
+
+The current article plan is the **six-article flagship series**, planned in a clean
+workspace separate from this skill's older experiment clusters:
+
+> **`docs/series/INDEX.md`** — the series index (table, status, editorial position,
+> shared assets), plus **one editable working file per article**
+> (`docs/series/article-0N-<slug>.md`).
+
+Each working file is a **shared human/agent scratchpad**: role, status, proposed
+destination, core message, key facts & numbers (with evidence + cost labels), supporting
+runs (with capture paths), visuals (have/need), writing hooks, limitations, and an
+open-item TODO. When you research, draft, or measure anything for an article, **record
+what you learn in that article's working file** — it is where the next session picks up.
+
+How the layers relate (don't edit the wrong one):
+
+- `docs/series/` — the **new** plan + per-article working files (edit freely; scratchpad).
+- `docs/articles/*.md` — the **published** markdown that actually ships.
+- `packages/articles/articles.config.mjs` — the publish manifest (edit to publish/relocate).
+- `docs/content-lab/` — the **earlier** article-series idea + raw experiment scratch (the
+  data catalog and pre-regs still live here and stay authoritative for data).
+
+Rule: a working file must cite the **run ledger** (`docs/content-lab/data/db/runs.jsonl`)
+or a named capture for every number — never a remembered value.
+
 ## Reuse existing measured data — the data catalog (read before capturing)
 
 Before running or asking the user to run a new capture, **check what we already
@@ -355,10 +381,16 @@ When ending a writeup, reinforce official guidance with the concrete evidence:
 - Review tools and skills periodically.
 - Avoid optimizing away useful planning or reviewability.
 
-## Currently planned experiments
+## Older content-lab experiment cluster (legacy — see `docs/series/` for the current plan)
 
-Consolidated to **8 strong articles** in three clusters (see
-`docs/content-lab/publishing-plan.md` for the authoritative launch order). File
+> The **current** article plan is the six-article flagship series in
+> `docs/series/INDEX.md` (see top of this skill). The list below is the **earlier**
+> `docs/content-lab/` experiment cluster — still a useful menu of measured findings and
+> stubs, and several of these feed the new series, but it is **not** the current
+> publishing order. Cross-reference, don't treat as authoritative launch order.
+
+Consolidated to **8 experiments** in three clusters (see
+`docs/content-lab/publishing-plan.md` for that cluster's launch order). File
 numbers are stable IDs, not the article count or order.
 
 **A · The Fixed Floor — before you type**
