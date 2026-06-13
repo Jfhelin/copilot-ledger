@@ -238,8 +238,9 @@ Tool-definition footprint = the approximate token size of the full tool-schema
 array advertised to the model on the first main-agent request (MCP off, fresh
 session, no optional tools/skills), measured by the structural chars/4 estimate.
 This is a structural SIZE estimate, distinct from the exact API-reported
-first-call totals in the prefix table above; chars/4 underestimates the exact
-Anthropic count by ~8-9%, so treat these as floors and report with "≈".
+first-call totals in the prefix table above; the exact Anthropic tokenizer packs
+~3.7 chars/token for this content, so chars/4 underestimates by ~8-9% — treat these
+as floors and report with "≈".
 
 Direct, from the structural-prefix digests:
 - Copilot CLI: toolCount 19, toolDefsApproxTokens 8,064 (54.2% of the 14,877
