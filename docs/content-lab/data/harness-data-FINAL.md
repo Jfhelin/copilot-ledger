@@ -258,6 +258,18 @@ the growing message tail. Mechanism is Anthropic-locked (`cache_control:ephemera
 ≤4 breakpoints, 5-min TTL); placement is discretion. *(High confidence CLIs; IDE rates
 explicitly flagged not-meaningful.)*
 
+**Wire-order grounding (Anthropic Messages API):** the cacheable prefix is matched in the
+fixed order **`tools → system → messages`** — tool definitions are a separate top-level
+field, *not* concatenated into the system string, and the cache sees them first.
+`matched-pair-baseline/capture-006.json` (CL-CLI, sonnet-4-5) shows it concretely:
+`tools` = 26 defs (separate), `system` = 25,929 chars (string), and `messages[0]` is a
+single user turn whose blocks are ordered **skills (2,899) → environment/userEmail (366)
+→ user text ("hi", 2)**, with the lone `cache_control:{ephemeral, ttl 1h}` on the **last**
+block. So stable content sits ahead of the breakpoint and volatile user input behind it.
+This is the evidence behind Article 3's "Order is a caching decision" section. Note the
+component *order* differs from the simplified teaching list: env comes *after* skills, and
+both ride in the user message (not the system block) for CL-CLI.
+
 ## 1.11 Context Management
 
 | Harness | Growth | Summarization | Evidence |

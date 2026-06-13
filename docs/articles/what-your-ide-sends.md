@@ -448,6 +448,34 @@ None of the three baselines had a repository instruction file (`AGENTS.md`,
 configuration layers measured on top of the floor, not part of it.
 ---
 
+## Order is a caching decision
+
+The component list earlier in this article is a *logical* inventory, not the byte order on the wire. The actual request is not one flat block, and the order is not arbitrary—it is what makes a warm prefix possible.
+
+With the Anthropic Messages API—used by both the Claude CLI and the Copilot-in-VS-Code export—a request has three separate top-level fields, and the prompt cache matches them as a prefix in a fixed order:
+
+```text
+tools  →  system  →  messages
+```
+
+Tool definitions are not concatenated into the system text; they are a sibling field that the cache sees *first*. The user’s message and any conversation history live in `messages`, evaluated last.
+
+Prompt caching reuses the longest *identical* prefix, so this ordering is the whole mechanism. The design rule is simple:
+
+- **Stable content first.** Tool definitions and system instructions are identical across sessions. Kept at the front, they form a prefix every request can reuse.
+- **Volatile content last.** The user’s text, conversation history, timestamps, working directory, and per-user details must come after the stable prefix—otherwise they change the prefix and force a cold read.
+
+The captured Claude CLI request shows this discipline directly. `tools` (26 definitions) and `system` (~26k characters) arrive as stable top-level fields. The first `messages` entry is a single user turn whose blocks are ordered **skills → environment → the user’s text**, and the cache breakpoint (`cache_control: ephemeral, ttl 1h`) sits on the very last block. Everything stable is in front of it; the volatile user input is behind it.
+
+Two consequences follow:
+
+- A harness that places anything session-specific early—a session id or timestamp inside the system block, for example—changes the prefix and pays a cold read on every request.
+- The cache is scoped to the provider account, not shared across customers. “Warm” means *one stable prefix this harness reuses across its own sessions*, not a global cache shared by everyone.
+
+So the order in the simplified list is a teaching aid. The order on the wire is a caching decision—and it is the difference between paying for the prefix once and paying for it on every turn.
+
+---
+
 ## Cold, warm, and cached are different measurements
 
 A first user-visible request is not always a fully cold request.
