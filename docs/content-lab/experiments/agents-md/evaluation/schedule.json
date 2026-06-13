@@ -1,0 +1,737 @@
+{
+  "experiment": "agents-md",
+  "phase": "evaluation",
+  "generated_at": "2026-06-13T18:57:22.645Z",
+  "seed": 10756132,
+  "prng": "mulberry32",
+  "shuffle": "fisher-yates + max-2-in-a-row condition interleave",
+  "repo": "octodemo/octocat_supply@e1516cf9095b83f25adabf5fe66036f133bddfa6",
+  "tasks": [
+    "E1-nav",
+    "E2-local",
+    "E3-debug",
+    "E4-multifile",
+    "E5-review"
+  ],
+  "conditions": [
+    "BARE",
+    "AGENTS"
+  ],
+  "reps": 10,
+  "total": 100,
+  "max_condition_streak": 2,
+  "cell_counts": {
+    "E4-multifile/AGENTS": 10,
+    "E1-nav/BARE": 10,
+    "E3-debug/AGENTS": 10,
+    "E5-review/AGENTS": 10,
+    "E4-multifile/BARE": 10,
+    "E2-local/AGENTS": 10,
+    "E5-review/BARE": 10,
+    "E3-debug/BARE": 10,
+    "E1-nav/AGENTS": 10,
+    "E2-local/BARE": 10
+  },
+  "order": [
+    {
+      "seq": 1,
+      "run_id": "E_001_E4-multifile_AGENTS_r3",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 3
+    },
+    {
+      "seq": 2,
+      "run_id": "E_002_E4-multifile_AGENTS_r9",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 9
+    },
+    {
+      "seq": 3,
+      "run_id": "E_003_E1-nav_BARE_r5",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 5
+    },
+    {
+      "seq": 4,
+      "run_id": "E_004_E3-debug_AGENTS_r1",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 1
+    },
+    {
+      "seq": 5,
+      "run_id": "E_005_E5-review_AGENTS_r7",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 7
+    },
+    {
+      "seq": 6,
+      "run_id": "E_006_E4-multifile_BARE_r5",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 5
+    },
+    {
+      "seq": 7,
+      "run_id": "E_007_E2-local_AGENTS_r7",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 7
+    },
+    {
+      "seq": 8,
+      "run_id": "E_008_E5-review_AGENTS_r5",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 5
+    },
+    {
+      "seq": 9,
+      "run_id": "E_009_E4-multifile_BARE_r10",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 10
+    },
+    {
+      "seq": 10,
+      "run_id": "E_010_E5-review_BARE_r8",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 8
+    },
+    {
+      "seq": 11,
+      "run_id": "E_011_E4-multifile_AGENTS_r5",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 5
+    },
+    {
+      "seq": 12,
+      "run_id": "E_012_E3-debug_BARE_r7",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 7
+    },
+    {
+      "seq": 13,
+      "run_id": "E_013_E4-multifile_BARE_r4",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 4
+    },
+    {
+      "seq": 14,
+      "run_id": "E_014_E5-review_AGENTS_r4",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 4
+    },
+    {
+      "seq": 15,
+      "run_id": "E_015_E3-debug_BARE_r2",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 2
+    },
+    {
+      "seq": 16,
+      "run_id": "E_016_E3-debug_BARE_r3",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 3
+    },
+    {
+      "seq": 17,
+      "run_id": "E_017_E1-nav_AGENTS_r3",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 3
+    },
+    {
+      "seq": 18,
+      "run_id": "E_018_E2-local_BARE_r5",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 5
+    },
+    {
+      "seq": 19,
+      "run_id": "E_019_E1-nav_AGENTS_r5",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 5
+    },
+    {
+      "seq": 20,
+      "run_id": "E_020_E1-nav_AGENTS_r10",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 10
+    },
+    {
+      "seq": 21,
+      "run_id": "E_021_E5-review_BARE_r7",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 7
+    },
+    {
+      "seq": 22,
+      "run_id": "E_022_E5-review_AGENTS_r8",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 8
+    },
+    {
+      "seq": 23,
+      "run_id": "E_023_E3-debug_AGENTS_r7",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 7
+    },
+    {
+      "seq": 24,
+      "run_id": "E_024_E1-nav_BARE_r7",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 7
+    },
+    {
+      "seq": 25,
+      "run_id": "E_025_E3-debug_AGENTS_r4",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 4
+    },
+    {
+      "seq": 26,
+      "run_id": "E_026_E4-multifile_BARE_r1",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 1
+    },
+    {
+      "seq": 27,
+      "run_id": "E_027_E4-multifile_AGENTS_r10",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 10
+    },
+    {
+      "seq": 28,
+      "run_id": "E_028_E5-review_AGENTS_r9",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 9
+    },
+    {
+      "seq": 29,
+      "run_id": "E_029_E5-review_BARE_r4",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 4
+    },
+    {
+      "seq": 30,
+      "run_id": "E_030_E5-review_BARE_r1",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 1
+    },
+    {
+      "seq": 31,
+      "run_id": "E_031_E2-local_AGENTS_r8",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 8
+    },
+    {
+      "seq": 32,
+      "run_id": "E_032_E2-local_BARE_r4",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 4
+    },
+    {
+      "seq": 33,
+      "run_id": "E_033_E4-multifile_AGENTS_r1",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 1
+    },
+    {
+      "seq": 34,
+      "run_id": "E_034_E1-nav_BARE_r8",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 8
+    },
+    {
+      "seq": 35,
+      "run_id": "E_035_E3-debug_BARE_r5",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 5
+    },
+    {
+      "seq": 36,
+      "run_id": "E_036_E1-nav_AGENTS_r7",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 7
+    },
+    {
+      "seq": 37,
+      "run_id": "E_037_E4-multifile_AGENTS_r8",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 8
+    },
+    {
+      "seq": 38,
+      "run_id": "E_038_E4-multifile_BARE_r9",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 9
+    },
+    {
+      "seq": 39,
+      "run_id": "E_039_E5-review_AGENTS_r6",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 6
+    },
+    {
+      "seq": 40,
+      "run_id": "E_040_E2-local_BARE_r7",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 7
+    },
+    {
+      "seq": 41,
+      "run_id": "E_041_E5-review_BARE_r5",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 5
+    },
+    {
+      "seq": 42,
+      "run_id": "E_042_E2-local_AGENTS_r5",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 5
+    },
+    {
+      "seq": 43,
+      "run_id": "E_043_E3-debug_BARE_r10",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 10
+    },
+    {
+      "seq": 44,
+      "run_id": "E_044_E4-multifile_AGENTS_r6",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 6
+    },
+    {
+      "seq": 45,
+      "run_id": "E_045_E5-review_AGENTS_r10",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 10
+    },
+    {
+      "seq": 46,
+      "run_id": "E_046_E3-debug_BARE_r4",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 4
+    },
+    {
+      "seq": 47,
+      "run_id": "E_047_E2-local_BARE_r9",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 9
+    },
+    {
+      "seq": 48,
+      "run_id": "E_048_E2-local_AGENTS_r3",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 3
+    },
+    {
+      "seq": 49,
+      "run_id": "E_049_E4-multifile_BARE_r2",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 2
+    },
+    {
+      "seq": 50,
+      "run_id": "E_050_E3-debug_BARE_r6",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 6
+    },
+    {
+      "seq": 51,
+      "run_id": "E_051_E2-local_AGENTS_r4",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 4
+    },
+    {
+      "seq": 52,
+      "run_id": "E_052_E4-multifile_BARE_r8",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 8
+    },
+    {
+      "seq": 53,
+      "run_id": "E_053_E5-review_AGENTS_r1",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 1
+    },
+    {
+      "seq": 54,
+      "run_id": "E_054_E1-nav_BARE_r2",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 2
+    },
+    {
+      "seq": 55,
+      "run_id": "E_055_E1-nav_AGENTS_r9",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 9
+    },
+    {
+      "seq": 56,
+      "run_id": "E_056_E1-nav_AGENTS_r6",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 6
+    },
+    {
+      "seq": 57,
+      "run_id": "E_057_E1-nav_BARE_r6",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 6
+    },
+    {
+      "seq": 58,
+      "run_id": "E_058_E4-multifile_AGENTS_r4",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 4
+    },
+    {
+      "seq": 59,
+      "run_id": "E_059_E5-review_AGENTS_r2",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 2
+    },
+    {
+      "seq": 60,
+      "run_id": "E_060_E1-nav_BARE_r3",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 3
+    },
+    {
+      "seq": 61,
+      "run_id": "E_061_E3-debug_AGENTS_r6",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 6
+    },
+    {
+      "seq": 62,
+      "run_id": "E_062_E2-local_AGENTS_r2",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 2
+    },
+    {
+      "seq": 63,
+      "run_id": "E_063_E2-local_BARE_r8",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 8
+    },
+    {
+      "seq": 64,
+      "run_id": "E_064_E3-debug_AGENTS_r5",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 5
+    },
+    {
+      "seq": 65,
+      "run_id": "E_065_E4-multifile_AGENTS_r2",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 2
+    },
+    {
+      "seq": 66,
+      "run_id": "E_066_E5-review_BARE_r2",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 2
+    },
+    {
+      "seq": 67,
+      "run_id": "E_067_E2-local_BARE_r2",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 2
+    },
+    {
+      "seq": 68,
+      "run_id": "E_068_E4-multifile_AGENTS_r7",
+      "task": "E4-multifile",
+      "condition": "AGENTS",
+      "rep": 7
+    },
+    {
+      "seq": 69,
+      "run_id": "E_069_E2-local_BARE_r10",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 10
+    },
+    {
+      "seq": 70,
+      "run_id": "E_070_E3-debug_BARE_r9",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 9
+    },
+    {
+      "seq": 71,
+      "run_id": "E_071_E1-nav_AGENTS_r2",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 2
+    },
+    {
+      "seq": 72,
+      "run_id": "E_072_E2-local_AGENTS_r6",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 6
+    },
+    {
+      "seq": 73,
+      "run_id": "E_073_E5-review_BARE_r6",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 6
+    },
+    {
+      "seq": 74,
+      "run_id": "E_074_E3-debug_AGENTS_r8",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 8
+    },
+    {
+      "seq": 75,
+      "run_id": "E_075_E3-debug_AGENTS_r2",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 2
+    },
+    {
+      "seq": 76,
+      "run_id": "E_076_E5-review_BARE_r3",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 3
+    },
+    {
+      "seq": 77,
+      "run_id": "E_077_E4-multifile_BARE_r6",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 6
+    },
+    {
+      "seq": 78,
+      "run_id": "E_078_E1-nav_AGENTS_r8",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 8
+    },
+    {
+      "seq": 79,
+      "run_id": "E_079_E1-nav_BARE_r1",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 1
+    },
+    {
+      "seq": 80,
+      "run_id": "E_080_E1-nav_AGENTS_r4",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 4
+    },
+    {
+      "seq": 81,
+      "run_id": "E_081_E1-nav_BARE_r4",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 4
+    },
+    {
+      "seq": 82,
+      "run_id": "E_082_E5-review_AGENTS_r3",
+      "task": "E5-review",
+      "condition": "AGENTS",
+      "rep": 3
+    },
+    {
+      "seq": 83,
+      "run_id": "E_083_E4-multifile_BARE_r7",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 7
+    },
+    {
+      "seq": 84,
+      "run_id": "E_084_E1-nav_BARE_r9",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 9
+    },
+    {
+      "seq": 85,
+      "run_id": "E_085_E2-local_AGENTS_r1",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 1
+    },
+    {
+      "seq": 86,
+      "run_id": "E_086_E1-nav_AGENTS_r1",
+      "task": "E1-nav",
+      "condition": "AGENTS",
+      "rep": 1
+    },
+    {
+      "seq": 87,
+      "run_id": "E_087_E4-multifile_BARE_r3",
+      "task": "E4-multifile",
+      "condition": "BARE",
+      "rep": 3
+    },
+    {
+      "seq": 88,
+      "run_id": "E_088_E2-local_AGENTS_r9",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 9
+    },
+    {
+      "seq": 89,
+      "run_id": "E_089_E3-debug_AGENTS_r9",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 9
+    },
+    {
+      "seq": 90,
+      "run_id": "E_090_E2-local_BARE_r6",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 6
+    },
+    {
+      "seq": 91,
+      "run_id": "E_091_E5-review_BARE_r10",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 10
+    },
+    {
+      "seq": 92,
+      "run_id": "E_092_E2-local_AGENTS_r10",
+      "task": "E2-local",
+      "condition": "AGENTS",
+      "rep": 10
+    },
+    {
+      "seq": 93,
+      "run_id": "E_093_E1-nav_BARE_r10",
+      "task": "E1-nav",
+      "condition": "BARE",
+      "rep": 10
+    },
+    {
+      "seq": 94,
+      "run_id": "E_094_E5-review_BARE_r9",
+      "task": "E5-review",
+      "condition": "BARE",
+      "rep": 9
+    },
+    {
+      "seq": 95,
+      "run_id": "E_095_E3-debug_AGENTS_r3",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 3
+    },
+    {
+      "seq": 96,
+      "run_id": "E_096_E2-local_BARE_r1",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 1
+    },
+    {
+      "seq": 97,
+      "run_id": "E_097_E3-debug_BARE_r1",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 1
+    },
+    {
+      "seq": 98,
+      "run_id": "E_098_E3-debug_AGENTS_r10",
+      "task": "E3-debug",
+      "condition": "AGENTS",
+      "rep": 10
+    },
+    {
+      "seq": 99,
+      "run_id": "E_099_E2-local_BARE_r3",
+      "task": "E2-local",
+      "condition": "BARE",
+      "rep": 3
+    },
+    {
+      "seq": 100,
+      "run_id": "E_100_E3-debug_BARE_r8",
+      "task": "E3-debug",
+      "condition": "BARE",
+      "rep": 8
+    }
+  ]
+}
