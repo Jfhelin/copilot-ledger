@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="title">One MCP server adds tools and context</title>
+  <desc id="desc">Callout: enabling one filesystem MCP server in a controlled Claude CLI run added 14 tools and approximately 1,876 prefix tokens (tool-definition tokens, wire-measured, off to on).</desc>
+
+  <rect x="0" y="0" width="760" height="300" fill="#ffffff"/>
+  <text x="40" y="46" font-size="20" font-weight="700" fill="#24292f">MCP is capability — and context</text>
+  <text x="40" y="72" font-size="13" fill="#57606a">Enabling one filesystem MCP server in a controlled Claude CLI run, same repo and prompt.</text>
+
+  <!-- stat card: tools -->
+  <rect x="40" y="100" width="330" height="120" rx="8" fill="#ddf4ff" stroke="#54aeff" stroke-width="1"/>
+  <text x="205" y="166" font-size="46" font-weight="700" fill="#0969da" text-anchor="middle">+14</text>
+  <text x="205" y="196" font-size="15" fill="#57606a" text-anchor="middle">tools added to the catalog</text>
+
+  <!-- stat card: prefix tokens -->
+  <rect x="390" y="100" width="330" height="120" rx="8" fill="#ddf4ff" stroke="#54aeff" stroke-width="1"/>
+  <text x="555" y="166" font-size="46" font-weight="700" fill="#0969da" text-anchor="middle">+1,876</text>
+  <text x="555" y="196" font-size="15" fill="#57606a" text-anchor="middle">prefix tokens (tool definitions)</text>
+
+  <text x="40" y="262" font-size="12" fill="#57606a">Claude CLI · @modelcontextprotocol/server-filesystem (14 tools) · off → on · wire-measured tool-definition tokens.</text>
+  <text x="40" y="282" font-size="12" fill="#57606a">A capability surface is not free: it is carried in every request's prefix.</text>
+</svg>
