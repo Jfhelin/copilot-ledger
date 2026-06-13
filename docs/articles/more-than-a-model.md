@@ -434,29 +434,28 @@ In the experiment behind the first article in this series, Copilot CLI and Claud
 
 | Harness | Mean model requests | Mean tool calls |
 |---|---:|---:|
-| Copilot CLI | **?** | **?** |
-| Claude CLI | **?** | **?** |
+| Copilot CLI | **4.5** | **13.9** |
+| Claude CLI | **16.4** | **12.9** |
+
+Both harnesses did a comparable amount of tool work — about 13 to 14 tool calls on average — yet Claude CLI spread that work across roughly 16 model requests while Copilot CLI used about 4 or 5. More round-trips means the large stable prefix is processed more often, which is one reason the same task cost about 2.8× more on Claude CLI ($0.36 vs $0.13 token-normalized per run) even though the model was identical.
 
 <!--
-EXPERIMENT TODO: INSERT ARTICLE 1 AGGREGATES
+METRIC DEFINITION — Article-1 40-run aggregates (gap #3, RESOLVED)
 
-Use the final 40-run ledger values.
+Source: docs/content-lab/data/db/runs.jsonl (the run ledger), task=explain-repo,
+conditions BARE + TRIM, harnesses CO-CLI and CL-CLI, MCP off,
+claude-sonnet-4-5-20250929. n = 40 runs total (20 per harness, 10 BARE + 10 TRIM).
+Arithmetic means:
 
-Record:
+- Copilot CLI: requests 4.50, tool_calls 13.90, cost_usd $0.1299.
+- Claude CLI:  requests 16.40, tool_calls 12.90, cost_usd $0.3594.
+- Cost ratio CL/CO = 2.77x (~2.8x).
 
-- experiment ID
-- number of runs included
-- conditions included in the aggregate
-- arithmetic mean
-- median, if useful
-- exclusions, if any
-- whether tool-call counting is normalized identically across harnesses
-
-Keep this section brief.
-
-Do not repeat the full Article 1 benchmark or present the result as universal
-behavior. State that it was observed for this read-heavy task, repository,
-model, and configuration.
+requests 4.5 / 16.4 match Article 1's published "Avg requests" column exactly
+(one-run-cant-rank-two-agents.md). Tool-call counts are normalized identically
+across harnesses in the ledger (main-agent tool calls; same task and rubric).
+This was observed for THIS read-heavy task, repository, model, and configuration
+— not presented as universal behavior. Do not repeat the full Article 1 benchmark.
 -->
 
 That difference did not come from the model weights. The model snapshot was held constant.

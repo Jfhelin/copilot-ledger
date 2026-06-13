@@ -111,6 +111,27 @@ provenance comment. Figure `tool-catalog-size.svg` already carries ~8.1k/19 and 
 verified, no regen needed. Kept neutral on delivery mechanism (flat/virtualized/progressive →
 Article 3).
 
+## ✅ RESOLVED — Article-1 40-run aggregates (gap #3)
+
+**Source:** `docs/content-lab/data/db/runs.jsonl`, task `explain-repo`, conditions BARE+TRIM,
+harnesses CO-CLI & CL-CLI, MCP off, `claude-sonnet-4-5-20250929`. **n = 40** (20/harness:
+10 BARE + 10 TRIM). Arithmetic means:
+
+| Harness | Mean requests | Mean tool calls | Mean cost |
+|---|---:|---:|---:|
+| Copilot CLI | 4.50 | 13.90 | $0.1299 |
+| Claude CLI | 16.40 | 12.90 | $0.3594 |
+
+- **Cost ratio CL/CO = 2.77× (~2.8×).** Requests 4.5 / 16.4 **match Article 1's published
+  "Avg requests" exactly** (`one-run-cant-rank-two-agents.md` line 229–230) → cross-article
+  consistency confirmed. Tool calls (13.9 vs 12.9) back the "broadly similar tool work, very
+  different request counts" framing.
+- **Non-conflict checked:** Article 1's "21.0 / 20.4" column is **Quality avg**, not tool
+  calls — so Article 2's tool-call means do not contradict Article 1.
+- **Article changes:** filled the mean-requests/tool-calls table; replaced the
+  `EXPERIMENT TODO: INSERT ARTICLE 1 AGGREGATES` with prose (adds the 2.8× cost tie-in) + a
+  `METRIC DEFINITION` provenance comment. Scoped to this task/repo/model/config; not universal.
+
 ## ✅ Known inconsistency — RESOLVED (was top priority)
 
 > Resolved by the block above. Final first-call footprints are exact: CO-CLI 16,200 ·
