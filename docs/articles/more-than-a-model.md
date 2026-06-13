@@ -90,15 +90,25 @@ Same kind of task.
 About a 1.3x difference in the size of what the model sees before it even starts answering — and the composition differs far more than the totals.
 
 <figure>
-  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart of the turn-0 prefix in billed tokens for three harnesses on the same model (Claude Sonnet 4.5, MCP off). Copilot CLI totals about 16,200 tokens, Claude CLI about 18,130, and Copilot in VS Code about 20,600. Tool definitions are the largest component everywhere — about 56 percent of the Copilot CLI prefix and 49 percent of the VS Code prefix. All three use the same Anthropic tokenizer and are directly comparable; the spread is about 1.27 times.">
+  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart of the turn-0 prefix in billed tokens for three harnesses on the same model (Claude Sonnet 4.5, MCP off). Copilot CLI totals about 16,200 tokens, Claude CLI about 18,130, and Copilot in VS Code about 20,600. Tool definitions are the largest component everywhere — about 56 percent of the Copilot CLI prefix, 52 percent of the Claude CLI prefix, and 48 percent of the VS Code prefix. All three use the same Anthropic tokenizer and are directly comparable; the spread is about 1.27 times.">
   <figcaption>The turn-0 payload, MCP off: the model was the same, but the pre-reasoning prefix ranged from about 16k to 21k tokens — a 1.27x spread on the same Anthropic meter. Tool definitions dominate every bar. This is roughly the starting point; real usage only adds to it.</figcaption>
 </figure>
+
+Here is how those floors divide. The totals are exact billed tokens; the per-section split is attributed with a single tokenizer, so read the shares as approximate.
+
+| Harness | System | Tool defs | Prompt + env | Billed total |
+|---|---:|---:|---:|---:|
+| Copilot CLI | ~7.0k (43%) | ~9.0k (56%) | ~0.2k (1%) | 16,200 |
+| Claude CLI | ~7.0k (39%) | ~9.5k (52%) | ~1.6k (9%) | 18,130 |
+| Copilot in VS Code | ~8.3k (40%) | ~10.0k (48%) | ~2.3k (11%) | 20,598 |
+
+Tool definitions are the single largest component everywhere — roughly half of everything the model sees before it reasons. (Claude CLI's tool-definition figure is the subset it actually sends upfront — about 8 core tools — because it defers the rest of its catalog and loads it on demand; measured flat, its full catalog is much larger, which is why it can carry 27 tools yet still start near 18k.)
 
 That difference came mostly from harness choices: system prompt size, tool catalog verbosity, IDE context, and how much extra environment information is injected.
 
 These three numbers are the floor — what each harness loads with MCP off, no memory file, and no user-added skills. It is the most portable number I can give you, because everything above it depends on your machine.
 
-And there is a lot that sits above it. The biggest variable, the tool catalog, is partly out of the harness's hands. In an IDE especially, installed extensions add their own tools. The Copilot-in-VS-Code session I captured actually measured about 21k tokens across 56 tools — but 18 of those came from notebook and browser extensions, not from Copilot itself. Strip those extension tools and Copilot's own floor in VS Code is roughly 17k (an estimate — that exact configuration was not separately billed). Turn MCP on instead and that same harness jumped to about 46k tokens across 95 tools. Add a memory file or a few skills and it grows again.
+And there is a lot that sits above it. The biggest variable is the tool catalog — and in an IDE it also reflects your installed extensions. The Copilot-in-VS-Code session I captured measured about 20.6k billed tokens across a 56-tool catalog, though most of that catalog never ships as full schemas on the first call (the harness sends a core set and loads the rest on demand — more on that under Tools below). Turn MCP on instead and that same harness jumped to about 46k tokens across 95 tools. Add a memory file or a few skills and it grows again.
 
 So the portable, harness-controlled part is really the floor: the system prompt plus the built-in tool set, with MCP off and no extra extensions or skills. Everything above that floor is your environment. The exact number on your machine will differ from mine — which is the whole point.
 
@@ -196,21 +206,21 @@ They read files, search directories, run commands, edit code, create plans, call
 
 The tool catalog is the list of tools the model can see and call.
 
-In the captures, counting each harness's built-in tools (MCP off, no extensions), the catalogs differed quite a bit.
+In the captures, the enabled tool catalogs differed quite a bit (MCP off):
 
 ```text
 Copilot CLI:            19 tools
 Claude CLI:             27 tools
-Copilot in VS Code:    ~38 tools
+Copilot in VS Code:     56 tools
 ```
 
-These are built-in floors. The Copilot-in-VS-Code session I captured actually exposed 56 tools, but 18 of those came from installed extensions (notebook and browser), not from Copilot — so the portable number is ~38. MCP and extensions only ever add on top.
+But the enabled count is not the whole story, because not every tool is sent to the model as a full schema. Copilot CLI sends all 19. Copilot in VS Code and Claude CLI send only a core subset as full definitions and list the rest by name, loading them on demand when the model asks — a technique sometimes called tool virtualization. On the first call, VS Code sent 23 of its 56 tools in full; Claude CLI sent around 8 of its 27. An IDE's catalog also reflects your installed extensions, so the exact number on your machine will differ.
 
 The difference was not only the number of tools.
 
 It was also how they were described.
 
-Claude CLI’s tool catalog was much more verbose than Copilot CLI’s. The tool definitions were around 18.9k tokens for Claude CLI versus around 8.1k tokens for Copilot CLI.
+Claude CLI’s tool catalog was much more verbose than Copilot CLI’s. The tool definitions were around 18.9k tokens for Claude CLI versus around 8.1k tokens for Copilot CLI. That 18.9k measures the full catalog flat; because Claude CLI defers most of its tools and loads them on demand, only a fraction ships on any one call — which is why its actual first-call prefix stays around 18k rather than ballooning to match the catalog.
 
 <figure>
   <img src="./figures/harnesses/tool-catalog-size.svg" alt="Horizontal bar chart of tool catalog size: Copilot CLI about 8.1k tokens across 19 tools, Claude CLI about 18.9k tokens across 27 tools.">
@@ -430,7 +440,7 @@ In the CLI runs, the shape was very different.
 | LLM requests | 7 | 19 |
 | Tool calls | 19 | 16 |
 | Tool catalog size | ~8.1k tokens | ~18.9k tokens |
-| System prompt size | ~6.7k tokens | ~7.0k tokens |
+| System prompt size | ~7.0k tokens | ~7.0k tokens |
 | Cache hit rate | 87.2% | 90.2% |
 | Cost | $0.163 exact | modelled estimate |
 
@@ -454,14 +464,14 @@ An IDE is not just a CLI inside a window.
 
 It can add workspace context, repository state, editor state, instructions, skills, MCP tools, and product-specific agent behavior.
 
-The built-in floor for Copilot in VS Code sits only a little above the Copilot CLI:
+The Copilot-in-VS-Code floor I captured sits somewhat above the Copilot CLI:
 
 ```text
 Copilot CLI:        ~16k tokens
-Copilot in VS Code: ~17k tokens
+Copilot in VS Code: ~21k tokens
 ```
 
-But the IDE is where the environment piles on. The Copilot-in-VS-Code session I captured measured about 21k tokens once a couple of installed extensions added their own tools — that is the VS Code bar in the chart above — and jumped to about 46k with MCP enabled, far above the CLI floor on the identical harness and model.
+But the IDE is where the environment piles on. That same harness jumped to about 46k tokens with MCP enabled — far above the CLI floor on the identical harness and model. Installed extensions and loaded skills add their own tools on top of the floor, so the exact number on your machine will be higher still.
 
 That does not mean the IDE is worse.
 
