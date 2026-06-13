@@ -1,0 +1,1 @@
+Add an optional `notes` text field to the Branch entity. It should be persisted in the database, accepted when creating or updating a branch through the API, and included in branch API responses. Make the minimal changes needed and make sure the existing API tests still pass.

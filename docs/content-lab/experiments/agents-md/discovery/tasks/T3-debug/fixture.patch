@@ -1,0 +1,13 @@
+diff --git a/api/src/routes/branch.ts b/api/src/routes/branch.ts
+index b1ffdcc..5e75cfa 100644
+--- a/api/src/routes/branch.ts
++++ b/api/src/routes/branch.ts
+@@ -111,7 +111,7 @@ router.post('/', async (req, res, next) => {
+   try {
+     const repo = await getBranchesRepository();
+     const newBranch = await repo.create(req.body as Omit<Branch, 'branchId'>);
+-    res.status(201).json(newBranch);
++    res.status(200).json(newBranch);
+   } catch (error) {
+     next(error);
+   }

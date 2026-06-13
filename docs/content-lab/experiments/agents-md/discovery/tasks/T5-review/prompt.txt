@@ -1,0 +1,1 @@
+Review the Branch API route handler (`api/src/routes/branch.ts`) and its backing repository for correctness, error handling, input validation, and adherence to the conventions used elsewhere in this codebase. Produce a concrete list of defects or risks — each with the file, the location, why it is a problem, and a suggested fix. Do not change any code.
