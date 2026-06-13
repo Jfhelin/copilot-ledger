@@ -118,9 +118,9 @@ table as **order-of-magnitude shape**, not a precise head-to-head.
 
 | Environment | First-call context footprint | Measurement source |
 |---|---:|---|
-| Copilot CLI | **~14,877 tokens** | `structural-prefix/copilot/digest.json` (wire body, chars/4) |
-| Claude CLI | **~27,217 tokens** | `structural-prefix/claude/digest.json` (relay body, chars/4) |
-| Copilot in VS Code | **20,598 tokens** | `co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json` (export `prompt_tokens`) |
+| Copilot CLI | **~14.9k tokens** | `structural-prefix/copilot/digest.json` (wire body, chars/4) |
+| Claude CLI | **~27.2k tokens** | `structural-prefix/claude/digest.json` (relay body, chars/4) |
+| Copilot in VS Code | **20.6k tokens** | `co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json` (export `prompt_tokens`) |
 
 <figure>
   <img
@@ -163,22 +163,22 @@ is not separately measurable in that capture.
 
 | Environment | System | Tools | Environment | Skills | User message + history | Total |
 |---|---:|---:|---:|---:|---:|---:|
-| Copilot CLI | 6,657 | 8,064 | <150 (in system) | 0 (loaded on demand) | 156 | ~14,877 |
-| Claude CLI | 7,015 | 18,877 | ~300 (in first msg) | ~1,094 (in first msg) | 1,325 | ~27,217 |
-| Copilot in VS Code | — (not separable in export) | ~9,200 (23 of 56 sent; 33 deferred) | — | ~3,314 — 16 skills + 8 agents folded into system (mostly repo/installed-ext) | — | 20,598 (API total) |
+| Copilot CLI | 6.7k | 8.1k | <150 (in system) | 0 (loaded on demand) | 156 | ~14.9k |
+| Claude CLI | 7.0k | 18.9k | ~300 (in first msg) | ~1.1k (in first msg) | 1.3k | ~27.2k |
+| Copilot in VS Code | — (not separable in export) | ~9.2k (23 of 56 sent; 33 deferred) | — | ~3.3k — 16 skills + 8 agents folded into system (mostly repo/installed-ext) | — | 20.6k (API total) |
 
 For the two CLI surfaces the split is read directly from the request body. For
-Copilot in VS Code the export gives the **total** (`prompt_tokens` = 20,598) and the
+Copilot in VS Code the export gives the **total** (`prompt_tokens` = 20.6k) and the
 tools array, but folds system instructions, skills, and workspace context into one
 opaque block, so those rows are left unattributed rather than guessed.
 
 > Note on the Copilot-in-VS-Code tool block: all 56 tools are **native to VS Code** —
 > there is no MCP and no third-party extension surface in this capture. But the harness
 > does **not** send all 56 on the first request. Each tool object carries a
-> `defer_loading` flag: **23 tools ship on the wire at turn 1** (~9,200 tokens by
-> `chars / 4`; 10,052 by the exact Anthropic tokenizer) and the remaining **33 are
-> deferred** (~7,000 tokens) and pulled in only when the agent calls the built-in
-> `tool_search` tool. So the 56-tool catalog *would* be ~16,600 tokens if sent flat,
+> `defer_loading` flag: **23 tools ship on the wire at turn 1** (~9.2k tokens by
+> `chars / 4`; 10.1k by the exact Anthropic tokenizer) and the remaining **33 are
+> deferred** (~7.0k tokens) and pulled in only when the agent calls the built-in
+> `tool_search` tool. So the 56-tool catalog *would* be ~16.6k tokens if sent flat,
 > but the actual first-call tool block is roughly half that. The full mechanism is
 > described in the next section.
 
@@ -194,7 +194,7 @@ opaque block, so those rows are left unattributed rather than guessed.
 
 In the captures collected here, the developer’s actual prompt was a very small part of the request — on the order of tens of tokens against a 15k–27k prefix.
 
-In both CLI captures the **single largest component was the tool definitions**: 54.2% of the Copilot CLI prefix and 69.4% of the Claude CLI prefix, since both CLIs send their whole catalog flat. Copilot in VS Code behaves differently — it sends only 23 of its 56 tools on the first request (~9,200 tokens, about 45% of its prefix) and defers the rest, so for that surface the folded system-and-context block is the larger share. System instructions were the next largest block on the two CLIs (roughly 6.7k–7.0k tokens). The user message and conversation history were the smallest measurable parts.
+In both CLI captures the **single largest component was the tool definitions**: 54.2% of the Copilot CLI prefix and 69.4% of the Claude CLI prefix, since both CLIs send their whole catalog flat. Copilot in VS Code behaves differently — it sends only 23 of its 56 tools on the first request (~9.2k tokens, about 45% of its prefix) and defers the rest, so for that surface the folded system-and-context block is the larger share. System instructions were the next largest block on the two CLIs (roughly 6.7k–7.0k tokens). The user message and conversation history were the smallest measurable parts.
 
 That observation changes how we should interpret prompt advice.
 
@@ -221,15 +221,15 @@ For every environment, the investigation should record:
 
 | Environment | Enabled tools | Full schemas on first request | Tool-definition tokens |
 |---|---:|---:|---:|
-| Copilot CLI | 19 | 19 / 19 (flat) | 8,064 |
-| Claude CLI | 27 | 27 / 27 (flat) | 18,877 |
-| Copilot in VS Code | 56 | 23 / 56 (33 deferred) | ~9,200 sent (catalog ~16,600 if flat) |
+| Copilot CLI | 19 | 19 / 19 (flat) | 8.1k |
+| Claude CLI | 27 | 27 / 27 (flat) | 18.9k |
+| Copilot in VS Code | 56 | 23 / 56 (33 deferred) | ~9.2k sent (catalog ~16.6k if flat) |
 
 Tool counts and full schemas are read directly from the request body for the two
 CLIs and from the export's `tools` array for Copilot in VS Code. The two CLIs send
 their entire catalog flat, so enabled tools and first-request schemas are the same
 number. Copilot in VS Code is different: it enables 56 tools but marks 33 of them
-`defer_loading`, sending only 23 full schemas (~9,200 tokens by `chars / 4`) on the
+`defer_loading`, sending only 23 full schemas (~9.2k tokens by `chars / 4`) on the
 first request — the mechanism is detailed two sections down. A more detailed
 description may help the model select the correct tool and construct valid arguments.
 
@@ -281,9 +281,9 @@ are *not* sent as full schemas on the first request; the model discovers and
 activates them by calling `tool_search` when a task needs them.
 
 This is genuine progressive disclosure, and it has a clear cost effect. The 23
-active schemas are ~9,200 tokens by `chars / 4` (10,052 by the exact Anthropic
-tokenizer); the full 56-tool catalog would be ~16,600 tokens if sent flat. Deferring
-33 tools keeps roughly 7,000 tokens out of the first request — paid for later, and
+active schemas are ~9.2k tokens by `chars / 4` (10.1k by the exact Anthropic
+tokenizer); the full 56-tool catalog would be ~16.6k tokens if sent flat. Deferring
+33 tools keeps roughly 7.0k tokens out of the first request — paid for later, and
 only if those tools are actually needed.
 
 The pattern reproduces across both agent-mode captures (`CO-IDE_agent_sonnet_MCPoff`
@@ -352,7 +352,7 @@ Do not attribute all additional IDE context to the harness itself. Some of it co
 In the Copilot-in-VS-Code capture (the one IDE surface in this article), all 56 tools
 are **native to VS Code** — there is no MCP server and no third-party tool surface in
 this run. The attribution point here is about *delivery*, not vendor: of those 56
-native tools, only **23 are sent on the first request** (~9,200 tokens by `chars / 4`)
+native tools, only **23 are sent on the first request** (~9.2k tokens by `chars / 4`)
 and **33 are deferred** behind `tool_search`. So the first-call "IDE footprint" is
 roughly half the full catalog — the rest is real capability the agent can reach, but
 it is not paid for until used.
@@ -433,10 +433,10 @@ In these baselines, skills and memory behaved differently across the three envir
 - **Copilot CLI** carried **zero skill blocks** in the prefix. It exposes a `skill`
   tool (~741 tokens) that loads skill content on demand, so skills cost almost
   nothing until invoked.
-- **Claude CLI** preloaded a **13-skill catalog** (~1,094 tokens) into the first user
+- **Claude CLI** preloaded a **13-skill catalog** (~1.1k tokens) into the first user
   message — names and short descriptions, not full bodies. The full skill text is
   retrieved only when a skill runs.
-- **Copilot in VS Code** folded a **16-skill + 8-agent catalog** (~3,314 tokens of
+- **Copilot in VS Code** folded a **16-skill + 8-agent catalog** (~3.3k tokens of
   descriptions) into the system prompt, counted inside the opaque system block rather
   than itemized. Their `<file>` paths show the origin: only 6 are Copilot built-ins —
   **9 come from the workspace repo's `.github/` (skills + sub-agents) and 8 from
@@ -504,9 +504,9 @@ For every baseline capture, report:
 
 | Environment | Logical footprint | Cache creation | Cache read | Uncached input |
 |---|---:|---:|---:|---:|
-| Copilot CLI | ~14,877 (shape) | not captured (shape digest) | not captured | not captured |
-| Claude CLI | ~27,217 (shape) | not captured (relay digest) | not captured | not captured |
-| Copilot in VS Code | 20,598 (API `prompt_tokens`) | — | 9,745 (warm capture) | 10,853 |
+| Copilot CLI | ~14.9k (shape) | not captured (shape digest) | not captured | not captured |
+| Claude CLI | ~27.2k (shape) | not captured (relay digest) | not captured | not captured |
+| Copilot in VS Code | 20.6k (API `prompt_tokens`) | — | 9.7k (warm capture) | 10.9k |
 
 The cache picture is **partially observable** and the honest answer differs by source:
 
@@ -514,17 +514,17 @@ The cache picture is **partially observable** and the honest answer differs by s
   request body) and **do not carry the response `usage` cache fields**, so cache
   creation / read / uncached are not available for them here.
 - The Copilot-in-VS-Code export *does* carry `prompt_tokens_details`. The MCP-off
-  capture reports `prompt_tokens` = 20,598 with `cached_tokens` = 9,745 — but it was
+  capture reports `prompt_tokens` = 20.6k with `cached_tokens` = 9.7k — but it was
   taken **warm** (after a warm-up turn), so that cache read reflects reuse, not a cold
   first call. A separate MCP-on capture taken cold (`cached_tokens` = 0) reported
-  46,428 tokens, confirming the prefix is real input even when later reads are cheap.
+  46.4k tokens, confirming the prefix is real input even when later reads are cheap.
 
 This is exactly why a first user-visible request is not always a cold request.
 
 <figure>
   <img
     src="./figures/context-footprint/cache-categories.svg"
-    alt="Cache categories per capture: the two CLI digests show only a logical-footprint block (cache fields not captured); the warm Copilot-in-VS-Code call splits 20,598 into 9,745 cache read plus 10,853 uncached; a cold MCP-on call bills all 46,428 as input."
+    alt="Cache categories per capture: the two CLI digests show only a logical-footprint block (cache fields not captured); the warm Copilot-in-VS-Code call splits 20.6k into 9.7k cache read plus 10.9k uncached; a cold MCP-on call bills all 46.4k as input."
   >
   <figcaption>
     Cache reuse changes price, not context size. A cached prefix still occupies the same room in the model's window.
@@ -556,13 +556,13 @@ Nominal model context limit
 
 The result is only approximate because products may reserve output tokens, use hidden reasoning budgets, compact history, or apply limits below the model’s theoretical maximum.
 
-Still, it is useful to show the order of magnitude. All three environments run Claude Sonnet 4.5, whose nominal context window is **200,000 tokens**.
+Still, it is useful to show the order of magnitude. All three environments run Claude Sonnet 4.5, whose nominal context window is **200k tokens**.
 
 | Environment | Model context limit | First-call footprint | % of window consumed | Approximate room remaining |
 |---|---:|---:|---:|---:|
-| Copilot CLI | 200,000 | ~14,877 | ~7.4% | ~185,000 |
-| Claude CLI | 200,000 | ~27,217 | ~13.6% | ~173,000 |
-| Copilot in VS Code | 200,000 | 20,598 | ~10.3% | ~179,000 |
+| Copilot CLI | 200k | ~14.9k | ~7.4% | ~185k |
+| Claude CLI | 200k | ~27.2k | ~13.6% | ~173k |
+| Copilot in VS Code | 200k | 20.6k | ~10.3% | ~179k |
 
 These "room remaining" figures intentionally ignore output and reasoning
 reservations, which are **not reliably documented per harness** in these captures.
@@ -625,12 +625,12 @@ The most useful report shows both:
 
 | Environment | Baseline floor (MCP off) | Configured footprint | Added capabilities |
 |---|---:|---:|---|
-| Copilot CLI | ~14,877 | not captured in this set | — |
-| Claude CLI | ~27,217 | not captured in this set | one small MCP server added +14 tools / ~1,876 tok in a separate probe |
-| Copilot in VS Code | 20,598 | 46,428 (cold, MCP on) | +39 `mcp__bicep/github/pylance` tools → 95 flat tools total |
+| Copilot CLI | ~14.9k | not captured in this set | — |
+| Claude CLI | ~27.2k | not captured in this set | one small MCP server added +14 tools / ~1.9k tok in a separate probe |
+| Copilot in VS Code | 20.6k | 46.4k (cold, MCP on) | +39 `mcp__bicep/github/pylance` tools → 95 flat tools total |
 
 Only one environment here has a clean, matched configured snapshot: turning MCP on in
-Copilot in VS Code more than doubled the prefix (20,598 → 46,428) by adding 39 MCP
+Copilot in VS Code more than doubled the prefix (20.6k → 46.4k) by adding 39 MCP
 tools to the flat catalog. That is not "the product got heavier" — it is **the
 developer's configuration** piling onto the product floor. The CLI configured cells
 are left blank rather than filled with a value captured under different conditions.
