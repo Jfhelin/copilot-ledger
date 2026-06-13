@@ -104,7 +104,7 @@ Even under those conditions, the harnesses did not start from the same place.
 |---|---:|
 | Copilot CLI | **~16.2k tokens** |
 | Claude CLI | **~29.5k tokens** |
-| Copilot coding agent in VS Code | **~20.6k tokens** |
+| Copilot coding agent in VS Code | **~18.5k tokens** |
 
 The footprint is the total context the model reads on the first request, measured the same way for all three. It reflects size, not cost — caching changes the price, not how much the model has to read.
 
@@ -120,6 +120,7 @@ Copilot CLI = 16,200  (uncached 10 + cache-read 9,071 + cache-creation 7,119)
   source: structural-prefix/copilot/logs/process-1781029040975-75037.log (first response input_tokens), 19 native tools
 Copilot coding agent in VS Code = 20,598  (uncached 9 + cache-read 9,745 + cache-creation 10,844)
   source: co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json, prompt#0 first ChatMLSuccess usage.prompt_tokens, 56 native tools
+  Reader-facing footprint = ~18,500 product-floor projection: measured 20,598 − ~2,000 environment-driven skills (repo .github + installed-extension + user config), keeping only the ~1,200 built-in skill floor (5 bundled skills + Explore agent, chars/4). The ~2,000 is environment-specific, not a Copilot default; see harness-data-FINAL §1.3.
 Claude CLI = 29,453  (uncached 10 + cache-creation 8,179 + cache-read 21,264)
   source: ~/.claude/projects/-private-tmp-octocat-supply-ak/137badef-…​.jsonl, first assistant message.usage, 27 native tools
 
@@ -141,8 +142,6 @@ footprint total is invariant to warm/cold; only billing differs.
 The precise totals matter, but the more important finding is structural: the developer’s prompt was only a small part of each request.
 
 System instructions and tool definitions accounted for much of the initial context. The IDE also supplied environment and workspace information that was not present in the same form in the CLI environments.
-
-Part of the VS Code footprint came from a source worth naming: the IDE preloaded skill and sub-agent definitions that mostly originated from the workspace repository’s own `.github` configuration and from extensions installed on the machine — not from a Copilot product default. Of the roughly 3.3k-token skill block, only ~1.2k tokens were genuine Copilot built-ins — five bundled skills plus the Explore sub-agent — and the remaining ~2.0k came from the repository and from installed extensions. The two CLI baselines carried no equivalent. That is itself a harness decision: VS Code loads every available skill and agent body into the first request regardless of where it came from, while the CLIs advertise them on demand. The footprint difference is partly the harness choosing to preload configuration the other harnesses left out.
 
 A smaller footprint is not automatically better. It can mean less fixed overhead and more room for the task, but it can also mean less guidance and less environment awareness.
 
