@@ -29,21 +29,23 @@ if [ "$SKIP" -eq 0 ]; then
 fi
 
 # Read schedule order as: seq<TAB>task<TAB>condition<TAB>rep
-mapfile -t ROWS < <(node -e '
+# (portable: macOS ships bash 3.2 which lacks `mapfile`)
+SCHED_TSV="$(mktemp)"
+node -e '
   const s=require(process.argv[1]);
   for (const o of s.order) console.log([o.seq,o.task,o.condition,o.rep].join("\t"));
-' "$SCHED")
+' "$SCHED" > "$SCHED_TSV"
 
-TOTAL=${#ROWS[@]}
+TOTAL=$(wc -l < "$SCHED_TSV" | tr -d ' ')
 echo "=== Phase 5 start $(date) — $TOTAL rows, skipping $SKIP, seed=$(node -e 'console.log(require(process.argv[1]).seed)' "$SCHED") ==="
 
 i=0
-for row in "${ROWS[@]}"; do
+while IFS=$'\t' read -r seq task cond rep; do
   i=$((i+1))
   [ "$i" -le "$SKIP" ] && continue
-  IFS=$'\t' read -r seq task cond rep <<< "$row"
   echo "----- [$i/$TOTAL] seq=$seq $task $cond rep=$rep -----"
   PHASE=evaluation bash "$RUNNER_DIR/run.sh" "$task" "$cond" "$rep"
-done
+done < "$SCHED_TSV"
 
+rm -f "$SCHED_TSV"
 echo "=== Phase 5 complete $(date) — master rows: $(wc -l < "$MASTER") ==="
