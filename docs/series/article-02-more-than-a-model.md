@@ -111,6 +111,32 @@ provenance comment. Figure `tool-catalog-size.svg` already carries ~8.1k/19 and 
 verified, no regen needed. Kept neutral on delivery mechanism (flat/virtualized/progressive →
 Article 3).
 
+## ✅ VERIFIED — MCP delta + autonomy wording; MCP figure created
+
+**MCP delta (+14 tools / +1,876 tokens) — VERIFIED.** Source:
+`docs/content-lab/data/harness-data-FINAL.md` §1.6. CL-CLI, same repo+prompt, one
+`@modelcontextprotocol/server-filesystem` (14 tools) toggled off→on: OFF 28 tools / 21,071
+tool-def tok → ON 42 tools / 22,947 → **+14 / +1,876** (relay wire capture, High). The
++1,876 = tool-DEFINITION (schema) token delta, not API-reported input. Article reports only
+the delta, so the OFF=28 here does not conflict with the 27-tool structural-digest session
+(gap #2). Replaced the `VERIFY THE MCP DELTA` TODO with a provenance comment.
+
+**Autonomy wording — VERIFIED.** Source: `system-prompt-comparison.md` (+ `system-prompts/
+{copilot-cli,claude-cli}.txt`). CO-CLI = "non-interactive mode… proceed autonomously"; CL-CLI
+= "executing actions with care… check with the user before proceeding." Article paraphrases
+(no proprietary quote) — supported. Replaced the `VERIFY AUTONOMY WORDING` TODO with a
+provenance comment.
+
+**Missing figure created:** `docs/articles/figures/harnesses/mcp-delta-callout.svg` (was
+⚪ planned, referenced at article line ~330 → would have been a broken image). Two-stat
+callout (+14 tools / +1,876 prefix tokens), GitHub palette, role=img + title/desc, validated
+well-formed XML; build copies it to `dist/` and the page references it.
+
+**Remaining TODO comments are optional guardrails, not data gaps:** `OPTIONAL SUPPORTING
+EXAMPLE` (line ~390, explicitly "do not delay Article 2") and `DO NOT OVERSTATE COMPACTION`
+(line ~568, satisfied — section stays conceptual, claims no specific compaction event). Both
+are invisible HTML comments; left in place.
+
 ## ✅ RESOLVED — cache-read rate (gap #4)
 
 **Formula (one, applied to both):** `cache_read / (uncached_input + cache_read +
@@ -199,8 +225,9 @@ to it.)
 ## Visuals
 
 Have: `agent-is-more-than-model.svg`, `prefix-size-comparison.svg`,
-`model-provider-vs-harness-control.svg`, `tool-catalog-size.svg`.
-⚪ **Missing but planned:** `mcp-delta-callout.svg` (visualize +14 tools / +1,876 tokens).
+`model-provider-vs-harness-control.svg`, `tool-catalog-size.svg`,
+`mcp-delta-callout.svg`.
+✅ **Created:** `mcp-delta-callout.svg` (+14 tools / +1,876 prefix tokens).
 
 ## Required evidence checklist (from plan)
 
@@ -220,5 +247,5 @@ does not establish quality difference.
 - [ ] Add Claude cost number (with label) to the worked-example table.
 - [ ] Sharpen hook/ending; add `readNext`.
 - [ ] Decide fate of `what-actually-differs` stub.
-- [ ] Build `mcp-delta-callout.svg` (optional).
+- [x] Build `mcp-delta-callout.svg` (optional).
 - [ ] Add the glossary + explicit evidence labels if not yet present.

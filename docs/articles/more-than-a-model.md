@@ -178,18 +178,19 @@ In the captured prompts, Copilot CLI and Claude CLI gave the same model differen
 Copilot CLI used instructions that favored autonomous, non-interactive progress. Claude CLI included more explicit guidance around confirming irreversible operations.
 
 <!--
-EXPERIMENT TODO: VERIFY AUTONOMY WORDING
+VERIFIED — autonomy wording (gap: VERIFY AUTONOMY WORDING, RESOLVED)
 
-Confirm the exact system-prompt language used in both captures.
-
-Do not quote more than a short phrase from proprietary prompts in the published article.
-
-Record:
-
-- prompt source
-- product version
-- relevant instruction category
-- whether the instruction applies globally or only to the captured mode
+Source: docs/content-lab/data/system-prompt-comparison.md (captured system
+prompts in docs/content-lab/data/system-prompts/{copilot-cli,claude-cli}.txt),
+same repo (octocat_supply) and Sonnet snapshot; system-prompt structure is a
+harness choice, model-agnostic.
+- Copilot CLI: autonomy posture = "running in non-interactive mode... Do not
+  stop to ask... proceed autonomously."
+- Claude CLI: "# Executing actions with care... check with the user before
+  proceeding... authorization stands for the scope specified."
+The article PARAPHRASES (no proprietary text quoted), which the source supports.
+Instruction category: autonomy / confirmation posture. Applies to the captured
+default CLI mode. Do not quote more than a short phrase from proprietary prompts.
 -->
 
 Neither choice is universally correct.
@@ -308,21 +309,22 @@ In one controlled Claude CLI capture, enabling a single filesystem MCP server ad
 ```
 
 <!--
-EXPERIMENT TODO: VERIFY THE MCP DELTA
+VERIFIED — MCP delta (gap: VERIFY THE MCP DELTA, RESOLVED)
 
-Confirm:
-
-- Claude CLI version
-- model snapshot
-- MCP server name and version
-- exact server configuration
-- MCP-off tool count
-- MCP-on tool count
-- MCP-off first-call metric
-- MCP-on first-call metric
-- whether 1,876 represents logical schema tokens, serialized request tokens,
-  API-reported input tokens, or another measurement
-- whether any dynamic tool or prompt content also changed
+Source: docs/content-lab/data/harness-data-FINAL.md section 1.6 (within-harness
+ON vs OFF, newly measured). Claude CLI (CL-CLI), same repo and prompt, one small
+filesystem MCP server toggled off->on to isolate the MCP effect:
+- Server: @modelcontextprotocol/server-filesystem (14 tools).
+- OFF: 28 tools / 21,071 tool-definition tokens.
+- ON:  42 tools / 22,947 tool-definition tokens.
+- Delta: +14 tools, +1,876 tokens. Evidence: relay wire capture (High confidence).
+The +1,876 is the tool-DEFINITION (schema) token delta from the wire capture
+(22,947 - 21,071), i.e. logical schema tokens, NOT API-reported input tokens.
+Reading: a flat catalog grows linearly — one server adds exactly its tool count.
+MCP load is a config/deployment choice, not a harness-architecture difference.
+(The absolute OFF count here, 28, is a separate on/off re-run, distinct from the
+27-tool structural-digest session used for the tool-catalog table; the article
+reports only the DELTA in this section, so the two do not conflict.)
 -->
 
 <figure>
