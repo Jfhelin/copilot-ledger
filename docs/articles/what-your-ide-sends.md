@@ -165,7 +165,7 @@ is not separately measurable in that capture.
 |---|---:|---:|---:|---:|---:|---:|
 | Copilot CLI | 6,657 | 8,064 | <150 (in system) | 0 (loaded on demand) | 156 | ~14,877 |
 | Claude CLI | 7,015 | 18,877 | ~300 (in first msg) | ~1,094 (in first msg) | 1,325 | ~27,217 |
-| Copilot in VS Code | — (not separable in export) | ~16,622 (tools array, chars/4) | — | ~37 skills folded into system | — | 20,598 (API total) |
+| Copilot in VS Code | — (not separable in export) | ~16,622 (tools array, chars/4) | — | ~3,314 — 16 skills + 8 agents folded into system (mostly repo/installed-ext) | — | 20,598 (API total) |
 
 For the two CLI surfaces the split is read directly from the request body. For
 Copilot in VS Code the export gives the **total** (`prompt_tokens` = 20,598) and the
@@ -338,7 +338,7 @@ the "IDE footprint" is *user-installed extension surface*, not a product default
 |---|---|
 | Core Copilot tool schemas (38) | Product default |
 | Notebook + browser extension tools (18) | User-configured (installed extensions) |
-| System instructions + skill catalog (~37 skills) | Product default (folded into system) |
+| System instructions + skill/agent catalog (16 skills + 8 agents) | Mostly repo `.github` + installed extensions (folded into system) |
 | Git branch / status, workspace metadata | Workspace-derived |
 | `prompt_tokens` system-vs-context split | Not observable from the export |
 
@@ -413,8 +413,12 @@ In these baselines, skills and memory behaved differently across the three envir
 - **Claude CLI** preloaded a **13-skill catalog** (~1,094 tokens) into the first user
   message — names and short descriptions, not full bodies. The full skill text is
   retrieved only when a skill runs.
-- **Copilot in VS Code** folded roughly **37 skills into the system prompt**; they are
-  counted inside the opaque system block rather than itemized separately.
+- **Copilot in VS Code** folded a **16-skill + 8-agent catalog** (~3,314 tokens of
+  descriptions) into the system prompt, counted inside the opaque system block rather
+  than itemized. Their `<file>` paths show the origin: only 6 are Copilot built-ins —
+  **9 come from the workspace repo's `.github/` (skills + sub-agents) and 8 from
+  user-installed extensions**. So most of this segment is repository and user config the
+  IDE preloads, not a product default.
 
 None of the three baselines had a repository instruction file (`AGENTS.md`,
 `CLAUDE.md`, or Copilot instructions) or project memory active, by design — those are
