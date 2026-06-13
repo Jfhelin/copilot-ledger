@@ -102,9 +102,9 @@ Even under those conditions, the harnesses did not start from the same place.
 
 | Harness | First-call context footprint |
 |---|---:|
-| Copilot CLI | **16,200 tokens** |
-| Claude CLI | **29,453 tokens** |
-| Copilot coding agent in VS Code | **20,598 tokens** |
+| Copilot CLI | **~16.2k tokens** |
+| Claude CLI | **~29.5k tokens** |
+| Copilot coding agent in VS Code | **~20.6k tokens** |
 
 The footprint is the total context the model reads on the first request, measured the same way for all three. It reflects size, not cost — caching changes the price, not how much the model has to read.
 
@@ -142,7 +142,7 @@ The precise totals matter, but the more important finding is structural: the dev
 
 System instructions and tool definitions accounted for much of the initial context. The IDE also supplied environment and workspace information that was not present in the same form in the CLI environments.
 
-Part of the VS Code footprint came from a source worth naming: the IDE preloaded skill and sub-agent definitions that mostly originated from the workspace repository’s own `.github` configuration and from extensions installed on the machine — not from a Copilot product default. The two CLI baselines carried no equivalent. That is itself a harness decision: VS Code loads every available skill and agent body into the first request regardless of where it came from, while the CLIs advertise them on demand. The footprint difference is partly the harness choosing to preload configuration the other harnesses left out.
+Part of the VS Code footprint came from a source worth naming: the IDE preloaded skill and sub-agent definitions that mostly originated from the workspace repository’s own `.github` configuration and from extensions installed on the machine — not from a Copilot product default. Of the roughly 3.3k-token skill block, only ~1.2k tokens were genuine Copilot built-ins — five bundled skills plus the Explore sub-agent — and the remaining ~2.0k came from the repository and from installed extensions. The two CLI baselines carried no equivalent. That is itself a harness decision: VS Code loads every available skill and agent body into the first request regardless of where it came from, while the CLIs advertise them on demand. The footprint difference is partly the harness choosing to preload configuration the other harnesses left out.
 
 A smaller footprint is not automatically better. It can mean less fixed overhead and more room for the task, but it can also mean less guidance and less environment awareness.
 
@@ -225,11 +225,11 @@ In the measured CLI captures, tool definitions occupied a substantial portion of
 
 | Harness | Available tools | Tool-definition footprint |
 |---|---:|---:|
-| Copilot CLI | **19** | **≈8,100 tokens** |
-| Claude CLI | **27** | **≈18,900 tokens** |
-| Copilot coding agent in VS Code | **56** (23 sent first call) | **≈9,200 tokens** |
+| Copilot CLI | **19** | **~8.1k tokens** |
+| Claude CLI | **27** | **~18.9k tokens** |
+| Copilot coding agent in VS Code | **56** (23 sent first call) | **~9.2k tokens** |
 
-The harnesses expose different numbers of tools, and they describe them at different lengths. Copilot CLI advertises 19 tools whose schemas occupy roughly 8,100 tokens; Claude CLI advertises 27 tools occupying roughly 18,900 tokens — more than twice the catalog, and about 69% of that harness's entire first-call context. Copilot in VS Code has the largest catalog — 56 native tools — but ships only 23 of them on the first request (≈9,200 tokens) and defers the other 33, loading their schemas on demand. So the harness with the most tools carries one of the *smallest* first-call tool blocks. These figures count only the tool definitions, separate from the system prompt and conversation. How each harness delivers those definitions on the wire — including VS Code's deferral — is examined in Article 3; here we only measure how much room they take.
+The harnesses expose different numbers of tools, and they describe them at different lengths. Copilot CLI advertises 19 tools whose schemas occupy roughly 8.1k tokens; Claude CLI advertises 27 tools occupying roughly 18.9k tokens — more than twice the catalog, and about 69% of that harness's entire first-call context. Copilot in VS Code has the largest catalog — 56 native tools — but ships only 23 of them on the first request (~9.2k tokens) and defers the other 33, loading their schemas on demand. So the harness with the most tools carries one of the *smallest* first-call tool blocks. These figures count only the tool definitions, separate from the system prompt and conversation. How each harness delivers those definitions on the wire — including VS Code's deferral — is examined in Article 3; here we only measure how much room they take.
 
 <!--
 METRIC DEFINITION — tool-definition footprint (gap #2, RESOLVED)
@@ -238,8 +238,9 @@ Tool-definition footprint = the approximate token size of the full tool-schema
 array advertised to the model on the first main-agent request (MCP off, fresh
 session, no optional tools/skills), measured by the structural chars/4 estimate.
 This is a structural SIZE estimate, distinct from the exact API-reported
-first-call totals in the prefix table above; chars/4 underestimates the exact
-Anthropic count by ~8-9%, so treat these as floors and report with "≈".
+first-call totals in the prefix table above; the exact Anthropic tokenizer packs
+~3.7 chars/token for this content, so chars/4 underestimates by ~8-9% — treat these
+as floors and report with "≈".
 
 Direct, from the structural-prefix digests:
 - Copilot CLI: toolCount 19, toolDefsApproxTokens 8,064 (54.2% of the 14,877

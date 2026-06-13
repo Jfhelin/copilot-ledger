@@ -17,7 +17,7 @@
   <text x="135" y="312" font-size="12" fill="#57606a" text-anchor="middle">Claude Sonnet 4.5</text>
 
   <!-- plus -->
-  <text x="252" y="298" font-size="30" font-weight="700" fill="#57606a" text-anchor="middle">+</text>
+  <text x="260" y="298" font-size="30" font-weight="700" fill="#57606a" text-anchor="middle">+</text>
 
   <!-- Harness choices cluster -->
   <text x="450" y="120" font-size="12" letter-spacing="0.12em" fill="#57606a" text-anchor="middle">HARNESS CHOICES</text>
@@ -58,7 +58,9 @@
   <text x="865" y="285" font-size="18" font-weight="700" fill="#1a7f37" text-anchor="middle">Agent</text>
   <text x="865" y="310" font-size="18" font-weight="700" fill="#1a7f37" text-anchor="middle">behavior</text>
 
-  <!-- connectors -->
-  <line x1="222" y1="290" x2="292" y2="290" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <line x1="622" y1="290" x2="772" y2="290" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- connectors (split to leave a clear gap around the + and = glyphs) -->
+  <line x1="222" y1="290" x2="244" y2="290" stroke="#57606a" stroke-width="1.5"/>
+  <line x1="276" y1="290" x2="292" y2="290" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="622" y1="290" x2="684" y2="290" stroke="#57606a" stroke-width="1.5"/>
+  <line x1="716" y1="290" x2="772" y2="290" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
 </svg>
