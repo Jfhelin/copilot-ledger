@@ -660,6 +660,8 @@ It cannot, by itself, tell us:
 - whether an IDE needs fewer later model calls
 - which product is best overall
 
+One caveat applies to the per-component split itself: the segments are not strictly apples-to-apples, because each harness places the same material differently. The Claude CLI accounts environment details and the skills inventory *inside* the first user turn, while the Copilot CLI and VS Code put that material in the system block. So Claude CLI's "first user request" segment looks large not because the user typed more, but because that turn carries harness-injected context the other two attribute elsewhere. Read the components as a structural breakdown, not a strict per-bucket comparison.
+
 Those questions require repeated tasks, quality scoring, and matched configurations.
 
 This article is intentionally not that benchmark.
