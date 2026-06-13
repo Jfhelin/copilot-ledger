@@ -123,6 +123,16 @@ repo/user config*, not a Copilot floor. The genuine harness signal is unchanged:
 the CLIs advertise on-demand. *(High confidence — per-skill `<file>` paths in the export
 + matched against `octocat_supply-psychic-disco/.github/skills` and `/.github/agents`.)*
 
+**Built-in floor vs environment (chars/4, Option A re-measure):** of the 24 preloaded
+items, the 6 product built-ins (5 bundled skills `project-setup-info-local`,
+`agent-customization`, `chronicle`, `troubleshoot`, `get-search-view-results` + the
+`Explore` agent) sum to ~1,000 tok of block body; the 18 repo/extension/user items sum to
+~1,700 tok. Scaled to the figure's 3,314-token skill segment that is **~1,200 built-in +
+~2,000 environment**. So VS Code's true skill *floor* is **~1,200 tokens, not 3,314**.
+*(chars/4 estimate; numbers held to ~100 precision. The 20,598 total is billed
+`prompt_tokens` and is unchanged — only a clean run, not subtraction, re-measures the
+total. All six built-ins resolve to `…/Visual Studio Code.app/…/extensions/copilot/assets/prompts/skills/`.)*
+
 **Also corrected earlier:** Claude carries **13 skills, not zero** *(High confidence —
 `skills.names` in digest + the first-user-message reminder).*
 
