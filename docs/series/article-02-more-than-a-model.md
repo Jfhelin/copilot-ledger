@@ -18,6 +18,26 @@
   order 6) — the earlier name, overlapping scope. Decide: retire, redirect, or repurpose.
   Do not accidentally edit the wrong file.
 
+## ✅ RESOLVED (2026-06-13) — VS Code skill-provenance correction
+
+Earlier notes (and `harness-data-FINAL.md §1.3`) claimed VS Code preloaded **"~37 skills,
+M365/Teams/SharePoint/Outlook, product default."** Verified wrong against the raw export
+(`co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json`). Actual first-call surface: **16 `<skill>`
+blocks + 8 `<agent>` blocks**, each skill carrying a `<file>` path. Sources:
+- **9 from the workspace repo** `octocat_supply-psychic-disco/.github/` (2 skills `api-endpoint`,
+  `walkthrough-writer`; 7 agents `tdd-red/green/blue`, `api-specialist`, `api-test-writer`,
+  `bdd-specialist`, `walkthrough-writer`).
+- **8 from user-installed extensions** (6 GitHub-PR ext, 2 chat-customizations-evaluations ext).
+- **1 user-level** `~/.agents/skills/microsoft-foundry`.
+- **6 product built-ins** (5 skills in the bundled Copilot ext + the `Explore` agent).
+
+So only **6 of 24** are Copilot defaults; **18 are repo/user config**. The ~3,314-tok skill
+segment in `prefix-size-comparison.svg` is mostly repo/installed config — the "no skills"
+baseline couldn't strip it because VS Code auto-loads them. **Real harness signal (kept):**
+VS Code preloads every skill/agent body into the first request regardless of source; the CLIs
+advertise on-demand. Corrected: `harness-data-FINAL.md` §1.1+§1.3, `ide-context-breakdown.svg`,
+`prefix-size-comparison.svg`, and a new caveat paragraph in `more-than-a-model.md`.
+
 ## The 8 levers (article spine)
 
 1. system prompt & autonomy · 2. tools · 3. MCP · 4. memory · 5. context management /

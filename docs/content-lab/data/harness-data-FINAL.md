@@ -38,7 +38,7 @@ estimates (chars/4 of the actual wire body); each table says which.
 | CO-CLI | 26,652 | ~6,663 | ✅ wire `systemApproxTokens` 6,657 | — |
 | CL-CLI | 28,131 | ~7,032 | ✅ relay `systemApproxTokens` 7,015 | — |
 | CL-IDE | 26,614 | ~6,653 | (export, not wire) | — |
-| CO-IDE | 44,165 | ~11,041 | (export) | inlines repo instructions + 37 skill blocks + 11-agent roster |
+| CO-IDE | 44,165 | ~11,041 | (export) | inlines repo instructions + 16 skill blocks + 8-agent roster (mostly repo/user-installed, not product defaults — see §1.3) |
 
 **Major sections (by harness):**
 - **CO-CLI**: role/identity; tone & brevity; tool-use rules (`bash`/`view`/`edit`/`task`
@@ -51,8 +51,9 @@ estimates (chars/4 of the actual wire body); each table says which.
 - **CL-IDE**: *same template as CL-CLI* (~5-line diff): `sdk-ts`, `cc_version=2.1.112`,
   `TodoWrite` instead of `TaskCreate`, +Glob/Grep in the tools list, a `# Environment`
   block with git status + recent commits, different memory path.
-- **CO-IDE**: identity; the **37 `<skill>` blocks**; the **11-agent roster**; inlined
-  `copilot-instructions.md`; Microsoft content-policy clause; tool guidance.
+- **CO-IDE**: identity; **16 `<skill>` blocks** + an **8-agent roster** (preloaded
+  full-body — most are repo/user-installed config, not product defaults; see §1.3);
+  inlined `copilot-instructions.md`; Microsoft content-policy clause; tool guidance.
 
 **Autonomy instructions (the cleanest contrast):**
 - CO-CLI: *"non-interactive… proceed autonomously… don't ask for confirmation."*
@@ -65,7 +66,8 @@ Claude add a dual-use-research security preamble; CO-IDE adds a short content cl
 
 **Agent instructions:** CO-CLI frames the model as a *manager* delegating to `task`
 sub-agents. Claude harnesses describe a planning loop (`EnterPlanMode`) + a delegation
-fleet. CO-IDE names 11 specific sub-agents it may call.
+fleet. CO-IDE names 8 specific sub-agents it may call (7 supplied by the workspace
+repo's `.github/agents/`, only `Explore` is a product built-in).
 
 **Encouraged vs discouraged**
 
@@ -97,13 +99,32 @@ IDEs (export-derived).
 
 | Harness | Count | Discovery | Pre/On-demand | ~Footprint | Names (sample) |
 |---|---|---|---|---|---|
-| CO-IDE | **37** | `<skill>` blocks **in system prompt** | **preloaded full-body** | large (part of the 44k prompt) | Teams, SharePoint, Outlook, … (M365/productivity-heavy) |
+| CO-IDE | **16 skills + 8 agents** | `<skill>`/`<agent>` blocks **in system prompt** | **preloaded full-body** | ~3,314 tok (skill descriptions) | api-endpoint, walkthrough-writer (repo); create-pull-request, address-pr-comments, … (installed exts); tdd-red/green/blue, api-specialist, … (repo agents) |
 | CL-CLI | **13** | name+desc in first-user-msg `<system-reminder>` + `Skill` tool | **on-demand body** | **~1,094 tok** catalog | update-config, verify, code-review, simplify, loop, schedule, claude-api, run, init, review, security-review, … |
 | CL-IDE | ~13 | same as CL-CLI | on-demand | ~same | same family |
 | CO-CLI | 2+ (dynamic) | `Skill` tool + contextual `<available_skills>` | on-demand | small | Foundry-specific |
 
-**Correction to prior draft:** Claude carries **13 skills, not zero.** *(High confidence —
-`skills.names` in digest + the first-user-message reminder.)*
+**Correction to prior draft (skill provenance — verified from the raw export):** The
+earlier "37 skills, M365 / Teams-SharePoint-Outlook" claim was **wrong** on both count
+and source. The MCP-off capture advertises **16 `<skill>` blocks + 8 `<agent>` blocks**
+(24 named items), each skill carrying a `<file>` path that reveals its origin:
+
+| Source | Count | Examples |
+|---|---|---|
+| **Workspace repo `.github/`** (octocat_supply) | **9** | 2 skills (`api-endpoint`, `walkthrough-writer`) + 7 agents (`tdd-red/green/blue`, `api-specialist`, `api-test-writer`, `bdd-specialist`, `walkthrough-writer`) |
+| **User-installed extensions** | **8** | 6 from `github.vscode-pull-request-github` (`create-pull-request`, `address-pr-comments`, …) + 2 from `vscode-chat-customizations-evaluations` |
+| **User-level `~/.agents/skills/`** | **1** | `microsoft-foundry` |
+| **Product built-in** (bundled Copilot ext) | **6** | 5 skills (`project-setup-info-local`, `troubleshoot`, `agent-customization`, `chronicle`, `get-search-view-results`) + 1 agent (`Explore`) |
+
+So **only 6 of 24 are product defaults; 18 are repo- or user-supplied** (9 straight from
+the demo repo). The ~3,314-token "skill descriptions" segment is therefore *mostly
+repo/user config*, not a Copilot floor. The genuine harness signal is unchanged: VS Code
+**preloads every skill/agent body into the first request regardless of source**, whereas
+the CLIs advertise on-demand. *(High confidence — per-skill `<file>` paths in the export
++ matched against `octocat_supply-psychic-disco/.github/skills` and `/.github/agents`.)*
+
+**Also corrected earlier:** Claude carries **13 skills, not zero** *(High confidence —
+`skills.names` in digest + the first-user-message reminder).*
 
 ## 1.4 Memory
 

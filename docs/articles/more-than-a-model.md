@@ -142,6 +142,8 @@ The precise totals matter, but the more important finding is structural: the dev
 
 System instructions and tool definitions accounted for much of the initial context. The IDE also supplied environment and workspace information that was not present in the same form in the CLI environments.
 
+Part of the VS Code footprint came from a source worth naming: the IDE preloaded skill and sub-agent definitions that mostly originated from the workspace repository’s own `.github` configuration and from extensions installed on the machine — not from a Copilot product default. The two CLI baselines carried no equivalent. That is itself a harness decision: VS Code loads every available skill and agent body into the first request regardless of where it came from, while the CLIs advertise them on demand. The footprint difference is partly the harness choosing to preload configuration the other harnesses left out.
+
 A smaller footprint is not automatically better. It can mean less fixed overhead and more room for the task, but it can also mean less guidance and less environment awareness.
 
 A larger footprint is not automatically better either. It can provide richer instructions and more capabilities, but it also consumes context and may include information irrelevant to the current task.
