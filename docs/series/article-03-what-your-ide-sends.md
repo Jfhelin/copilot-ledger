@@ -24,11 +24,7 @@ The result is a useful way to think about coding agents:
 
 ---
 
-## First, this is not the model’s context window
-
-The term **context window** usually refers to the maximum amount of information a model can process in one request.
-
-That is not what I am measuring here.
+## The first-call context footprint
 
 I use **first-call context footprint** to describe the logical input already present on the first main-agent request:
 
