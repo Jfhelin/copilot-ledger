@@ -63,6 +63,33 @@ Task-specific rubrics · blind the scorer to condition where possible · define 
 - Related pre-reg already in repo: `docs/content-lab/experiments/01-context-quality.md`
   (and `03-prompt-precision.md`). Check before writing a fresh manifest.
 
+## Discovery-phase results (Phase 2 done — candidate pool, not the frozen file)
+
+15 BARE discovery runs (5 task classes × 3 reps, no instruction file). Friction extracted
+from raw logs by `runner/friction.mjs`; full writeup in
+`docs/content-lab/experiments/agents-md/discovery/analysis/friction-findings.md`, candidate
+lines in `discovery/candidate-instructions.md`. Captures: `~/copilot-ledger-data/captures/agents-md/discovery/`.
+
+Friction observed (runs hit / 15), after excluding TDD red-states and the agent's own
+passing curl checks:
+
+| Event | Runs / 15 | Tasks | Result → candidate |
+|---|---|---|---|
+| `missing_deps_run` | **9** | T2, T3, T4 | `npm test` before install → `vitest: command not found` → **C1 install-before-test** (kept) |
+| `split_layout_probe` + `phantom_file` | 3 | T1 | read both sub-manifests / guessed root `package.json` → **C2 two-project layout** (kept) |
+| `server_start_probe` | 1 | T4 | 4 ways to start API → **dropped** (1 run, below recurring bar) |
+
+- **Marquee finding:** every code-task run (9/9) tried to test before installing deps. The
+  harness `git clean -fdx` wipes `node_modules`, so each run is a genuine clean checkout —
+  the exact "first contact" moment AGENTS.md targets. State honestly that the clean-slate
+  harness amplifies this.
+- **T5-review produced zero friction** → no candidate. The small candidate pool *is* the
+  story: a concise file earns its keep only where repeated friction was seen.
+- Per-task discovery cost (mean credits): T1 28.4 · T2 58.3 · T3 36.4 · **T4 246.4** · T5 30.8.
+  T4-multifile dominates (~6× any other task).
+- **Credibility caveat to carry:** the C1 `npm ci` clause was *not* re-observed this sweep
+  (carried from Phase 0 lock) — trim or flag at freeze if we want every clause observed.
+
 ## Main analysis / visuals
 
 cost-vs-quality scatter · requests/tool-calls with vs without · fixed prefix tax vs
