@@ -107,4 +107,12 @@ export const ARTICLES = [
       "Same Claude Sonnet 4.5 weights across three harnesses — Copilot CLI, Claude CLI, and Copilot in VS Code. A measured map of which behaviors come from the model provider and which come from harness design, and how those choices move what the model sees before it reasons.",
     order: 7,
   },
+  {
+    slug: "what-your-ide-sends",
+    src: "what-your-ide-sends.md",
+    title: "The prompt you type is not the prompt the model sees",
+    description:
+      "Same Claude Sonnet 4.5, same repo, same minimal prompt across Copilot CLI, Claude CLI, and Copilot in VS Code. A measured decomposition of the first-call context footprint — ~14.9k to ~27.2k tokens of system prompt, tool schemas, IDE state, and skills assembled before you type.",
+    order: 8,
+  },
 ];
