@@ -83,6 +83,34 @@ first-call footprint is **29,453** (tool defs 18,877 sit correctly inside it). S
 from prior identical runs). The footprint total is invariant to warm/cold; only billing
 differs. Footprint is a context-size metric, not a cost metric.
 
+## ✅ RESOLVED — tool-definition footprint (gap #2)
+
+**Metric:** approximate token size of the full tool-schema array on the first main-agent
+request (MCP off, fresh session, no optional tools/skills), via the structural chars/4
+estimate. A SIZE estimate, distinct from the exact API-reported first-call totals (gap #1);
+chars/4 underestimates the exact Anthropic count by ~8–9%, so reported with `≈` as floors.
+
+| Harness | Tools | Tool-def footprint | Share of chars/4 prefix |
+|---|---:|---:|---:|
+| Copilot CLI | 19 | ≈8,064 tok | 54.2% (of 14,877) |
+| Claude CLI | 27 | ≈18,877 tok | 69.4% (of 27,217) |
+
+**Evidence (direct, structural digests):**
+- CO-CLI — `structural-prefix/copilot/digest.json` `prefix.representative`:
+  `toolCount` 19, `toolDefsApproxTokens` 8,064, `toolDefsShareOfPrefix` 0.5420. Tool schemas
+  are present in the Copilot CLI log. `toolCatalog.count` also = 19 (names verified).
+- CL-CLI — `structural-prefix/claude/digest.json` `prefix.representative`
+  (file `2026-06-09T18-18-47-402Z-008.json`): `toolCount` 27, `toolDefsApproxTokens` 18,877,
+  `toolDefsShareOfPrefix` 0.6936. Schema weight from the relay capture (the Claude transcript
+  omits tool schemas, so `toolCatalog.count` reads 0 from `deferred_tools_delta` — the 27
+  count comes from the relay-captured request). Model claude-sonnet-4.5 both.
+
+**Article changes:** filled the tool-catalog table (≈8,100 / ≈18,900); replaced the
+`EXPERIMENT TODO: VERIFY TOOL-CATALOG FIGURES` comment with prose + a `METRIC DEFINITION`
+provenance comment. Figure `tool-catalog-size.svg` already carries ~8.1k/19 and ~18.9k/27 —
+verified, no regen needed. Kept neutral on delivery mechanism (flat/virtualized/progressive →
+Article 3).
+
 ## ✅ Known inconsistency — RESOLVED (was top priority)
 
 > Resolved by the block above. Final first-call footprints are exact: CO-CLI 16,200 ·

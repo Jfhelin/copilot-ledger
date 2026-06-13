@@ -222,32 +222,35 @@ In the measured CLI captures, tool definitions occupied a substantial portion of
 
 | Harness | Available tools | Tool-definition footprint |
 |---|---:|---:|
-| Copilot CLI | **?** | **? tokens** |
-| Claude CLI | **?** | **? tokens** |
+| Copilot CLI | **19** | **≈8,100 tokens** |
+| Claude CLI | **27** | **≈18,900 tokens** |
+
+The two harnesses expose different numbers of tools, and they describe them at different lengths. Copilot CLI advertises 19 tools whose schemas occupy roughly 8,100 tokens; Claude CLI advertises 27 tools occupying roughly 18,900 tokens — more than twice the catalog, and about 69% of that harness's entire first-call context. These figures count only the tool definitions, separate from the system prompt and conversation. How each harness delivers those definitions on the wire is a question for Article 3; here we only measure how much room they take.
 
 <!--
-EXPERIMENT TODO: VERIFY TOOL-CATALOG FIGURES
+METRIC DEFINITION — tool-definition footprint (gap #2, RESOLVED)
 
-For each CLI, inspect the literal first main-agent request and record:
+Tool-definition footprint = the approximate token size of the full tool-schema
+array advertised to the model on the first main-agent request (MCP off, fresh
+session, no optional tools/skills), measured by the structural chars/4 estimate.
+This is a structural SIZE estimate, distinct from the exact API-reported
+first-call totals in the prefix table above; chars/4 underestimates the exact
+Anthropic count by ~8-9%, so treat these as floors and report with "≈".
 
-- number of full tool schemas
-- total tokenized size of the tool array
-- tokenization method
-- product and version
-- model snapshot
-- whether MCP was disabled
-- whether any optional tools were enabled
-- whether the request was a main-agent request or an auxiliary call
+Direct, from the structural-prefix digests:
+- Copilot CLI: toolCount 19, toolDefsApproxTokens 8,064 (54.2% of the 14,877
+  chars/4 prefix). Source: structural-prefix/copilot/digest.json
+  (prefix.representative; tool schemas present in the CLI log).
+- Claude CLI: toolCount 27, toolDefsApproxTokens 18,877 (69.4% of the 27,217
+  chars/4 prefix). Source: structural-prefix/claude/digest.json
+  (prefix.representative, file 2026-06-09T18-18-47-402Z-008.json; schema weight
+  from the relay capture — the Claude transcript omits tool schemas).
+Model: claude-sonnet-4.5 both. Main-agent request, auxiliary calls excluded.
 
-Do not claim in Article 2 that either harness:
-
-- sends every tool flat
-- uses tool virtualization
-- advertises tools by name only
-- progressively loads tool schemas
-
-Tool delivery is a harness design choice, but the exact implementation belongs
-in Article 3 after the wire requests have been reconciled.
+Do not claim in Article 2 that either harness sends every tool flat, uses tool
+virtualization, advertises tools by name only, or progressively loads schemas.
+Tool delivery is a harness design choice; the exact mechanism belongs in
+Article 3 after the wire requests have been reconciled.
 -->
 
 <figure>
