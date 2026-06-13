@@ -562,16 +562,6 @@ Some parts of the system belong clearly to the model provider. Others are primar
 | Permissions and confirmations | Provides base safety behavior | Adds product policy and UX |
 | Model routing | Serves available models | Selects a model or routing strategy |
 
-<figure>
-  <img
-    src="./figures/harnesses/model-provider-vs-harness-control.svg"
-    alt="Matrix showing model-provider responsibilities such as model weights and API mechanisms alongside harness responsibilities such as system prompts, tool selection, MCP configuration, memory, caching structure, context management, orchestration, and routing."
-  >
-  <figcaption>
-    The model provider supplies the model and its mechanisms. The harness assembles those mechanisms into a developer product.
-  </figcaption>
-</figure>
-
 The boundary is not perfectly sharp. A model is trained to use tools, follow instructions, and reason in certain ways. The harness cannot make the model capable of something it fundamentally cannot do.
 
 But within those capabilities, the harness has substantial influence over the experience.
