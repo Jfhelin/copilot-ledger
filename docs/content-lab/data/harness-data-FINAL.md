@@ -38,7 +38,7 @@ estimates (chars/4 of the actual wire body); each table says which.
 | CO-CLI | 26,652 | ~6,663 | ✅ wire `systemApproxTokens` 6,657 | — |
 | CL-CLI | 28,131 | ~7,032 | ✅ relay `systemApproxTokens` 7,015 | — |
 | CL-IDE | 26,614 | ~6,653 | (export, not wire) | — |
-| CO-IDE | 44,165 | ~11,041 | (export) | inlines repo instructions + 37 skill blocks + 11-agent roster |
+| CO-IDE | 44,165 | ~11,041 | (export) | inlines repo instructions + 16 skill blocks + 8-agent roster (mostly repo/user-installed, not product defaults — see §1.3) |
 
 **Major sections (by harness):**
 - **CO-CLI**: role/identity; tone & brevity; tool-use rules (`bash`/`view`/`edit`/`task`
@@ -51,8 +51,9 @@ estimates (chars/4 of the actual wire body); each table says which.
 - **CL-IDE**: *same template as CL-CLI* (~5-line diff): `sdk-ts`, `cc_version=2.1.112`,
   `TodoWrite` instead of `TaskCreate`, +Glob/Grep in the tools list, a `# Environment`
   block with git status + recent commits, different memory path.
-- **CO-IDE**: identity; the **37 `<skill>` blocks**; the **11-agent roster**; inlined
-  `copilot-instructions.md`; Microsoft content-policy clause; tool guidance.
+- **CO-IDE**: identity; **16 `<skill>` blocks** + an **8-agent roster** (preloaded
+  full-body — most are repo/user-installed config, not product defaults; see §1.3);
+  inlined `copilot-instructions.md`; Microsoft content-policy clause; tool guidance.
 
 **Autonomy instructions (the cleanest contrast):**
 - CO-CLI: *"non-interactive… proceed autonomously… don't ask for confirmation."*
@@ -65,7 +66,8 @@ Claude add a dual-use-research security preamble; CO-IDE adds a short content cl
 
 **Agent instructions:** CO-CLI frames the model as a *manager* delegating to `task`
 sub-agents. Claude harnesses describe a planning loop (`EnterPlanMode`) + a delegation
-fleet. CO-IDE names 11 specific sub-agents it may call.
+fleet. CO-IDE names 8 specific sub-agents it may call (7 supplied by the workspace
+repo's `.github/agents/`, only `Explore` is a product built-in).
 
 **Encouraged vs discouraged**
 
@@ -97,13 +99,32 @@ IDEs (export-derived).
 
 | Harness | Count | Discovery | Pre/On-demand | ~Footprint | Names (sample) |
 |---|---|---|---|---|---|
-| CO-IDE | **37** | `<skill>` blocks **in system prompt** | **preloaded full-body** | large (part of the 44k prompt) | Teams, SharePoint, Outlook, … (M365/productivity-heavy) |
+| CO-IDE | **16 skills + 8 agents** | `<skill>`/`<agent>` blocks **in system prompt** | **preloaded full-body** | ~3,314 tok (skill descriptions) | api-endpoint, walkthrough-writer (repo); create-pull-request, address-pr-comments, … (installed exts); tdd-red/green/blue, api-specialist, … (repo agents) |
 | CL-CLI | **13** | name+desc in first-user-msg `<system-reminder>` + `Skill` tool | **on-demand body** | **~1,094 tok** catalog | update-config, verify, code-review, simplify, loop, schedule, claude-api, run, init, review, security-review, … |
 | CL-IDE | ~13 | same as CL-CLI | on-demand | ~same | same family |
 | CO-CLI | 2+ (dynamic) | `Skill` tool + contextual `<available_skills>` | on-demand | small | Foundry-specific |
 
-**Correction to prior draft:** Claude carries **13 skills, not zero.** *(High confidence —
-`skills.names` in digest + the first-user-message reminder.)*
+**Correction to prior draft (skill provenance — verified from the raw export):** The
+earlier "37 skills, M365 / Teams-SharePoint-Outlook" claim was **wrong** on both count
+and source. The MCP-off capture advertises **16 `<skill>` blocks + 8 `<agent>` blocks**
+(24 named items), each skill carrying a `<file>` path that reveals its origin:
+
+| Source | Count | Examples |
+|---|---|---|
+| **Workspace repo `.github/`** (octocat_supply) | **9** | 2 skills (`api-endpoint`, `walkthrough-writer`) + 7 agents (`tdd-red/green/blue`, `api-specialist`, `api-test-writer`, `bdd-specialist`, `walkthrough-writer`) |
+| **User-installed extensions** | **8** | 6 from `github.vscode-pull-request-github` (`create-pull-request`, `address-pr-comments`, …) + 2 from `vscode-chat-customizations-evaluations` |
+| **User-level `~/.agents/skills/`** | **1** | `microsoft-foundry` |
+| **Product built-in** (bundled Copilot ext) | **6** | 5 skills (`project-setup-info-local`, `troubleshoot`, `agent-customization`, `chronicle`, `get-search-view-results`) + 1 agent (`Explore`) |
+
+So **only 6 of 24 are product defaults; 18 are repo- or user-supplied** (9 straight from
+the demo repo). The ~3,314-token "skill descriptions" segment is therefore *mostly
+repo/user config*, not a Copilot floor. The genuine harness signal is unchanged: VS Code
+**preloads every skill/agent body into the first request regardless of source**, whereas
+the CLIs advertise on-demand. *(High confidence — per-skill `<file>` paths in the export
++ matched against `octocat_supply-psychic-disco/.github/skills` and `/.github/agents`.)*
+
+**Also corrected earlier:** Claude carries **13 skills, not zero** *(High confidence —
+`skills.names` in digest + the first-user-message reminder).*
 
 ## 1.4 Memory
 
@@ -318,12 +339,14 @@ tools). The model is constant; **the prefix is a harness/config decision.**
 # DELIVERABLE 3 — Tool Discovery Flow
 
 > **CORRECTION (2026-06-11):** an earlier draft claimed CO-IDE used progressive
-> disclosure (0→1→23). That was an **artifact** — those were three *separate* prompts in
-> `hi18.json` (a title-gen on gpt-4o-mini → a 1-tool aux on gpt-4o-mini → the real
-> 23-tool Claude agent turn), not progressive reveal within one turn. Direct inspection
-> of a multi-turn agent run (`t6_B_agent_sonnet_warm_r1.json`) shows **VS Code Copilot
-> sends a FLAT catalog with full `input_schema` for every tool** (56/56 carried full
-> schemas). **All four harnesses are flat in our captures.**
+> disclosure (0→1→23). The *0→1→23* sequence was an **artifact** — those were three
+> *separate* prompts in `hi18.json` (a title-gen on gpt-4o-mini → a 1-tool aux on
+> gpt-4o-mini → the real 23-tool Claude agent turn), not progressive reveal within one
+> turn. **However** (further correction, see DELIVERABLE 3 below): direct inspection of a
+> multi-turn agent run (`t6_B_agent_sonnet_warm_r1.json`) shows the export carries all 56
+> tools as a **catalog**, but each tool object's **`defer_loading`** flag splits them
+> **23 sent / 33 deferred** on the wire — so CO-IDE agent mode *does* defer (via
+> `tool_search`). The two CLIs remain flat.
 
 ### CO-CLI — **flat**
 - Every request: 19 tools, full schemas. Constant catalog.
@@ -331,13 +354,21 @@ tools). The model is constant; **the prefix is a harness/config decision.**
 ### CL-CLI — **flat**
 - Every request: 27 tools, full schemas. Constant.
 
-### CO-IDE — **flat** (corrected)
-- Agent turn (`t6_B`, claude-sonnet-4.5): **56 tools, all with full description +
-  input_schema, on every request** (e.g. `create_file`, …). No deferral observed.
-- Tool count varies with config/MCP (23 in hi18, 56 in t6_B) — but always flat.
-- *Caveat:* VS Code Copilot has a documented **"virtual tools" grouping** feature that
-  activates only above ~128 enabled tools; we have **no capture** of it triggering, so we
-  cannot show virtualization empirically. *(Medium confidence it exists; not observed.)*
+### CO-IDE — **deferred** (corrected)
+- Agent turn (`t6_B`, claude-sonnet-4.5): export carries **56 tools** in `metadata.tools`,
+  but that array is the full **catalog**, not the wire payload. Each tool object has a
+  **`defer_loading`** flag: **23 tools omit it (sent on the first request) and 33 set
+  `defer_loading: true` (deferred)**. The deferred 33 load on demand when the agent calls
+  the built-in **`tool_search`** tool. 23 active ≈ 9,174 tok (chars/4; 10,052 exact); full
+  catalog ≈ 16,190 tok (chars/4) if sent flat.
+- Reproduced on **both** agent-mode captures (`CO-IDE_agent_sonnet_MCPoff` and `t6_B`):
+  23 active / 33 deferred on every main-agent request.
+- The MCP-**on** Copilot **Chat** capture (`CO-IDE_CopilotChat_sonnet4.5_MCPon`, 95 tools)
+  shows **0** `defer_loading` — so deferral is an **agent-mode** behavior, not universal.
+- *Earlier note retracted:* the prior "flat, no deferral" reading inspected schema presence
+  in the catalog and missed the `defer_loading` flag. VS Code's documented "virtual tools"
+  grouping (above ~128 tools) is a **different** mechanism and is not what produced this
+  23/33 split.
 
 ### CL-IDE — **flat** (extension, MCP-off)
 - Multi-turn `sdk-ts` run: the model used native tools (`Read`/`Glob`/`Bash`) throughout;
@@ -346,10 +377,12 @@ tools). The model is constant; **the prefix is a harness/config decision.**
   CL-CLI flat 27-tool family). Cold prefix ~46.4k carries the full catalog once, then it is
   cache-read each turn.
 
-**Verdict:** **All four ship flat catalogs** in every captured Sonnet run. The differences
-are *count* (19 → 27 → 56 native) driven by native tool set + MCP load, not delivery
-strategy. Progressive disclosure was **not observed in any harness**. *(High confidence —
-counts and full schemas seen directly in wire/relay/export bodies.)*
+**Verdict:** The **two CLIs ship flat catalogs** (19 / 27 full schemas every request).
+**Copilot in VS Code agent mode defers**: 23 of 56 native tools sent first, 33 behind
+`tool_search` (`defer_loading: true`) — reproduced across both agent captures, while the
+MCP-on Chat capture stays flat at 95. So delivery strategy *does* differ: count alone
+(19 → 27 → 56) understates how much VS Code keeps off the first request. *(High confidence —
+counts and the `defer_loading` flag seen directly in wire/relay/export bodies.)*
 
 ---
 
@@ -468,9 +501,12 @@ now direct multi-turn captures of the same prompt + model.)*
 1. Same model, ~3× spread in pre-reasoning prefix MCP-off (≈15k CO-CLI → ≈27k CL-CLI →
    ≈46k CL-IDE), driven by tool-catalog verbosity + IDE context injection; MCP then adds
    linearly on top (+14 tools / +1,876 tok per small server). *[wire/relay/transcript bodies]*
-2. **All four harnesses ship FLAT tool catalogs** (full schemas every turn) in every
-   captured Sonnet run — 19 / 27 / 56 (native counts). *(Corrected: the earlier
-   "CO-IDE defers 0→1→23" was an artifact of three separate prompts.)*
+2. **The two CLIs ship FLAT tool catalogs** (full schemas every turn) — 19 / 27. **Copilot
+   in VS Code agent mode DEFERS**: of 56 native tools, 23 are sent on the first request and
+   33 carry `defer_loading: true`, loading on demand via `tool_search` (reproduced on both
+   agent captures; the MCP-on Chat capture stays flat at 95). *(Corrected twice: the earlier
+   "CO-IDE defers 0→1→23" was an artifact of three separate prompts; the later "all flat, no
+   deferral" reading missed the per-tool `defer_loading` flag.)*
 3. Claude's tool catalog is **2.3×** Copilot CLI's (18.9k vs 8.1k), descs ~2,145 vs
    smaller — pure verbosity choice.
 4. Claude carries **13 skills**, not zero (corrects prior draft).
@@ -524,7 +560,7 @@ transcripts, `e3-T1-runs/`, `matched-pair-2.1.112/`):
 | CO-CLI multi-turn | ✅ have | `structural/copilot/` |
 | CL-CLI multi-turn | ✅ have (abundant) | `~/.claude/projects/` (all `sdk-cli`) |
 | **CO-IDE multi-turn + cache + cost** | ✅ **now filled** | `t6_B_agent_sonnet_warm_r1.json` (agent mode, Sonnet, native billing) |
-| Tool-discovery flow | ✅ resolved (all flat; virtualization claim retracted) | t6_B + hi18 re-reading |
+| Tool-discovery flow | ✅ resolved (CLIs flat; CO-IDE agent defers 23/56 via `defer_loading`+`tool_search`) | t6_B + MCPoff `defer_loading` flags |
 | **CL-IDE multi-turn** | ✅ **now filled** | extension `sdk-ts` transcripts `3864bdcd` + `ad52a532` (Sonnet 4.5, verbatim prompt, octocat) |
 | **MCP off→on (within-harness, isolated)** | ✅ **now measured** | CL-CLI relay +14 tools/+1,876 tok; CO-CLI +30% credits (§1.6) |
 | IDE sampling params (temp/max_tokens) | ❌ **unobtainable from exports** | export schema omits them (format limit) |
