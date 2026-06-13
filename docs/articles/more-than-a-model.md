@@ -106,7 +106,7 @@ Even under those conditions, the harnesses did not start from the same place.
 | Claude CLI | **29,453 tokens** |
 | Copilot coding agent in VS Code | **20,598 tokens** |
 
-The footprint here is the total input the model tokenizes on the first request — uncached input plus cache-read plus cache-creation tokens — measured with the same Anthropic tokenizer for all three. It is a measure of context size, not of cost: whether those tokens were billed cold or served warm from cache changes the price, not the amount the model has to read.
+The footprint is the total context the model reads on the first request, measured the same way for all three. It reflects size, not cost — caching changes the price, not how much the model has to read.
 
 <!--
 METRIC DEFINITION (resolved — keep for provenance, safe to leave as a comment)
