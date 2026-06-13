@@ -82,7 +82,7 @@ a binary `success` (objective gate) and a graded `quality` (0–N).
 
 | Task | `success` gate (binary) | `quality` graded scale |
 |---|---|---|
-| **T1-nav** | answer produced | deterministic factual-coverage scorer (`score.mjs`), **0–20** |
+| **T1-nav** | answer produced | **identical `score.mjs`** (unchanged from Articles 1–3, ground truth verified at e1516cf): raw checklist **0–27** (25 facts + entities + port-discrepancy bonus). Headlined as raw 0–27 for continuity; the scorer also emits a normalized 0–20 (`raw/27×20`, with −2 / cap-16 penalties) as a secondary view. |
 | **T2-local** | targeted API tests pass + field round-trips | **0–6**: +gate, +existing tests still green (no collateral break), +used the migration system, +minimal/surgical diff, +regenerated swagger (not hand-edited), +no unrelated files touched |
 | **T3-debug** | full API suite green, fix in handler not test | **0–5**: +gate, +fix is minimal & correct location, +no collateral edits, +didn't touch tests, +efficient path to the bug (no flailing) |
 | **T4-multifile** | endpoint returns correct count + frontend builds + API tests pass | **0–6**: +gate, +correct count logic, +followed existing API-client pattern, +wired UI sensibly, +no collateral break, +no hand-edited generated files |
