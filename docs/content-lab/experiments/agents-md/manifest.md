@@ -75,14 +75,31 @@ completion_tokens, cache_hit_rate, cost_token_norm_usd, native_credits, tools_js
 
 ## Quality scoring
 
-- **T1-nav:** deterministic factual-coverage scorer (`score.mjs`, ground truth verified at
-  e1516cf), 0–20.
-- **Code tasks (local / debug / multi-file):** objective gates first — does the change
-  compile, do the right tests pass, does the feature round-trip — then a blind rubric in
-  `evaluation/rubrics/` for partial credit.
-- **Review task:** blind rubric against a reviewer checklist fixed before scoring.
-- All quality scoring is **blind to condition** (run ids carry condition, so the scorer is
-  fed condition-stripped artifacts).
+Quality is **not** binary. Every task yields a graded score on a fixed ordinal scale, so
+two runs that both "succeed" can still score differently — that is what lets us detect a
+quality regression rather than only a success-rate change. Each run produces **two numbers**:
+a binary `success` (objective gate) and a graded `quality` (0–N).
+
+| Task | `success` gate (binary) | `quality` graded scale |
+|---|---|---|
+| **T1-nav** | answer produced | deterministic factual-coverage scorer (`score.mjs`), **0–20** |
+| **T2-local** | targeted API tests pass + field round-trips | **0–6**: +gate, +existing tests still green (no collateral break), +used the migration system, +minimal/surgical diff, +regenerated swagger (not hand-edited), +no unrelated files touched |
+| **T3-debug** | full API suite green, fix in handler not test | **0–5**: +gate, +fix is minimal & correct location, +no collateral edits, +didn't touch tests, +efficient path to the bug (no flailing) |
+| **T4-multifile** | endpoint returns correct count + frontend builds + API tests pass | **0–6**: +gate, +correct count logic, +followed existing API-client pattern, +wired UI sensibly, +no collateral break, +no hand-edited generated files |
+| **T5-review** | a review is produced | **0–N**: + each real defect found (true positives, against a checklist fixed before scoring) − hallucinated defects (false positives) |
+
+- Scales and rubrics are written into `evaluation/rubrics/` and **frozen before any eval run**.
+- All quality scoring is **blind to condition**: artifacts are fed to the scorer with run
+  ids / `AGENTS.md` presence stripped, so the scorer cannot tell BARE from AGENTS.
+- Each cell has 10 reps → we compare **distributions** (mean + spread), not single points.
+
+### The "quality must not go down" test (H2, non-inferiority)
+Registered before eval: AGENTS passes the quality bar only if, per task, its mean `quality`
+is **not meaningfully below** BARE's — concretely, AGENTS mean ≥ BARE mean − a pre-set
+margin (the bootstrap CI of the difference must not sit clearly below zero). A cost win that
+comes with a quality drop beyond that margin is reported as a **regression, not a win**.
+Success **rate** is tracked alongside quality so a condition cannot look good by being
+cheap-but-failing.
 
 ## Success / exclusion / timeout rules
 
