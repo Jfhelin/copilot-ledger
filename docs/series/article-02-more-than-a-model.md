@@ -36,7 +36,7 @@ primitives); harness builds the car** (everything above).
 | One filesystem MCP server adds | +14 tools, +1,876 prefix tokens | Direct (MCP on/off pair) | n/a |
 | CO-IDE MCP on vs off | ~46,428 / 95 tools vs ~20,598 / 56 tools | Direct (`co-ide-exports/*`) | n/a |
 | Worked example shape | requests 7 vs 19; tool calls 19 vs 16 | Direct (40-run / structural) | Copilot $0.163 exact; Claude estimate |
-| Cache hit | CO-CLI 87.2% · CL-CLI 90.2% | Direct | n/a |
+| Cache hit | CO-CLI 80.9% · CL-CLI 86.4% (40-run, token-weighted) | Direct (`captures.jsonl`); single-session digest 87.2/90.2 corroborates | n/a |
 | max_tokens | CO-CLI 8,192 · CL-CLI 32,000 | Direct | n/a |
 
 ## ✅ RESOLVED — first-call context footprint (gap #1)
@@ -110,6 +110,31 @@ chars/4 underestimates the exact Anthropic count by ~8–9%, so reported with `�
 provenance comment. Figure `tool-catalog-size.svg` already carries ~8.1k/19 and ~18.9k/27 —
 verified, no regen needed. Kept neutral on delivery mechanism (flat/virtualized/progressive →
 Article 3).
+
+## ✅ RESOLVED — cache-read rate (gap #4)
+
+**Formula (one, applied to both):** `cache_read / (uncached_input + cache_read +
+cache_creation)` — cached reads over ALL logical prompt tokens, **token-weighted** (sum token
+fields across requests, then divide; NOT a mean of per-request %).
+
+**Source:** `~/copilot-ledger-data/captures/repeatability-40run/captures.jsonl` — the **same
+n=40 dataset** as gap #3 (explain-repo, BARE+TRIM, 20/harness, MCP off, Claude Sonnet 4.5).
+Fields `cached_tokens`, `cache_creation_tokens`, `fresh_input_tokens`.
+
+| Harness | Cache-read rate (40-run, token-wtd) | Per-run mean | Single-session digest |
+|---|---:|---:|---:|
+| Copilot CLI | **80.9%** | 80.2% | 0.8722 |
+| Claude CLI | **86.4%** | 85.0% | 0.9022 |
+
+- Decision: **publish the 40-run token-weighted figure** (larger N; same dataset the
+  $0.13/$0.36 cost ratio comes from → internally consistent). The single dedicated
+  structural-prefix session (`digest.json` `rollups.cacheHitRate` 0.8722 / 0.9022) uses the
+  *same formula* and corroborates (same ballpark, same ordering) — kept as a footnote, not the
+  headline, to avoid mixing an N=1 session into a 40-run claim.
+- **Not** labeled a provider "cache-hit rate" — it's our ratio from captured usage fields.
+- **Article changes:** filled the table (80.9% / 86.4%); replaced the
+  `EXPERIMENT TODO: DEFINE AND VERIFY THE CACHE METRIC` with prose (defines the formula inline)
+  + a `METRIC DEFINITION` provenance comment with the exact token sums.
 
 ## ✅ RESOLVED — Article-1 40-run aggregates (gap #3)
 

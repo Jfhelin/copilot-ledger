@@ -494,36 +494,35 @@ In the CLI captures, both harnesses achieved substantial cache reuse.
 
 | Harness | Cache-read rate |
 |---|---:|
-| Copilot CLI | **?%** |
-| Claude CLI | **?%** |
+| Copilot CLI | **80.9%** |
+| Claude CLI | **86.4%** |
+
+Here, cache-read rate is the share of all logical prompt tokens that were served from cache rather than processed fresh — `cache-read ÷ (uncached input + cache-read + cache-creation)` — summed across every request in the 40 runs behind the table above. Both harnesses reused most of their prompt tokens; Claude CLI reused a slightly larger share. That high reuse is exactly why caching matters, but it is a statement about price, not about what the model knew.
 
 <!--
-EXPERIMENT TODO: DEFINE AND VERIFY THE CACHE METRIC
+METRIC DEFINITION — cache-read rate (gap #4, RESOLVED)
 
-Choose one formula and apply it consistently.
+Formula (one formula, applied consistently to both harnesses):
+  cache_read_tokens / (uncached_input + cache_read + cache_creation)
+i.e. cached reads over ALL logical prompt tokens. Token-weighted (sum the token
+fields across requests, then divide) — NOT a mean of per-request percentages.
 
-Possible formula:
+Source: ~/copilot-ledger-data/captures/repeatability-40run/captures.jsonl, the
+same n=40 dataset as the requests/cost table (explain-repo, BARE+TRIM, 20 per
+harness, MCP off, claude-sonnet-4-5-20250929). Fields: cached_tokens (read),
+cache_creation_tokens, fresh_input_tokens.
+- Copilot CLI: 1,542,212 / (1,542,212 + 338,513 + 25,813) = 0.8089 -> 80.9%.
+- Claude CLI:  6,296,982 / (6,296,982 +  965,582 + 22,178) = 0.8644 -> 86.4%.
+(Per-run mean is close: 80.2% / 85.0%.)
 
-cache_read_tokens /
-(input_tokens + cache_read_tokens + cache_creation_tokens)
+Corroboration: the single dedicated structural-prefix session reports a slightly
+higher cacheHitRate via the same formula (CO 0.8722, CL 0.9022, from
+structural-prefix/{copilot,claude}/digest.json rollups) — same ballpark, same
+ordering. We publish the 40-run figure because it is the larger sample and is
+the dataset the cost ratio above is computed from.
 
-Confirm whether the denominator should include:
-
-- uncached input
-- cache creation
-- cache reads
-- all logical prompt tokens
-
-Record:
-
-- source fields
-- aggregation scope
-- included runs
-- whether the value is weighted by tokens or averaged per request
-- whether the two APIs report equivalent categories
-
-Do not call this a provider-reported "cache-hit rate" unless that is literally
-the metric returned by both products.
+This is NOT a provider-reported "cache-hit rate" label; it is our token-weighted
+ratio from captured usage fields, equivalent categories across both APIs.
 -->
 
 A high cache percentage is useful, but it is not a complete efficiency score.
