@@ -90,7 +90,7 @@ Same kind of task.
 About a 1.3x difference in the size of what the model sees before it even starts answering — and the composition differs far more than the totals.
 
 <figure>
-  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart of the turn-0 prefix in billed tokens for three harnesses on the same model (Claude Sonnet 4.5, MCP off). Copilot CLI totals about 16,200 tokens, Claude CLI about 18,130, and Copilot in VS Code about 20,600. Tool definitions are the largest component everywhere — about 56 percent of the Copilot CLI prefix and 48 percent of the VS Code prefix. All three use the same Anthropic tokenizer and are directly comparable; the spread is about 1.27 times.">
+  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart of the turn-0 prefix in billed tokens for three harnesses on the same model (Claude Sonnet 4.5, MCP off). Copilot CLI totals about 16,200 tokens, Claude CLI about 18,130, and Copilot in VS Code about 20,600. Tool definitions are the largest component everywhere — about 56 percent of the Copilot CLI prefix, 52 percent of the Claude CLI prefix, and 48 percent of the VS Code prefix. All three use the same Anthropic tokenizer and are directly comparable; the spread is about 1.27 times.">
   <figcaption>The turn-0 payload, MCP off: the model was the same, but the pre-reasoning prefix ranged from about 16k to 21k tokens — a 1.27x spread on the same Anthropic meter. Tool definitions dominate every bar. This is roughly the starting point; real usage only adds to it.</figcaption>
 </figure>
 
@@ -99,10 +99,10 @@ Here is how those floors divide. The totals are exact billed tokens; the per-sec
 | Harness | System | Tool defs | Prompt + env | Billed total |
 |---|---:|---:|---:|---:|
 | Copilot CLI | ~7.0k (43%) | ~9.0k (56%) | ~0.2k (1%) | 16,200 |
-| Claude CLI | — | — | — | 18,130 |
+| Claude CLI | ~7.0k (39%) | ~9.5k (52%) | ~1.6k (9%) | 18,130 |
 | Copilot in VS Code | ~8.3k (40%) | ~10.0k (48%) | ~2.3k (11%) | 20,598 |
 
-Tool definitions are the single largest component everywhere — roughly half of everything the model sees before it reasons. (Claude CLI's billed first call was served from cache, so only its total is directly metered; its shape matches the others, with tool definitions dominating.)
+Tool definitions are the single largest component everywhere — roughly half of everything the model sees before it reasons. (Claude CLI's tool-definition figure is the subset it actually sends upfront — about 8 core tools — because it defers the rest of its catalog and loads it on demand; measured flat, its full catalog is much larger, which is why it can carry 27 tools yet still start near 18k.)
 
 That difference came mostly from harness choices: system prompt size, tool catalog verbosity, IDE context, and how much extra environment information is injected.
 
