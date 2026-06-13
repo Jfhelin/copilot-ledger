@@ -18,6 +18,26 @@
   order 6) — the earlier name, overlapping scope. Decide: retire, redirect, or repurpose.
   Do not accidentally edit the wrong file.
 
+## ✅ RESOLVED (2026-06-13) — VS Code skill-provenance correction
+
+Earlier notes (and `harness-data-FINAL.md §1.3`) claimed VS Code preloaded **"~37 skills,
+M365/Teams/SharePoint/Outlook, product default."** Verified wrong against the raw export
+(`co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json`). Actual first-call surface: **16 `<skill>`
+blocks + 8 `<agent>` blocks**, each skill carrying a `<file>` path. Sources:
+- **9 from the workspace repo** `octocat_supply-psychic-disco/.github/` (2 skills `api-endpoint`,
+  `walkthrough-writer`; 7 agents `tdd-red/green/blue`, `api-specialist`, `api-test-writer`,
+  `bdd-specialist`, `walkthrough-writer`).
+- **8 from user-installed extensions** (6 GitHub-PR ext, 2 chat-customizations-evaluations ext).
+- **1 user-level** `~/.agents/skills/microsoft-foundry`.
+- **6 product built-ins** (5 skills in the bundled Copilot ext + the `Explore` agent).
+
+So only **6 of 24** are Copilot defaults; **18 are repo/user config**. The ~3,314-tok skill
+segment in `prefix-size-comparison.svg` is mostly repo/installed config — the "no skills"
+baseline couldn't strip it because VS Code auto-loads them. **Real harness signal (kept):**
+VS Code preloads every skill/agent body into the first request regardless of source; the CLIs
+advertise on-demand. Corrected: `harness-data-FINAL.md` §1.1+§1.3, `ide-context-breakdown.svg`,
+`prefix-size-comparison.svg`, and a new caveat paragraph in `more-than-a-model.md`.
+
 ## The 8 levers (article spine)
 
 1. system prompt & autonomy · 2. tools · 3. MCP · 4. memory · 5. context management /
@@ -249,3 +269,24 @@ does not establish quality difference.
 - [ ] Decide fate of `what-actually-differs` stub.
 - [x] Build `mcp-delta-callout.svg` (optional).
 - [ ] Add the glossary + explicit evidence labels if not yet present.
+
+## RESOLVED (2026-06-12) — VS Code tool catalog: virtualized, not flat
+
+The "Tools are part of the prompt" data was corrected. All **56** VS Code tools are
+**native** (no MCP, no third-party extension surface in the capture) — the earlier
+"38 Copilot + 18 extension" split was wrong. More importantly, VS Code agent mode
+**defers**: each tool object carries a `defer_loading` flag, and only **23 ship on the
+first request** (~9,200 tok chars/4; 10,052 exact) while **33 are deferred** and loaded
+on demand via the built-in **`tool_search`** tool (full catalog ≈16,600 tok if flat).
+
+- **Article 2** (`more-than-a-model.md`): on-wire numbers only — 56 tools (23 sent first
+  call), ~9,200 tokens; points to Article 3 for the mechanism. Minimal explanation.
+- **Article 3** (`what-your-ide-sends.md`): full virtualization explanation lives here —
+  rewrote the delivery section (no longer "all flat"), the footprint/enabled-tools/
+  attribution tables, and three figures.
+- Figures updated: `tool-catalog-size.svg`, `tool-catalog-delivery.svg`,
+  `ide-context-breakdown.svg`, `first-call-composition.svg`.
+- Data note (`harness-data-FINAL.md`): DELIVERABLE 3 verdict, DELIVERABLE 6 finding #2,
+  and the gap table corrected from "all flat" to "CO-IDE agent defers 23/56".
+- Reproduced on both agent captures (`CO-IDE_agent_sonnet_MCPoff`, `t6_B`); MCP-on Chat
+  capture (95 tools) shows 0 deferred → deferral is an agent-mode behavior.
