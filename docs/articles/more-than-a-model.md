@@ -1,630 +1,971 @@
 # A coding agent is more than a model
 
-Developers talk a lot about models.
+Two coding agents can use the same model and still behave very differently.
 
-One person says Claude is better at coding. Another says GPT is better at tool use. A third says one coding agent is faster, cheaper, or more autonomous than another.
+One may inspect a repository in a few large steps. Another may work sequentially, reading one file at a time. One may proceed autonomously. Another may stop before an action and ask for confirmation. They may expose different tools, load different project context, remember different things, and carry very different amounts of information into each model call.
 
-But when you use a coding agent, you are not interacting with a model directly.
+It is tempting to explain these differences by saying that one model is better than another.
 
-You are interacting with a system built around the model.
+But the model is only one part of a coding agent.
 
-That system is the harness.
+Around the model sits another system: the **harness**.
 
-The harness decides what instructions the model sees, which tools it can call, how much repository context is loaded, how memory works, whether MCP servers are available, how tool schemas are described, how caching is used, when the conversation is compacted, and how much autonomy the agent is encouraged to take.
+The harness decides what the model sees, what it can do, and how the work is organized. It assembles the prompt, exposes tools, manages memory, connects MCP servers, executes tool calls, maintains the conversation, and decides how much autonomy the agent should have.
 
-That means two coding agents can use the same underlying model and still behave very differently.
+That means the same underlying model can produce a different experience depending on the system built around it.
 
-I wanted to understand how much of the behavior comes from the model, and how much comes from the harness around it. So I looked at several coding-agent harnesses using the same model, the same repository, and the same task.
+To understand how much the harness matters, I examined three coding-agent environments using the same Claude Sonnet 4.5 model:
 
-Same model: Claude Sonnet 4.5.
-
-Same task: explain a repository to a new developer.
-
-Different harnesses.
-
-The result was not that one harness is magical and another is not.
-
-The result was simpler:
-
-> A coding agent is a model plus a stack of product and engineering decisions.
-
-Those decisions matter.
-
-## What I looked at
-
-I looked at three harnesses:
-
-- Copilot CLI
+- GitHub Copilot CLI
 - Claude CLI
-- Copilot coding agent in VS Code
+- GitHub Copilot coding agent in Visual Studio Code
 
-The goal was not to benchmark them or rank them.
+The goal was not to rank them. It was to look below the interface and answer a more useful question:
 
-The goal was to understand what each harness sends to the model, what tools it exposes, how it manages context, and which parts of the experience are controlled by the model provider versus the harness developer.
+> What decisions does the harness make before and while the model works?
 
-The same model was used across the captures: Claude Sonnet 4.5.
+The answer helps explain why coding-agent comparisons can produce very different results—even when the model is held constant.
 
-That matters because it lets us separate two ideas that are often mixed together:
+---
 
-> Is the model different?
+## The model is only one part of the system
 
-and
+A language model can generate text and request tool calls. By itself, however, it does not know which repository it is working in, which commands it may run, which files it may edit, or how cautiously it should proceed.
 
-> Is the system around the model different?
+The harness supplies that operating environment.
 
-In these captures, the model was the same.
-
-The systems around it were not.
-
-## The first surprise: the model sees very different things
-
-When a developer types a prompt into a coding agent, it can feel like the model sees only that prompt.
-
-It does not.
-
-Before the model starts reasoning, the harness may already have sent a large amount of context:
-
-- system instructions
-- tool definitions
-- environment details
-- repository instructions
-- memory
-- skill descriptions
-- MCP tool schemas
-- prior conversation history
-
-That entire payload shapes the model’s behavior.
-
-In the captures, the “before reasoning” payload varied a lot.
-
-```text
-Copilot CLI:            ~16k tokens
-Claude CLI:             ~18k tokens
-Copilot in VS Code:     ~21k tokens
-```
-
-Same model.
-
-Same kind of task.
-
-About a 1.3x difference in the size of what the model sees before it even starts answering — and the composition differs far more than the totals.
-
-<figure>
-  <img src="./figures/harnesses/prefix-size-comparison.svg" alt="Horizontal bar chart of the turn-0 prefix in billed tokens for three harnesses on the same model (Claude Sonnet 4.5, MCP off). Copilot CLI totals about 16,200 tokens, Claude CLI about 18,130, and Copilot in VS Code about 20,600. Tool definitions are the largest component everywhere — about 56 percent of the Copilot CLI prefix, 52 percent of the Claude CLI prefix, and 48 percent of the VS Code prefix. All three use the same Anthropic tokenizer and are directly comparable; the spread is about 1.27 times.">
-  <figcaption>The turn-0 payload, MCP off: the model was the same, but the pre-reasoning prefix ranged from about 16k to 21k tokens — a 1.27x spread on the same Anthropic meter. Tool definitions dominate every bar. This is roughly the starting point; real usage only adds to it.</figcaption>
-</figure>
-
-Here is how those floors divide. The totals are exact billed tokens; the per-section split is attributed with a single tokenizer, so read the shares as approximate.
-
-| Harness | System | Tool defs | Prompt + env | Billed total |
-|---|---:|---:|---:|---:|
-| Copilot CLI | ~7.0k (43%) | ~9.0k (56%) | ~0.2k (1%) | 16,200 |
-| Claude CLI | ~7.0k (39%) | ~9.5k (52%) | ~1.6k (9%) | 18,130 |
-| Copilot in VS Code | ~8.3k (40%) | ~10.0k (48%) | ~2.3k (11%) | 20,598 |
-
-Tool definitions are the single largest component everywhere — roughly half of everything the model sees before it reasons. (Claude CLI's tool-definition figure is the subset it actually sends upfront — about 8 core tools — because it defers the rest of its catalog and loads it on demand; measured flat, its full catalog is much larger, which is why it can carry 27 tools yet still start near 18k.)
-
-That difference came mostly from harness choices: system prompt size, tool catalog verbosity, IDE context, and how much extra environment information is injected.
-
-These three numbers are the floor — what each harness loads with MCP off, no memory file, and no user-added skills. It is the most portable number I can give you, because everything above it depends on your machine.
-
-And there is a lot that sits above it. The biggest variable is the tool catalog — and in an IDE it also reflects your installed extensions. The Copilot-in-VS-Code session I captured measured about 20.6k billed tokens across a 56-tool catalog, though most of that catalog never ships as full schemas on the first call (the harness sends a core set and loads the rest on demand — more on that under Tools below). Turn MCP on instead and that same harness jumped to about 46k tokens across 95 tools. Add a memory file or a few skills and it grows again.
-
-So the portable, harness-controlled part is really the floor: the system prompt plus the built-in tool set, with MCP off and no extra extensions or skills. Everything above that floor is your environment. The exact number on your machine will differ from mine — which is the whole point.
-
-This is the first important lesson:
-
-> The model is constant. The prefix is not.
-
-## What is a harness?
-
-A coding-agent harness is the software layer that turns a model into a developer tool.
-
-The model predicts text and tool calls.
-
-The harness decides what world the model is operating in.
-
-A simplified coding-agent request looks something like this:
+A simplified coding-agent request might contain:
 
 ```text
 System instructions
-+ Tool catalog
-+ Environment context
-+ Memory
-+ Skills
-+ MCP tools
-+ User prompt
-+ Conversation history
-= What the model sees
++ tool definitions
++ environment information
++ repository instructions
++ memory and skills
++ the user’s request
++ conversation history
 ```
 
-That bundle is not neutral.
+The harness then takes the model’s response, executes any requested tools, returns the results, and starts the next model call.
 
-It tells the model who it is, what it should do, what it should avoid, which tools exist, how autonomous it should be, whether it should ask questions, how it should format answers, and what information is available about the repository and environment.
-
-So when two agents behave differently, the difference may not come from the model at all.
-
-It may come from the harness.
+This loop continues until the task is complete—or until the harness, the user, or a limit stops it.
 
 <figure>
-  <img src="./figures/harnesses/agent-is-more-than-model.svg" alt="Diagram: a Model box plus a cluster of harness-choice boxes (system prompt, tools, MCP, memory, skills, context, caching, planning, orchestration, UX choices) producing an Agent behavior box.">
-  <figcaption>A coding agent is a model plus the harness around it: prompts, tools, memory, context, caching, planning, and UX choices.</figcaption>
+  <img
+    src="./figures/harnesses/agent-is-more-than-model.svg"
+    alt="Diagram showing a model combined with system prompts, tools, MCP, memory, skills, context, caching, planning, orchestration, and user experience choices to produce coding-agent behavior."
+  >
+  <figcaption>
+    A coding agent combines a model with the prompts, tools, context, memory, and orchestration supplied by its harness.
+  </figcaption>
 </figure>
 
-## What the model provider controls
+This is the first useful distinction:
 
-With Claude Sonnet 4.5, Anthropic controls the model.
+> The model provides capabilities. The harness turns those capabilities into a product.
 
-That includes the model weights, training, the API contract, the safety floor, and the basic mechanisms for things like caching and thinking.
+---
 
-But that does not mean Anthropic controls the whole coding-agent experience.
+## The user prompt is only part of what the model sees
 
-A lot remains in the hands of the harness developer.
+When a developer enters a short request, it can look as though the model receives only those few words.
 
-A simple way to say it is:
+It does not.
 
-> The model provider owns the engine. The harness developer builds the car around it.
+Before reading the request, the model may already have received thousands of tokens describing:
+
+- its role and behavioral rules
+- the tools it can use
+- how those tools should be called
+- the current operating environment
+- repository and workspace information
+- permissions and safety constraints
+- memory from earlier work
+- available skills
+- previous messages in the session
+
+I call the amount loaded on the first model request the **first-call context footprint**.
+
+This is not the same as the model’s **context window**, which describes its maximum capacity. The first-call footprint is how much of that capacity the harness has already populated before meaningful task work begins.
+
+For a cleaner baseline, I captured each harness with:
+
+- the same Claude Sonnet 4.5 model snapshot
+- the same repository and pinned commit
+- the same minimal task
+- a fresh conversation
+- MCP disabled
+- no optional user skills
+- no repository memory or instruction file
+
+Even under those conditions, the harnesses did not start from the same place.
+
+| Harness | First-call context footprint |
+|---|---:|
+| Copilot CLI | **16,200 tokens** |
+| Claude CLI | **29,453 tokens** |
+| Copilot coding agent in VS Code | **20,598 tokens** |
+
+The footprint here is the total input the model tokenizes on the first request — uncached input plus cache-read plus cache-creation tokens — measured with the same Anthropic tokenizer for all three. It is a measure of context size, not of cost: whether those tokens were billed cold or served warm from cache changes the price, not the amount the model has to read.
+
+<!--
+METRIC DEFINITION (resolved — keep for provenance, safe to leave as a comment)
+
+metric_name: first-call context footprint
+definition: total logical input on the first model request = uncached input + cache-read + cache-creation tokens (API-reported), same Anthropic tokenizer (claude-sonnet-4.5 snapshot)
+conditions: MCP off, fresh session, no user skills, no repo memory/instruction file, same repo + pinned commit, same minimal task
+measurement: direct (API-reported usage), not tokenizer-estimated. Component splits: Copilot CLI and VS Code from captured payloads (sum to the exact total); Claude CLI split is its chars/4 structural proportions scaled to the exact total.
+
+Copilot CLI = 16,200  (uncached 10 + cache-read 9,071 + cache-creation 7,119)
+  source: structural-prefix/copilot/logs/process-1781029040975-75037.log (first response input_tokens), 19 native tools
+Copilot coding agent in VS Code = 20,598  (uncached 9 + cache-read 9,745 + cache-creation 10,844)
+  source: co-ide-exports/CO-IDE_agent_sonnet_MCPoff.json, prompt#0 first ChatMLSuccess usage.prompt_tokens, 56 native tools
+Claude CLI = 29,453  (uncached 10 + cache-creation 8,179 + cache-read 21,264)
+  source: ~/.claude/projects/-private-tmp-octocat-supply-ak/137badef-…​.jsonl, first assistant message.usage, 27 native tools
+
+Caveat: all three "first" calls had cache-read > 0 (warm from prior identical runs). The
+footprint total is invariant to warm/cold; only billing differs.
+-->
+
 
 <figure>
-  <img src="./figures/harnesses/model-provider-vs-harness-control.svg" alt="Table of levers showing which are controlled mostly by the model provider (model weights, training) versus mostly by the harness developer (system prompt, tools, MCP, skills, memory, caching placement, context management, orchestration, sampling, routing).">
-  <figcaption>The model provider owns the engine. The harness developer decides much of what the model sees and how hard it has to work.</figcaption>
+  <img
+    src="./figures/harnesses/prefix-size-comparison.svg"
+    alt="Horizontal bar chart comparing the first-call context footprint of Copilot CLI, Claude CLI, and Copilot coding agent in Visual Studio Code using the same Claude Sonnet model and a minimal configuration."
+  >
+  <figcaption>
+    The same model begins with a different amount and composition of context depending on the harness.
+  </figcaption>
 </figure>
 
-That car can be tuned in very different ways.
+The precise totals matter, but the more important finding is structural: the developer’s prompt was only a small part of each request.
 
-## Lever 1: system prompt and autonomy
+System instructions and tool definitions accounted for much of the initial context. The IDE also supplied environment and workspace information that was not present in the same form in the CLI environments.
 
-The system prompt is one of the biggest behavioral surfaces in a coding agent.
+A smaller footprint is not automatically better. It can mean less fixed overhead and more room for the task, but it can also mean less guidance and less environment awareness.
 
-It tells the model what kind of assistant it is supposed to be.
+A larger footprint is not automatically better either. It can provide richer instructions and more capabilities, but it also consumes context and may include information irrelevant to the current task.
 
-In the captures, the system prompts were not the same.
+The right question is not simply:
 
-Copilot CLI leaned toward autonomy. It told the agent to proceed in a non-interactive way and not ask for confirmation.
+> Which harness sends fewer tokens?
 
-The Claude CLI leaned more cautious. It included instructions to confirm before irreversible actions.
+It is:
 
-Neither choice is inherently right or wrong.
+> What information is being sent, what value does it provide, and what does it cost?
 
-They are product choices.
+That deeper decomposition is the subject of the next article in this series.
 
-For a read-only task, a more autonomous posture can reduce round trips. The agent can inspect files, form an answer, and continue without asking.
+---
 
-For a risky editing task, a more cautious posture may be exactly what you want. You may prefer an agent that stops before making an irreversible change.
+## System instructions shape the agent’s behavior
 
-This is why harness comparisons can be tricky.
+The system prompt tells the model what kind of agent it is expected to be.
 
-The same design choice can be a strength in one task and a weakness in another.
+It can define:
 
-## Lever 2: tools
+- the agent’s role
+- how it should explore a repository
+- when it should make edits
+- when it should ask for permission
+- whether independent work should be parallelized
+- how concise or detailed its responses should be
+- how it should use tools
+- what safety boundaries it must observe
 
-Coding agents do not just answer from memory.
+In the captured prompts, Copilot CLI and Claude CLI gave the same model different behavioral guidance.
 
-They use tools.
+Copilot CLI used instructions that favored autonomous, non-interactive progress. Claude CLI included more explicit guidance around confirming irreversible operations.
 
-They read files, search directories, run commands, edit code, create plans, call MCP servers, and sometimes delegate work to subagents.
+<!--
+EXPERIMENT TODO: VERIFY AUTONOMY WORDING
 
-The tool catalog is the list of tools the model can see and call.
+Confirm the exact system-prompt language used in both captures.
 
-In the captures, the enabled tool catalogs differed quite a bit (MCP off):
+Do not quote more than a short phrase from proprietary prompts in the published article.
 
-```text
-Copilot CLI:            19 tools
-Claude CLI:             27 tools
-Copilot in VS Code:     56 tools
-```
+Record:
 
-But the enabled count is not the whole story, because not every tool is sent to the model as a full schema. Copilot CLI sends all 19. Copilot in VS Code and Claude CLI send only a core subset as full definitions and list the rest by name, loading them on demand when the model asks — a technique sometimes called tool virtualization. On the first call, VS Code sent 23 of its 56 tools in full; Claude CLI sent around 8 of its 27. An IDE's catalog also reflects your installed extensions, so the exact number on your machine will differ.
+- prompt source
+- product version
+- relevant instruction category
+- whether the instruction applies globally or only to the captured mode
+-->
 
-The difference was not only the number of tools.
+Neither choice is universally correct.
 
-It was also how they were described.
+For a read-only repository explanation, a more autonomous posture may avoid unnecessary interruptions. For a task that can delete data, change infrastructure, or publish code, a more cautious posture may be preferable.
 
-Claude CLI’s tool catalog was much more verbose than Copilot CLI’s. The tool definitions were around 18.9k tokens for Claude CLI versus around 8.1k tokens for Copilot CLI. That 18.9k measures the full catalog flat; because Claude CLI defers most of its tools and loads them on demand, only a fraction ships on any one call — which is why its actual first-call prefix stays around 18k rather than ballooning to match the catalog.
+What can look like a difference in model confidence may therefore be a difference in product policy.
+
+> Autonomy is not only a model trait. It is also a harness setting.
+
+The same applies to planning, verbosity, persistence, and tool-use style. The model has learned broad capabilities, but the harness tells it how those capabilities should be used in this product.
+
+---
+
+## Tools are part of the prompt
+
+Coding agents do not only generate code. They inspect files, search repositories, run commands, edit documents, create plans, and call external systems.
+
+To use a tool, the model needs a description of it. A typical definition includes:
+
+- a tool name
+- an explanation of its purpose
+- its accepted parameters
+- a JSON schema
+- usage guidance and restrictions
+
+Those definitions are part of the model’s input.
+
+In the measured CLI captures, tool definitions occupied a substantial portion of the first-call context.
+
+| Harness | Available tools | Tool-definition footprint |
+|---|---:|---:|
+| Copilot CLI | **?** | **? tokens** |
+| Claude CLI | **?** | **? tokens** |
+
+<!--
+EXPERIMENT TODO: VERIFY TOOL-CATALOG FIGURES
+
+For each CLI, inspect the literal first main-agent request and record:
+
+- number of full tool schemas
+- total tokenized size of the tool array
+- tokenization method
+- product and version
+- model snapshot
+- whether MCP was disabled
+- whether any optional tools were enabled
+- whether the request was a main-agent request or an auxiliary call
+
+Do not claim in Article 2 that either harness:
+
+- sends every tool flat
+- uses tool virtualization
+- advertises tools by name only
+- progressively loads tool schemas
+
+Tool delivery is a harness design choice, but the exact implementation belongs
+in Article 3 after the wire requests have been reconciled.
+-->
 
 <figure>
-  <img src="./figures/harnesses/tool-catalog-size.svg" alt="Horizontal bar chart of tool catalog size: Copilot CLI about 8.1k tokens across 19 tools, Claude CLI about 18.9k tokens across 27 tools.">
-  <figcaption>Claude CLI exposed more tools and a much larger tool catalog than Copilot CLI in this capture.</figcaption>
+  <img
+    src="./figures/harnesses/tool-catalog-size.svg"
+    alt="Horizontal bar chart comparing the token footprint of tool definitions in Copilot CLI and Claude CLI."
+  >
+  <figcaption>
+    Tools are not outside the prompt. Their names, descriptions, and schemas consume context before the model calls any of them.
+  </figcaption>
 </figure>
 
-That is a pure harness choice.
+A larger or more detailed catalog may help the model select tools accurately. It may also increase the fixed context carried into a request.
 
-More detailed tool descriptions may help the model choose the right tool on the first try. But they also increase the fixed cost of every request, especially because the tool catalog is part of the repeated prefix.
+A smaller catalog may reduce overhead and make selection simpler. It may provide less guidance or fewer capabilities.
 
-Again, this is not magic.
+The harness can choose:
 
-It is a tradeoff.
+- which tools to expose
+- how narrowly each tool is scoped
+- how verbose its description should be
+- whether several operations share one tool or use separate tools
+- how and when tool definitions are delivered
+- what result format is returned to the model
 
-```text
-Shorter tool descriptions:
-  lower token cost
-  smaller prefix
-  possibly less guidance
+These are product and engineering decisions.
 
-Longer tool descriptions:
-  higher token cost
-  larger prefix
-  possibly better tool selection
-```
+They can affect cost and behavior even when the model itself does not change.
 
-The right answer depends on the task and the product goals.
+---
 
-## Lever 3: MCP
+## MCP adds capability—and context
 
-MCP is powerful because it gives the agent access to more capabilities.
+The Model Context Protocol, or MCP, allows coding agents to connect to additional tools and data sources.
 
-It can expose tools for GitHub, Azure, Playwright, filesystem access, internal systems, and much more.
+An MCP server might provide access to:
 
-But every MCP server can also add tools to the catalog.
+- GitHub
+- a filesystem
+- cloud resources
+- databases
+- browsers
+- internal enterprise systems
+- documentation or search services
 
-And those tools are not free.
+This can make an agent much more capable.
 
-In one clean MCP on/off comparison, adding a single filesystem MCP server added:
+It also changes the environment being measured.
+
+In one controlled Claude CLI capture, enabling a single filesystem MCP server added:
 
 ```text
 +14 tools
 +1,876 prefix tokens
 ```
 
-That was one small server.
+<!--
+EXPERIMENT TODO: VERIFY THE MCP DELTA
 
-Larger MCP configurations can add many more tools.
+Confirm:
 
-This matters because an MCP-heavy setup and an MCP-light setup are not really the same test. If one agent has many MCP servers enabled and another does not, you may be measuring configuration more than harness quality.
+- Claude CLI version
+- model snapshot
+- MCP server name and version
+- exact server configuration
+- MCP-off tool count
+- MCP-on tool count
+- MCP-off first-call metric
+- MCP-on first-call metric
+- whether 1,876 represents logical schema tokens, serialized request tokens,
+  API-reported input tokens, or another measurement
+- whether any dynamic tool or prompt content also changed
+-->
 
-MCP is one of the easiest ways to change the cost, capability, and behavior of a coding agent.
+<figure>
+  <img
+    src="./figures/harnesses/mcp-delta-callout.svg"
+    alt="Callout showing that enabling one filesystem MCP server added 14 tools and approximately 1,876 prefix tokens in the captured configuration."
+  >
+  <figcaption>
+    MCP is capability, but it is also context. An MCP-on run and an MCP-off run are different experimental configurations.
+  </figcaption>
+</figure>
 
-That is the tradeoff.
+That does not make MCP inefficient. It means capability has a context cost.
 
-More MCP means more capability and more tools, but a larger prefix and more possible distraction. Less MCP means a smaller prefix and lower cost, but fewer capabilities.
+An agent with several MCP servers enabled is not directly comparable with one running only its built-in tools. The first agent may be able to perform much more work, but it also starts with a larger capability surface.
 
-So when someone compares two coding agents, one of the first questions should be:
+This gives us a simple rule for experiments:
 
-> Which MCP servers were enabled?
+> An MCP-on run and an MCP-off run are different configurations, even when the harness and model are the same.
 
-## Lever 4: memory
+MCP is an important feature of the system, but it is not an exclusive structural advantage belonging to one model or one product. It is a capability the harness chooses to expose and the user or administrator chooses to configure.
 
-Memory is another harness decision.
+---
 
-Some harnesses keep memory mostly session-scoped. Others support cross-session memory, project memory, user memory, or file-based memory that can be loaded back into the prompt.
+## Memory and skills change what “the same task” means
 
-Persistent memory can make an agent feel more continuous. It can remember preferences, project details, or feedback from earlier sessions.
+A coding agent may also load information from outside the immediate conversation.
 
-But memory can also carry stale facts forward.
+That information can take several forms:
 
-It can also add weight to the prompt.
+- repository instruction files
+- project memory
+- user preferences
+- session state
+- reusable skills
+- prior summaries
+- generated plans
 
-That creates another tradeoff:
+These mechanisms can save time. An agent that already knows the project’s build command, architecture, and conventions may need less exploration before acting.
 
-```text
-Persistent memory:
-  more continuity
-  more personalization
-  risk of stale context
-  more prefix weight
+But memory introduces tradeoffs.
 
-Session-only memory:
-  cleaner runs
-  more predictable behavior
-  less continuity
-```
+It can be:
 
-For a developer, this matters because two agents using the same model may not actually be seeing the same world.
+- useful
+- stale
+- incomplete
+- contradictory
+- too broad for the current task
+- expensive to include repeatedly
 
-One may be working from a clean session.
+Skills have similar tradeoffs. A harness might preload their full instructions, advertise them briefly and load details later, or make them available through another retrieval mechanism.
 
-Another may be carrying project memory, user memory, repository instructions, and previous feedback.
+The exact implementation differs by product. The design choice is the important point:
 
-Those are not small details.
+> The harness decides what prior knowledge is carried into the task and when it becomes available.
 
-They can change the result.
+That is why a repository with an instruction file and a repository without one are not identical benchmark conditions.
 
-## Lever 5: context management
+It is also why a later article in this series will test whether a carefully designed `AGENTS.md` file can reduce exploration enough to justify its added context.
 
-The API is stateless.
+<!--
+EXPERIMENT TODO: OPTIONAL SUPPORTING EXAMPLE
 
-That means the harness has to resend the relevant context on each request: system prompt, tools, conversation history, and anything else the model needs.
+Article 2 does not require a full skills or memory experiment.
 
-As the session gets longer, the harness has a choice.
+A small controlled example could strengthen this section:
 
-It can keep sending the growing history.
+- same harness
+- same model
+- same repository
+- same prompt
+- baseline without instruction file
+- condition with one known instruction or memory file
 
-Or it can summarize, compact, or drop parts of the conversation.
+Measure:
 
-That choice affects cost and quality.
+- added first-call tokens
+- whether the content is sent on every request
+- whether it is loaded on demand
+- whether it changes model requests or tool exploration
 
-In the captures, the harnesses managed history differently. Some showed mostly linear growth. One Claude CLI capture showed a plateau later in the run, which likely indicates compaction or summarization.
+Do not delay Article 2 for this experiment. The planned AGENTS.md article should
+provide the proper behavioral study.
+-->
 
-Compaction helps long sessions continue.
+---
 
-But it can also drop details.
+## The harness organizes the work
 
-No compaction is simpler and more predictable.
+The harness does more than assemble the first prompt. It also controls the loop that follows.
 
-But it can become expensive.
+Suppose an agent needs to inspect six unrelated files.
 
-Again, the harness decides.
+It could:
 
-## Lever 6: caching
+1. request all six files in one model turn; or
+2. request one file, inspect the result, and then decide what to request next.
 
-Prompt caching is one of the most important cost levers.
+The first approach uses fewer model round-trips. The second allows every step to react to the previous result.
 
-The basic caching primitive comes from the model provider. But the harness decides where to place cache breakpoints and how stable the prefix remains.
+Neither is always best.
 
-In the CLI captures, both harnesses achieved high cache hit rates:
+Batching can be efficient when operations are independent. It may also read files that turn out not to be necessary.
 
-```text
-Copilot CLI: 87.2%
-Claude CLI:  90.2%
-```
+Sequential work can be precise when each step depends on the last. It can become expensive if the same large prefix is processed for every small decision.
 
-That is good engineering on both sides.
+In the experiment behind the first article in this series, Copilot CLI and Claude CLI used the same model to investigate the same repository. They performed a broadly similar amount of tool work, but they organized that work into different numbers of model requests.
 
-It also shows why “raw input tokens” alone can be misleading. A large stable prefix can be much cheaper after caching than it looks at first glance.
-
-But caching only works well when stable content remains stable.
-
-If the tool catalog changes, MCP servers change, memory changes, or the prefix is reorganized, the cache may become less effective.
-
-So caching is not just an API feature.
-
-It is a harness design problem.
-
-## Lever 7: thinking and sampling
-
-Some harnesses explicitly enable thinking with a fixed budget. Others appear to use thinking through a different mechanism. Some IDE captures did not expose the same settings.
-
-The CLI captures also showed a notable max token difference:
-
-```text
-Copilot CLI max_tokens: 8,192
-Claude CLI max_tokens:  32,000
-```
-
-That setting can change behavior.
-
-A larger output budget can let an agent produce longer responses or continue within a single request. It may also make it more willing to keep going.
-
-A smaller budget can encourage tighter responses, but may require more turns for long work.
-
-These are not model differences.
-
-They are harness choices made within the API’s allowed ranges.
-
-## Lever 8: agent orchestration
-
-Modern coding agents are not always a single loop.
-
-Some can create tasks, spawn subagents, enter planning modes, manage worktrees, schedule future work, or call named specialized agents.
-
-The captures showed different orchestration surfaces.
-
-Claude exposed a richer set of orchestration tools, including task tools, worktree tools, monitoring, scheduling, and planning modes.
-
-Copilot CLI used a leaner manager-style approach.
-
-Copilot in VS Code exposed a curated fixed roster of agents.
-
-These choices shape the experience.
-
-A rich orchestration surface can support long-running autonomous workflows.
-
-A smaller surface can be simpler, easier to reason about, and less expensive to expose.
-
-A fixed roster can make the system more predictable.
-
-A dynamic fleet can make it more flexible.
-
-Once again, there is no magic.
-
-There are tradeoffs.
-
-## A worked example: same task, same model, different systems
-
-The cleanest way to see the difference is to look at one ordinary task:
-
-> Explain this repository to a new developer.
-
-Same model.
-
-Same repo.
-
-Same prompt.
-
-Different harnesses.
-
-In the CLI runs, the shape was very different.
-
-| Metric | Copilot CLI | Claude CLI |
+| Harness | Mean model requests | Mean tool calls |
 |---|---:|---:|
-| LLM requests | 7 | 19 |
-| Tool calls | 19 | 16 |
-| Tool catalog size | ~8.1k tokens | ~18.9k tokens |
-| System prompt size | ~7.0k tokens | ~7.0k tokens |
-| Cache hit rate | 87.2% | 90.2% |
-| Cost | $0.163 exact | modelled estimate |
+| Copilot CLI | **?** | **?** |
+| Claude CLI | **?** | **?** |
 
-The important point is not that one number is better.
+<!--
+EXPERIMENT TODO: INSERT ARTICLE 1 AGGREGATES
 
-The important point is that the agents took different paths through the same task.
+Use the final 40-run ledger values.
 
-Copilot CLI carried a smaller tool catalog and proceeded with a more autonomous posture.
+Record:
 
-Claude CLI carried a larger tool catalog, exposed richer orchestration tools, and took more model turns.
+- experiment ID
+- number of runs included
+- conditions included in the aggregate
+- arithmetic mean
+- median, if useful
+- exclusions, if any
+- whether tool-call counting is normalized identically across harnesses
 
-Both used the same model.
+Keep this section brief.
 
-The result was shaped by the harness.
+Do not repeat the full Article 1 benchmark or present the result as universal
+behavior. State that it was observed for this read-heavy task, repository,
+model, and configuration.
+-->
 
-## The IDEs add another layer
+That difference did not come from the model weights. The model snapshot was held constant.
 
-The IDE captures showed another important pattern.
+It came from the surrounding system: instructions, tool design, execution strategy, and the path each harness encouraged the model to take.
 
-An IDE is not just a CLI inside a window.
+The same principle applies to:
 
-It can add workspace context, repository state, editor state, instructions, skills, MCP tools, and product-specific agent behavior.
+- planning modes
+- subagents
+- background tasks
+- confirmation prompts
+- retry behavior
+- maximum output length
+- thinking configuration
+- context compaction
 
-The Copilot-in-VS-Code floor I captured sits somewhat above the Copilot CLI:
+These mechanisms change how the agent works without changing the underlying model.
 
-```text
-Copilot CLI:        ~16k tokens
-Copilot in VS Code: ~21k tokens
-```
+---
 
-But the IDE is where the environment piles on. That same harness jumped to about 46k tokens with MCP enabled — far above the CLI floor on the identical harness and model. Installed extensions and loaded skills add their own tools on top of the floor, so the exact number on your machine will be higher still.
+## Caching changes cost, not what the model knows
 
-That does not mean the IDE is worse.
+Coding-agent requests often contain a large stable prefix: system instructions, tool definitions, and other information that changes infrequently.
 
-It means the IDE is giving the model more context before it starts, and exposes more surface for your environment to add even more.
+Prompt caching allows a model provider to reuse parts of that prefix more cheaply on later calls.
 
-That context may help the agent behave better in a real developer workflow.
+The model provider supplies the caching mechanism. The harness influences how effectively it is used by deciding:
 
-It may also cost more under the hood.
+- where cache breakpoints are placed
+- which parts of the prompt remain stable
+- which information is inserted before or after those breakpoints
+- how often tools, memory, or instructions change
 
-This is another reason simple comparisons are hard.
+In the CLI captures, both harnesses achieved substantial cache reuse.
 
-A CLI and an IDE may use the same model but expose different worlds to that model.
+| Harness | Cache-read rate |
+|---|---:|
+| Copilot CLI | **?%** |
+| Claude CLI | **?%** |
 
-## Why this matters
+<!--
+EXPERIMENT TODO: DEFINE AND VERIFY THE CACHE METRIC
 
-A lot of coding-agent conversations start with:
+Choose one formula and apply it consistently.
 
-> Which model is best?
+Possible formula:
 
-That question is too narrow.
+cache_read_tokens /
+(input_tokens + cache_read_tokens + cache_creation_tokens)
 
-A better set of questions is:
+Confirm whether the denominator should include:
 
-- What system prompt did the model receive?
-- How autonomous was the agent instructed to be?
-- Which tools were available?
-- How verbose were the tool descriptions?
-- Were MCP servers enabled?
-- Was memory loaded?
-- Was the agent running in a CLI or IDE?
-- How was caching configured?
-- Was context compacted?
-- Did the harness expose subagents or planning tools?
-- Were we comparing the model, the harness, or the user’s configuration?
+- uncached input
+- cache creation
+- cache reads
+- all logical prompt tokens
 
-These details can change the result without changing the model.
+Record:
 
-That is the central point.
+- source fields
+- aggregation scope
+- included runs
+- whether the value is weighted by tokens or averaged per request
+- whether the two APIs report equivalent categories
 
-## What developers should take away
+Do not call this a provider-reported "cache-hit rate" unless that is literally
+the metric returned by both products.
+-->
 
-When a coding agent performs well, the model deserves some credit.
+A high cache percentage is useful, but it is not a complete efficiency score.
 
-But not all of it.
+A harness can have excellent cache reuse and still:
 
-When a coding agent performs poorly, the model may not be the only reason.
+- carry a large initial prefix
+- create an expensive cache on the first call
+- use many model round-trips
+- grow a large uncached conversation tail
+- consume substantial context capacity
 
-The harness may have given it too much context, too little context, too many tools, too few tools, stale memory, missing MCP access, a cautious autonomy posture, or a costly tool catalog.
+Caching reduces the price of reprocessing stable information. It does not remove that information from the model’s context, and it does not make the overall system automatically efficient.
 
-For developers, the practical lesson is simple:
+---
 
-> Do not treat the model name as the whole explanation.
+## Long sessions create another harness decision
 
-If two agents both say they use Claude Sonnet 4.5, they may still behave very differently.
+Model APIs are generally stateless between requests. The harness must therefore send the relevant conversation state again when it calls the model.
 
-They may have different prompts, tools, memory, caching, routing, orchestration, and context.
+As the session grows, the harness has several options:
 
-They are not the same system.
+- keep sending the complete history
+- summarize older messages
+- compact tool results
+- drop information judged no longer relevant
+- move selected facts into memory
+- start a new subagent with a smaller context
 
-## There is no magic
+Each approach trades continuity against context size and information loss.
 
-This is the part I find most useful.
+Keeping everything preserves detail, but the session becomes larger.
 
-When one coding agent looks much more efficient than another, it is tempting to assume there must be some hidden model advantage.
+Compaction keeps the session manageable, but a summary can omit something that later matters.
 
-Sometimes the model is part of the answer.
+Persistent memory can carry useful facts forward, but it can also preserve stale assumptions.
 
-But often the explanation is more ordinary.
+These are not simply model capabilities. They are system-design choices built around the model.
 
-One harness sends fewer tools.
+<!--
+EXPERIMENT TODO: DO NOT OVERSTATE COMPACTION
 
-Another sends longer tool descriptions.
+Do not include a product-specific statement that compaction occurred unless the
+capture contains a directly identifiable compaction, summary, or history-
+replacement event.
 
-One batches work.
+Article 2 should remain conceptual here.
 
-Another proceeds step by step.
+A later lab note can investigate:
 
-One loads memory.
+- context growth
+- compaction thresholds
+- summaries
+- information loss
+- fresh versus long sessions
+-->
 
-Another starts clean.
+---
 
-One has MCP enabled.
+## Who controls what?
 
-Another does not.
+Some parts of the system belong clearly to the model provider. Others are primarily controlled by the harness.
 
-One IDE injects rich workspace context.
+| Decision | Model provider | Harness or product |
+|---|---|---|
+| Model weights and training | Primary control | Selects the model |
+| API contract and supported primitives | Primary control | Uses and configures them |
+| System instructions | Provides instruction-following capability | Writes the instructions |
+| Tools | Defines the tool-calling interface | Selects and describes tools |
+| MCP | Supports compatible interactions | Selects servers and exposes tools |
+| Skills and memory | Provides context capacity | Designs loading and persistence |
+| Prompt caching | Provides the mechanism | Structures the cacheable prefix |
+| Context management | Defines context limits | Manages history and compaction |
+| Sampling and output limits | Defines allowed ranges | Chooses values |
+| Planning and subagents | Provides model capability | Builds orchestration |
+| Permissions and confirmations | Provides base safety behavior | Adds product policy and UX |
+| Model routing | Serves available models | Selects a model or routing strategy |
 
-Another sends a smaller prefix.
+<figure>
+  <img
+    src="./figures/harnesses/model-provider-vs-harness-control.svg"
+    alt="Matrix showing model-provider responsibilities such as model weights and API mechanisms alongside harness responsibilities such as system prompts, tool selection, MCP configuration, memory, caching structure, context management, orchestration, and routing."
+  >
+  <figcaption>
+    The model provider supplies the model and its mechanisms. The harness assembles those mechanisms into a developer product.
+  </figcaption>
+</figure>
 
-These are engineering choices.
+The boundary is not perfectly sharp. A model is trained to use tools, follow instructions, and reason in certain ways. The harness cannot make the model capable of something it fundamentally cannot do.
 
-They can be good choices.
+But within those capabilities, the harness has substantial influence over the experience.
 
-They can be bad choices.
+---
 
-They can be right for one task and wrong for another.
+## Different does not mean fundamentally better
 
-But they are not magic.
+This distinction matters when people compare coding agents.
 
-## Before you compare coding agents
+One agent may appear more capable because it exposes more tools.
 
-The next time you see a coding-agent comparison, do not only ask which model was used.
+One may appear more efficient because it batches independent operations.
 
-Ask what the harness did.
+One may appear more cautious because its instructions require confirmation.
 
-A useful comparison should tell you:
+One may appear to understand the project better because it loads persistent memory.
 
-- which model was used
-- which harness was used
-- whether it was CLI or IDE
-- what MCP servers were enabled
-- what tools were visible
-- whether memory was loaded
-- how many requests were made
-- how much of the prefix was tools, memory, system prompt, and context
-- whether caching was used
-- whether the task was repeated
+One may appear less expensive because it starts with a smaller tool catalog.
 
-Without those details, the comparison may still be interesting.
+All of those differences can be real.
 
-But it is probably not measuring what people think it is measuring.
+But they are not necessarily evidence that one product has access to a fundamentally better kind of agent architecture.
 
-## The model is the engine
+They may instead represent different choices along several tradeoff curves:
 
-A coding agent is not just a model.
+| Design choice | Possible benefit | Possible cost |
+|---|---|---|
+| Larger tool catalog | More immediate capability | Larger prompt and harder selection |
+| More detailed tool descriptions | Better guidance | More repeated context |
+| Persistent memory | Better continuity | Stale or irrelevant information |
+| More autonomy | Fewer interruptions | Greater need for guardrails |
+| Sequential exploration | Adapts after every result | More model round-trips |
+| Parallel exploration | Fewer round-trips | Possible unnecessary work |
+| Rich IDE context | Better workspace awareness | Larger first-call footprint |
+| Aggressive compaction | Longer sessions | Potential information loss |
+
+The best choice depends on the task.
+
+A read-heavy repository explanation rewards different behavior than a risky production deployment. A small code transformation has different needs from a multi-hour migration. A developer working interactively may prefer different controls from an unattended automation.
+
+So the conclusion is not that every harness is equivalent.
+
+It is:
+
+> Harnesses make different engineering choices, and no single combination is optimal for every task.
+
+---
+
+## What to ask when comparing coding agents
+
+The model name still matters. But it is not enough to explain a result.
+
+When evaluating a coding-agent comparison, ask:
+
+- Which exact model and snapshot were used?
+- Which harness and version were used?
+- What did the system instructions tell the model?
+- Which built-in tools were available?
+- Which MCP servers were enabled?
+- Were repository instructions, memory, or skills loaded?
+- Was the task run in a CLI or an IDE?
+- What context was present on the first call?
+- How many model requests and tool calls occurred?
+- Was the agent working sequentially or in parallel?
+- How was prompt caching measured?
+- Was cost billed by the product or estimated from tokens?
+- Was the test repeated?
+- Was the result scored for quality?
+
+Those questions turn an unexplained winner into an understandable system.
+
+---
+
+## The model matters. The system around it matters too.
+
+A coding agent is not simply a model with a text box.
 
 It is:
 
 ```text
 Model
-+ system prompt
++ instructions
 + tools
 + MCP
 + memory
 + skills
 + context
 + caching
-+ planning
 + orchestration
-+ UX choices
-= agent behavior
++ product policy
+= coding-agent behavior
 ```
 
-The model matters.
+The model supplies the underlying capability.
 
-But the harness decides what the model sees, what it can do, and how hard it has to work.
+The harness decides what the model sees, what it can do, and how the work moves forward.
 
-That is why two agents using the same model can feel so different.
+That is why the same model can feel so different across products.
 
-And it is why the most useful question is often not:
+And it is why the most useful question is not only:
 
-> Which model is better?
+> Which model ran the task?
 
 It is:
 
-> What system did we actually build around it?
+> What system did we build around it?
+
+---
+
+# Research completion checklist
+
+This section is for the experimentation agent and should be removed before publication.
+
+## Required before publication
+
+### 1. Normalize the first-call metric
+
+Select one comparable metric for all three harnesses.
+
+Document:
+
+- exact definition
+- source fields
+- tokenization method
+- treatment of cache-read tokens
+- treatment of cache-creation tokens
+- treatment of user-message tokens
+- treatment of tool schemas
+- whether auxiliary requests are excluded
+
+Recommended output:
+
+```text
+metric_name:
+metric_definition:
+included_components:
+excluded_components:
+capture_source:
+known_limitations:
+```
+
+### 2. Complete baseline provenance
+
+For each harness, record:
+
+```text
+Harness:
+Harness version:
+Surface:
+Model:
+Model snapshot:
+Repository:
+Commit SHA:
+Prompt:
+Prompt hash:
+Fresh-session procedure:
+MCP state:
+Skills state:
+Memory state:
+Instruction-file state:
+Tool count:
+First-call metric:
+Cache-read tokens:
+Cache-creation tokens:
+Uncached input tokens:
+Capture method:
+Direct or inferred:
+Raw capture path:
+```
+
+### 3. Verify tool-catalog values
+
+For Copilot CLI and Claude CLI:
+
+- locate the first main-agent request
+- exclude auxiliary requests
+- save the complete tool array
+- count full schemas
+- calculate schema tokens consistently
+- confirm MCP is off
+- confirm optional skills or tools are absent
+
+Article 2 should report only:
+
+- tool count
+- total tool-definition footprint
+
+Article 3 should investigate:
+
+- flat delivery
+- tool virtualization
+- name-only indexes
+- progressive loading
+- auxiliary tool requests
+- grouping thresholds
+
+### 4. Confirm the MCP delta
+
+Reproduce or verify:
+
+```text
++14 tools
++1,876 prefix tokens
+```
+
+Record:
+
+- server and version
+- exact configuration
+- baseline values
+- MCP-on values
+- measurement definition
+- whether other prompt components changed
+
+### 5. Add Article 1 aggregates
+
+Insert:
+
+- mean model requests
+- mean tool calls
+
+Use the final 40-run dataset.
+
+Record:
+
+- included conditions
+- number of runs
+- exclusions
+- mean
+- median
+- variability
+- counting method
+
+Do not repeat Article 1’s full cost or quality result.
+
+### 6. Define the cache metric
+
+Document:
+
+- formula
+- included token categories
+- weighted aggregate versus mean of percentages
+- run scope
+- API-field mapping
+- comparability caveats
+
+Use the same metric for both CLI harnesses.
+
+### 7. Verify autonomy statements
+
+Confirm that the extracted prompts support the descriptions:
+
+- Copilot CLI favors autonomous, non-interactive progress
+- Claude CLI asks for confirmation before irreversible actions
+
+Use paraphrases rather than long prompt quotations.
+
+### 8. Regenerate all SVG files
+
+Update:
+
+```text
+agent-is-more-than-model.svg
+prefix-size-comparison.svg
+tool-catalog-size.svg
+mcp-delta-callout.svg
+model-provider-vs-harness-control.svg
+```
+
+Verify:
+
+- numbers match the finalized dataset
+- captions use the same metric terminology
+- title and description elements are present
+- alt text matches the final image
+- images work in light and dark article contexts
+- mobile text remains readable
+
+---
+
+## Recommended but not blocking
+
+### Repeat the structural baselines
+
+Run each baseline two or three times to confirm:
+
+- first-call totals are stable
+- dynamic context does not materially change the result
+- auxiliary requests are correctly excluded
+- cache state does not alter the logical token total
+- tool catalogs are stable
+
+These repetitions are consistency checks, not performance distributions.
+
+### Add one instruction-file delta
+
+Optional controlled comparison:
+
+```text
+Baseline
+versus
+Baseline + one repository instruction file
+```
+
+Measure:
+
+- added first-call tokens
+- later model requests
+- tool calls
+- exploration
+- cache behavior
+
+Do not delay Article 2. This belongs more fully in the planned `AGENTS.md` article.
+
+---
+
+## Deliberately deferred to Article 3
+
+Do not expand Article 2 with these topics:
+
+- detailed first-call component decomposition
+- CLI-versus-IDE implementation comparison
+- tool virtualization
+- progressive tool delivery
+- full tool-schema inspection
+- installed-extension impact
+- cold-versus-warm first calls
+- remaining usable context capacity
+- product-by-product skills architecture
+- detailed MCP-on versus MCP-off IDE captures
+- configuration-parity recipes
+- official Claude Code VS Code comparison
+
+Article 3 should answer:
+
+> What exactly does each environment send before the model begins the task?
+
+---
+
+## Publication gate
+
+The article is ready for external review when:
+
+- [ ] all `?` placeholders are replaced
+- [ ] the first-call metric is consistently defined
+- [ ] baseline provenance is documented
+- [ ] tool figures are verified from main-agent requests
+- [ ] MCP delta is verified
+- [ ] Article 1 aggregates are inserted
+- [ ] cache-rate calculation is documented
+- [ ] autonomy wording is verified
+- [ ] unverified product-specific compaction claims are absent
+- [ ] all SVGs use the final data
+- [ ] all figures have accurate alt text
+- [ ] all direct measurements, inferences, and hypotheses are distinguishable
+- [ ] the final article does not imply that a smaller prompt is always better
+- [ ] the final article does not claim universal harness superiority
+- [ ] this research-completion section and all TODO comments are removed

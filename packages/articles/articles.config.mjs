@@ -105,6 +105,7 @@ export const ARTICLES = [
     title: "A coding agent is more than a model — what the harness decides",
     description:
       "Same Claude Sonnet 4.5 weights across three harnesses — Copilot CLI, Claude CLI, and Copilot in VS Code. A measured map of which behaviors come from the model provider and which come from harness design, and how those choices move what the model sees before it reasons.",
+    readNext: "what-actually-differs",
     order: 7,
   },
 ];
