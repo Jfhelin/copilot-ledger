@@ -134,7 +134,7 @@ footprint total is invariant to warm/cold; only billing differs.
     alt="Horizontal bar chart comparing the first-call context footprint of Copilot CLI, Claude CLI, and Copilot coding agent in Visual Studio Code using the same Claude Sonnet model and a minimal configuration."
   >
   <figcaption>
-    The same model begins with a different amount and composition of context depending on the harness.
+    The same model begins with a different amount and composition of context depending on the harness. The segments show each component’s size, not the order it appears on the wire.
   </figcaption>
 </figure>
 
@@ -476,6 +476,8 @@ The model provider supplies the caching mechanism. The harness influences how ef
 - which parts of the prompt remain stable
 - which information is inserted before or after those breakpoints
 - how often tools, memory, or instructions change
+
+How each harness orders that prefix for cache reuse—what stays stable up front and what is pushed past the breakpoint—is examined in Article 3.
 
 In the CLI captures, both harnesses achieved substantial cache reuse.
 
