@@ -23,12 +23,16 @@ verdict: **"task-dependent, and *prose-y* text is what's not free,"** not "guida
 
 ## Headline numbers (pooled, all 5 tasks)
 
-| Arm | n | mean cr | median cr | spread (sd) | total cr | ≈ $ |
-|---|---|---|---|---|---|---|
-| **BARE** | 50 | **64.8** | **35.0** | 50.5 | 3,239.6 | $32.40 |
-| **AGENTS** | 50 | **72.4** | **26.6** | 66.1 | 3,620.9 | $36.20 |
-| **ORIG** | 15 | **82.4** | **44.7** | 63.6 | 1,236.5 | $12.37 |
-| **INIT** | 50 | **64.8** | **26.3** | — | 3,241.4 | $32.41 |
+Cost per **version** of the file, all 5 tasks pooled. Range = min–max single-run credits.
+
+| Arm (file version) | ~tok | n | min | **median** | **mean** | max | range (min–max) | sd | total cr | ≈ $ |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **BARE** (no file) | 0 | 50 | 18.8 | **35.0** | **64.8** | 218.8 | 18.8–218.8 | 50.5 | 3,239.6 | $32.40 |
+| **AGENTS** (concise, hand-built) | ~129 | 50 | 15.0 | **26.6** | **72.4** | 242.5 | 15.0–242.5 | 66.1 | 3,620.9 | $36.20 |
+| **ORIG** (repo's verbose file) | ~650 | 15 | 19.1 | **44.7** | **82.4** | 191.7 | 19.1–191.7 | 63.6 | 1,236.5 | $12.37 |
+| **INIT** (`copilot init` auto-gen) | ~641 | 50 | 15.9 | **26.3** | **64.8** | 198.2 | 15.9–198.2 | — | 3,241.4 | $32.41 |
+
+(ORIG total is lower only because n=15 vs 50; compare mean/median, not total.)
 
 **The mean/median divergence is the story for the concise file.** AGENTS pushed the *median*
 down **35.0 → 26.6** (the typical run got cheaper) while the *mean* rose **64.8 → 72.4** (a few
