@@ -18,6 +18,9 @@ and sub-agents from the `<skills>` and `<agents>` blocks in the system message
 `~/copilot-ledger-data/captures/`.
 **Tool surface size.** 56 native tools; tool schemas ≈16,600 tokens (chars/4) ≈ **80.5%**
 of the 20,598 API-reported `prompt_tokens` — the highest tool share of the three.
+**Token divisor.** Shape-token counts use **chars/4** (dossier convention); the published
+Article 3 uses **chars/3.7**, so figures here run ~7% low — normalize before quoting. (The
+80.5% share is measured against the API's own `prompt_tokens`, not a divisor estimate.)
 
 All quotes below are **direct evidence** from the captured export. Predicted behaviors
 are labelled **Inference** and would need N=10/condition runs before any ranking claim.
@@ -100,6 +103,35 @@ one-shot, no background/parallel param. Curated and fixed — not an arbitrary t
 tools: extensions inflate the visible catalog. *(Direct evidence: `<file>` paths in
 `<skills>` block.)*
 
+## Memory & state
+
+Three surfaces — the richest memory model of the three harnesses.
+
+| Surface | Defer | Scope | Mechanism |
+|---|---|---|---|
+| `memory` | eager | **3 tiers**: user (`/memories/`, cross-workspace persistent), session (`/memories/session/`, per-conversation — *"Cleared after the conversation ends"*), repo (`/memories/repo/`, workspace-local) | file CRUD (`view`/`create`/`str_replace`/`insert`/`delete`/`rename`) |
+| `resolve_memory_file_uri` | **deferred** | resolves a `/memories/...` path → URI | helper for `setArtifacts` |
+| `session_store_sql` | eager | cross-session history (past sessions) | SQLite, **read-only** (SELECT/WITH); tables `sessions`/`turns`/`session_files`/…; schema via the `chronicle` skill |
+
+- **It tells the model what to put where — and *encourages* storing code facts.** Repo scope
+  is explicitly for *"codebase conventions, build commands, project structure facts, and
+  verified practices."* This is the **opposite** of a "don't store architecture, re-read it"
+  refusal; no such refusal appears in any of these three captures. *(Direct evidence,
+  `memory` schema.)*
+- **Read/write split.** `memory` is full read/write file CRUD; `session_store_sql` is
+  read-only history. Both costs fold into the eager-tool total (counted in the ~8.8k eager
+  budget); not separately broken out here.
+- **UX consequence (Inference).** Persistence spans three lifetimes (conversation / repo /
+  user) without the user hand-managing files — but it's only as good as what the model
+  remembers to write.
+
+## Version stability (not captured)
+
+No second VS Code data point: **Agent mode can't be driven headless**, so a fixed-prompt
+rerun at a different build isn't scriptable the way the two CLIs are. Treat the 56-tool /
+23-eager-33-deferred / 16-skill figures as a **single-build snapshot (2026-06-09)**; drift
+across VS Code / extension versions is **unavailable**.
+
 ## UX consequences (Inference)
 
 1. **Capability ceiling is highest, but so is the hidden cost.** ~80% of the prefix is
@@ -123,3 +155,12 @@ tools: extensions inflate the visible catalog. *(Direct evidence: `<file>` paths
   — it's actually a Claude Code CLI session (24 native incl. `Agent`/`Bash`/`Cron*`/
   `EnterPlanMode` + 71 `mcp__` = 95 tools). Do **not** cite it as Copilot-in-VS-Code.
   *(Direct evidence: tool names in that file.)*
+
+## Open data gaps
+
+- No second build snapshot (headless Agent mode unavailable) — version drift **unavailable**.
+- Per-tool token weights are chars/4 estimates from schema text, not API-reported per-tool
+  costs.
+- The eager/deferred token split (~8.8k / ~6.3k) is an estimate, not a wire-reported figure.
+- Exact `tool_search` trigger conditions (what makes the model fetch a deferred tool) not
+  exercised in this capture.

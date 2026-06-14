@@ -17,6 +17,9 @@ new developer: purpose, components, data flow, install/run/test."*
 outside git at `~/copilot-ledger-data/captures/`.
 **Tool surface size.** 27 native tools; tool definitions ≈18,877 shape tokens =
 **69.4%** of the ~27,217-token request prefix — the heaviest tool budget in the corpus.
+**Token divisor.** Shape-token counts use **chars/4** (dossier convention); the published
+Article 3 uses **chars/3.7**, so figures here run ~7% low — normalize before quoting.
+*(Convention note, not a measurement.)*
 
 All quotes below are **direct evidence** from the captured tool schemas. Predicted
 behaviors are labelled **Inference** and would need N=10/condition runs before any
@@ -90,6 +93,50 @@ list alongside built-ins. *(Inference.)*
 `security-review`. v2.1.112 had 10; v2.1.170 added `verify`/`code-review`/`run` and
 renamed `less-` → `fewer-permission-prompts`. *(Direct evidence, system-reminder delta.)*
 
+## Memory & state
+
+**No dedicated memory/state tool ships in the 27-tool wire array** *(Direct evidence:
+absence — there is no `memory`, `store_memory`, or `session_store_sql` in the captured
+schemas).* State is handled three other ways instead:
+
+| Surface | Scope | Mechanism | Cold-prefix cost |
+|---|---|---|---|
+| Task graph (`TaskCreate`/`TaskGet`/`TaskList`/`TaskUpdate`) | **Per-session** | in-session DAG with `owner` + `blocks`/`blockedBy` edges | `TaskUpdate` 837 + `TaskCreate` 682 (Get/List not separately measured) |
+| `CronCreate` jobs | **Per-session** | *"session-only; auto-expires after 7 days"* | 891 tok |
+| `CLAUDE.md` project / user files | Cross-session (file-based) | read at startup; **not a wire tool in this capture** | not separately observable |
+
+- **The persistence story is files, not a tool.** Durable cross-session memory in Claude
+  Code is `CLAUDE.md` (project) / `~/.claude` (user) markdown the harness reads at launch —
+  none of which appears as a callable tool in this request prefix, so its token cost here is
+  **not separately observable**. *(Inference from product design; the wire shows only the
+  absence of a memory tool.)*
+- **Explicit refusals.** None observed in the 27 schemas — the brief's "re-read code
+  patterns/architecture" refusal example was **not present** in this capture.
+- **UX consequence (Inference).** Within a session the model has a rich, owned task DAG; but
+  "what did I do last week?" has no built-in wire answer — it depends on whatever the user
+  committed to `CLAUDE.md`.
+
+## Version stability
+
+Second data point: **v2.1.112** (`matched-pair-baseline/capture-006.json`, 26 tools, schemas
+read verbatim) vs the **v2.1.170/173 baseline** (27 tools). Same model, flat delivery both
+times.
+
+| Dimension | v2.1.112 | v2.1.170/173 |
+|---|---|---|
+| Tool count | **26** | **27** |
+| Delivery | flat, all eager, skills preloaded | flat, all eager, skills preloaded |
+| Search | standalone `Glob` + `Grep` | **removed** — folded into `Bash` (`find`/`rg`) |
+| Todo / tasks | single `TodoWrite` | **task graph**: `TaskCreate`/`TaskGet`/`TaskList`/`TaskUpdate` |
+| Skills | 10 | 13 (+`verify`/`code-review`/`run`; `less-`→`fewer-permission-prompts`) |
+
+- **Philosophy stable, composition actively traded.** Delivery never changed (flat, eager,
+  preloaded skills), but the surface was *re-budgeted* between versions: −`Glob`/`Grep`,
+  −`TodoWrite`, +4-tool task graph, +3 skills. The engineer is moving schema budget between
+  features, not changing the delivery bet. *(Direct evidence, both captures.)*
+- v2.1.112's total tool-token budget was **not re-summed** under chars/4 (per-tool
+  `approxTokens` are present in the capture); the v2.1.170 total is 18,877.
+
 ## UX consequences (Inference)
 
 1. **The agent commits like a senior.** A 3,010-tok `Bash` playbook means git/PR hygiene
@@ -109,3 +156,12 @@ renamed `less-` → `fewer-permission-prompts`. *(Direct evidence, system-remind
   infrastructure economics leaking into a tool description.
 - Removing `Glob`/`Grep` while adding a Task graph shows schema budget being actively
   *traded* between features across versions.
+
+## Open data gaps
+
+- v2.1.112 total tool-token budget not re-summed under the chars/4 convention.
+- `CLAUDE.md` memory cost is off-wire — **not separately observable** from this prefix.
+- `TaskGet`/`TaskList` per-tool weights are estimates, not measured (**unavailable** as
+  Direct evidence).
+- Sub-agent registry extensibility (user `CLAUDE.md` subagents listed alongside built-ins) is
+  Inference from schema wording, not observed.
