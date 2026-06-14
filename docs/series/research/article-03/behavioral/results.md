@@ -144,6 +144,52 @@ is not an edit.*
 
 ---
 
+## Cost, cache & latency (descriptive — read the caveats first)
+
+These columns were extracted from the **same raw captures** (Copilot
+`digest.json → rollups`; Claude `stream.jsonl` usage + the terminal `result` event)
+and joined onto every scored row by `enrich.mjs`. They describe **operational cost of
+running each frozen prompt**, not quality. **This is not a price comparison** — see
+caveats. Medians over valid runs:
+
+| exp | harness | N | med wall_ms | med llm_calls | med total_tok | med cache_hit | med real_usd |
+|---|---|---|---|---|---|---|---|
+| exp1_identity | copilot | 10 | 11,551 | 1 | 16,114 | 0.567 | 0.0325 |
+| exp1_identity | claude | 10 | 8,751 | 1 | 18,066 | 0.999 | 0.0098 |
+| exp2_act_advise | copilot | 10 | 18,089 | 2 | 34,150 | 0.737 | 0.0476 |
+| exp2_act_advise | claude | 10 | 22,714 | 2 | 38,031 | 0.950 | 0.0349 |
+| exp3_scope | copilot | 10 | 18,781 | 3 | 49,460 | 0.841 | 0.0503 |
+| exp3_scope | claude | 10 | 17,556 | 3 | 55,532 | 0.983 | 0.0339 |
+| exp4_shape | copilot | 10 | 35,856 | 4 | 80,762 | 0.798 | 0.1053 |
+| exp4_shape | claude | 10 | 63,872 | 6 | 132,775 | 0.941 | 0.1238 |
+| exp5_plan | copilot | 10 | 181,211 | 26 | 765,148 | 0.956 | 0.4880 |
+| exp5_plan | claude | 8 | 150,693 | 22 | 635,400 | 0.965 | 0.4177 |
+
+What is **Direct evidence** here:
+
+- **`llm_calls`** — Copilot `rollups.requests` (responses-with-usage); Claude = count of
+  deduped `assistant` completions carrying a `usage` block (`llm_calls_primary_model`
+  stores the subset on the snapshot model — Claude spins background **haiku** title-gen
+  calls that the total includes).
+- **`total_tokens` / cache split** — both harnesses report `input` / `output` /
+  `cache_read` / `cache_creation` directly; `reasoning_tokens` is Copilot-only.
+- **`cache_hit_rate`** — Copilot reports `rollups.cacheHitRate`; Claude is computed the
+  same way: `cache_read / (cache_read + cache_creation + fresh_input)`.
+- **`real_spend`** — Copilot `cost.native` is the **exact GitHub AI Credits billed**
+  (authoritative; `real_spend_usd` = implied USD at $0.01/credit). Claude
+  `result.total_cost_usd` is **Anthropic list USD** (authoritative for that account).
+- **`normalized_usd`** — both modelled from the same pricing table (the closest to a
+  like-for-like efficiency figure); for Claude it equals `total_cost_usd`.
+
+Two reads that jump out (descriptive, **not** rankings):
+
+- The **cost curve tracks the task, not the harness** — both rise monotonically across
+  exp1→exp5 in lockstep (identity ≈ $0.01–0.03; the open-ended exp5 feature ≈ $0.4–0.5
+  and ~150–180 s with ~20–26 model calls). The expensive thing is the *kind of prompt*.
+- **exp4 is where wall-time and tokens diverge most** — Claude's longer prose answer
+  costs ~1.6× the tokens and ~1.8× the wall-time of Copilot's shorter, emoji/diagram
+  answer. That is the *same shape finding* (EXP 4) showing up in the cost ledger.
+
 ## Confounds observed (report, don't hide)
 
 1. **Headless autonomy bias (EXP 2 & EXP 5).** `-p`/print mode biases both CLIs toward
@@ -166,6 +212,14 @@ is not an edit.*
 5. **Token divisor.** This study reports counts/rates, not shape tokens — the chars/4
    (dossier) vs chars/3.7 (article) convention does not apply here. Flagged for
    consistency with the sibling dossiers.
+6. **Cost is confounded by cache warmth + different billing regimes (cost table only).**
+   Two reasons cross-harness `real_usd` is **not** a fair price comparison: (a) provider
+   prompt-cache warmth depends on session ordering — back-to-back reps warm each
+   provider's cache differently (e.g. EXP 1 Copilot rep-01 was **cold**: 15,835
+   cache-*creation* tokens, 0% hit; Claude read 18,051 cached at 99.9%), so per-run cost
+   swings with cache state, not just work done; (b) `real_spend` is in **different
+   commercial units** — GitHub AI Credits (implied USD) vs Anthropic list USD. Use
+   `normalized_usd` for efficiency, and treat all cost numbers as **descriptive**.
 
 ---
 
@@ -188,3 +242,30 @@ is not an edit.*
 - Version-stability re-capture for the two CLIs (different date/version) lives in the
   tooling dossiers' *Version stability* sections, not here.
 - VS Code N=1 interactive contrast is the user's manual capture; not represented above.
+
+---
+
+## Dataset schema & reuse
+
+`results.jsonl` (100 rows, one per run; `valid:false` on the 2 session-limit Claude
+exp5 runs) is intended to be **reusable beyond this study** — e.g. cost/efficiency,
+cache-behavior, or tokens-per-edit analyses. Every row joins three layers:
+**provenance + behavioral score + operational cost**. Raw artifacts for each row live at
+`raw_capture_path` (`digest.json`/`stream.jsonl`, `diff.patch`, `answer.txt`, `row.json`).
+
+| group | fields |
+|---|---|
+| **provenance** | `experiment`, `harness`, `harness_version`, `model_snapshot`, `repo`, `commit_sha`, `mcp`, `run_index`, `timestamp`, `prompt_id`, `prompt_hash`, `model_ok`, `exit_code`, `valid`, `result_is_error`, `raw_capture_path` |
+| **working-tree effect** | `files_changed_count`, `insertions`, `deletions`, `comments_added`, `new_test_files`, `touched_unrelated` |
+| **output shape** | `final_answer_word_count`, `emoji_count`, `ascii_diagram_present`, `todo_list_present` |
+| **agent behavior** | `first_tool`, `tool_call_count`, `planned_before_editing`, `plan_mode_invoked`, `dove_in`, `edited_without_plan`, `self_id_flags`, `classification` |
+| **latency** | `wall_ms` (orchestrator wall-clock, both); `duration_api_ms` (Claude only) |
+| **tokens** | `total_tokens`, `input_fresh_tokens`, `output_tokens`, `reasoning_tokens` (Copilot only), `cache_read_tokens`, `cache_creation_tokens`, `cache_hit_rate` |
+| **llm/tool calls** | `llm_calls`, `llm_calls_primary_model` (Claude only), `tool_calls_billed` |
+| **cost** | `real_spend_value` + `real_spend_unit` (credits vs usd), `real_spend_usd`, `normalized_usd`, `normalized_usd_no_cache` (Copilot only), `cost_enriched` |
+
+The cost/token/latency columns were added by `harness/enrich.mjs` (idempotent; re-derives
+from the raw captures, never overwrites the behavioral score). Re-run with
+`node enrich.mjs` after any backfill. **Caveats for reuse:** read confound #6 before
+comparing `real_usd` across harnesses; `llm_calls` counting differs by harness (see the
+cost section); cache columns reflect session warmth, not just work.
