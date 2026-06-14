@@ -21,6 +21,9 @@ echo "[backfill] re-running claude exp5 reps 9-10"
 cd "$HARNESS_DIR"
 node run.mjs --harness claude --exp exp5_plan --start 9 --reps 10 --timeout 900 --keep-going
 
+echo "[backfill] enriching new rows with token/cost/cache columns"
+node enrich.mjs
+
 echo "[backfill] re-deriving valid flag"
 python3 - "$JSONL" "$CAP" <<'PY'
 import json,os,sys
