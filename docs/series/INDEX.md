@@ -36,7 +36,7 @@ _Last updated: 2026-06-14._
 | 1 | One run can't rank two coding agents | Establish measurement discipline | ✅ research + article largely complete | GitHub Blog | [`article-01-one-run-cant-rank-two-agents.md`](./article-01-one-run-cant-rank-two-agents.md) |
 | 2 | A coding agent is more than a model | Explain the harness | 🟡 dossier complete, article drafted (in polish); 9 wire-derived research dossiers committed in `research/article-02/` (PR #80) — see **Article 2 & 4 — data & log locations** below | GitHub Blog | [`article-02-more-than-a-model.md`](./article-02-more-than-a-model.md) |
 | 3 | What your IDE sends before you type | Make invisible context visible | 🟡 reframed around **five harness design decisions** (tool surface · delivery · skills · sub-agents · memory & state); research dossiers + 98/100-run behavioral dataset complete (see `research/article-03/`); article not yet drafted. ⚠️ 3 data corrections must land in the draft — see **Article 3 — plan notes** below | Personal blog → maybe GitHub Blog | [`article-03-what-your-ide-sends.md`](./article-03-what-your-ide-sends.md) |
-| 4 | Can a good AGENTS.md improve quality and reduce cost? | Test a practical developer lever | 🔵 evaluation data **collected** (discovery 15 + evaluation 165 runs); raw captures external & not yet committed/catalogued — see **Article 2 & 4 — data & log locations** below; needs digest + write-up | GitHub Blog (+ MS Learn follow-up) | [`article-04-agents-md.md`](./article-04-agents-md.md) |
+| 4 | Can a good AGENTS.md improve quality and reduce cost? | Test a practical developer lever | 🔵 ready to write — pre-registered **4-arm** AGENTS.md experiment complete; 6 research dossiers committed in `research/article-04/` + reproducible pipeline (frozen scores) in `content-lab/experiments/agents-md/` (PR #79); raw captures external — see **Article 2 & 4 — data & log locations** below. ⚠️ working-file status line stale; data-catalog/ledger entry still missing | GitHub Blog (+ MS Learn follow-up) | [`article-04-agents-md.md`](./article-04-agents-md.md) |
 | 5 | When is a more expensive model worth it? | Map the cost-quality frontier | ⚪ needs new experiment (~250 runs); some e3 data exists | Personal blog → maybe GitHub Blog | [`article-05-model-cost-quality.md`](./article-05-model-cost-quality.md) |
 | 6 | Same model, different harness | Synthesis / competitive capstone | ⚪ depends on Articles 1–5 | Personal blog → possible field adaptation | [`article-06-same-model-different-harness.md`](./article-06-same-model-different-harness.md) |
 
@@ -110,19 +110,25 @@ captures they cite stay **outside git** under `~/copilot-ledger-data/` (see the 
   `cl-ide-transcripts/` (Claude Code extension transcripts).
 - In-git aggregate mirror: `docs/content-lab/data/db/runs.jsonl`.
 
-**Article 4 — "Can a good AGENTS.md improve quality and reduce cost?" (captured, not yet committed).**
+**Article 4 — "Can a good AGENTS.md improve quality and reduce cost?" (experiment complete; dossiers committed).**
+- In-repo digests: `docs/series/research/article-04/` — 6 dossiers (`INDEX.md`,
+  `experiment-design.md`, `the-three-files.md`, `discovery-friction.md`, `cost-findings.md`,
+  `quality-findings.md`). Landed via PR #79. `INDEX.md` is the entry point (pre-registered
+  4-arm design, one-paragraph result, provenance, honest caveats).
+- In-repo reproducible pipeline: `docs/content-lab/experiments/agents-md/` — runner + frozen
+  interventions, discovery & evaluation tasks/rubrics, scoring scripts and **frozen results**
+  (`evaluation/scoring/results/SUMMARY.md` + per-task scores).
 - Raw captures (outside git): `~/copilot-ledger-data/captures/agents-md/` —
-  - `discovery/` — 15 runs (5 representative tasks × 3 reps, no AGENTS.md): `captures.jsonl`, `runs/`, `sweep.progress.log`.
-  - `evaluation/` — 165 runs across 5 held-back tasks (E1-nav, E2-local, E3-debug, E4-multifile,
-    E5-review) × 4 conditions (BARE / AGENTS / INIT ×10 reps each + ORIG ×3): `captures.jsonl`,
-    `runs/`, `scoring/packets/`.
-- ⚠️ Open gaps: this data is **not yet** committed to the repo, digested into
-  `docs/series/research/article-04/`, or added to the data catalog / run ledger
-  (`docs/content-lab/data/INDEX.md`, `runs.jsonl`). The external `~/copilot-ledger-data/README.md`
-  inventory also does not yet list `agents-md/`.
-- ⚠️ Stale working file: `article-04-agents-md.md` still frames this as "needs a new
-  pre-registered experiment (~100 runs)" with an unchecked checklist — reconcile against the
-  collected data (note the evaluation grew to a 4-condition design, not the planned 2) when digesting.
+  `evaluation/captures.jsonl` (165 rows: BARE 50, AGENTS 50, ORIG 15, INIT 50) + per-run logs;
+  `discovery/` (15 no-context runs).
+- Design: 4 arms — BARE (no file) / AGENTS (~129 tok, concise hand-built) / ORIG (~650 tok,
+  repo's own verbose file) / INIT (~641 tok, `copilot init` auto-generated) × 5 unseen tasks
+  (E1-nav … E5-review), n=10/cell (ORIG n=3). Harness: Copilot CLI headless, Claude Sonnet 4.5;
+  repo under test `octodemo/octocat_supply @ e1516cf`.
+- ⚠️ Remaining gaps: **not** yet added to the data catalog / run ledger
+  (`docs/content-lab/data/INDEX.md`, `runs.jsonl` — 0 agents-md rows); the working file
+  `article-04-agents-md.md` status line still reads "needs a new pre-registered experiment" and
+  is stale relative to the committed results.
 
 ---
 
