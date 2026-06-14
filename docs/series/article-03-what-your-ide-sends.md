@@ -927,6 +927,57 @@ Verify:
 
 ---
 
+## Data collected — inventory & locations
+
+_Added 2026-06-14. This records what research data now backs Article 3 and exactly where it
+lives, so the writer can cite it without re-deriving. Standards: every cited number is
+Direct evidence with a capture; raw captures stay outside git; no harness is ranked._
+
+### Committed in the repo (the writer reads these)
+
+All under `docs/series/research/article-03/`:
+
+| File | What it is |
+|---|---|
+| `tooling-profile-copilot-cli.md` · `tooling-profile-claude-cli.md` · `tooling-profile-copilot-vscode.md` | Per-harness **tooling dossiers** — tool surface, delivery mechanism (flat-slim / flat-heavy / gated), skills, sub-agents, memory & state, version-stability. Wire-verified, evidence-labeled. (PRs #77, #78 — merged.) |
+| `harness-profile-*.md` | Companion **system-prompt dossiers** (reconciled: VS Code = 16 skills, 23 eager + 33 deferred). |
+| `behavioral/results.md` | The **behavioral study** writeup — design, validity, per-prompt findings (EXP 1–5), cost/cache/latency table, confounds, headline reads, open gaps, dataset schema. Tendency study, **not a ranking**. |
+| `behavioral/results.jsonl` | **100 rows, one per run** (98 valid). 50+ fields: behavioral flags joined with cost/cache/llm-calls/latency. Loads into the `sql` tool directly. |
+| `behavioral/vscode-manual.md` | VS Code Agent-mode **N=1** contrast (exp1+exp2) + the two `gpt-4o-mini` overhead-call findings. ⚠️ N=1, not state-matched. |
+| `behavioral/harness/` | Reproducibility scripts: `run.mjs` (frozen prompts + constants), `score.mjs`, `enrich.mjs`, `backfill-claude-exp5.sh`, `vscode-manual.sh`. |
+
+### The behavioral study at a glance (Direct evidence — `behavioral/results.md`)
+
+- **Design:** 5 frozen prompts (identity / act-vs-advise / scope / shape / plan) × 2 harnesses
+  (Copilot CLI, Claude CLI) × N=10 = **100 runs, 98 valid**.
+- **Pinned env:** repo `octodemo/octocat_supply` @ `e1516cf` (exp3 on `exp/offbyone` fixture
+  `a9530a6`), model `claude-sonnet-4-5-20250929`, MCP off, fresh session per run.
+- **Invalid 2:** Claude exp5 reps 9–10 hit the Anthropic session-limit (429), flagged
+  `valid:false`. Backfill to N=10 is scheduled (after the limit reset).
+- **VS Code N=1:** Agent mode can't be driven headless, so exp1+exp2 were captured manually.
+  Surfaced two per-turn overhead calls on `gpt-4o-mini` (`title` + `categorization`,
+  0 AI-credits) that **neither CLI emits** — a VS Code-specific harness design choice.
+
+### Raw captures (outside git, by project convention)
+
+- `~/copilot-ledger-data/captures/behavioral/` — per-run stdout/stream/digest for all CLI runs,
+  plus `exp{1,2}_*/vscode/run-01/` (exports, notes, deviation flags) and `vscode-observations.md`.
+- `~/copilot-ledger-data/behavioral-harness/` — live copies of the run/score/enrich/vscode scripts.
+
+### Catalogued in the indexes
+
+- `docs/content-lab/data/INDEX.md` — the study is logged at **dataset grain** (one Dataset-catalog
+  entry → `results.jsonl`), not as 100 rows in the `runs.jsonl` spine; a note explains why.
+- `docs/series/INDEX.md` — Article-3 status + run-ledger pointer updated.
+
+### Open data gaps (deferred — see `behavioral/results.md` for the full list)
+
+- exp5/claude is N=8 pending the scheduled backfill.
+- VS Code captured only exp1+exp2, N=1, not state-matched (different checkout + custom
+  instructions on) — a state-matched re-run remains open.
+
+---
+
 ## Optional follow-up experiments
 
 These are valuable but should not block this article.
@@ -954,7 +1005,7 @@ Capture realistic developer setups after the clean baseline is complete.
 
 Report them as examples of configuration growth, not product defaults.
 
-### Behavioral payoff study
+### Behavioral payoff study — ✅ run (see "Data collected" above)
 
 Use repeated tasks to test whether a larger first-call footprint reduces:
 
@@ -965,6 +1016,11 @@ Use repeated tasks to test whether a larger first-call footprint reduces:
 - wall-clock time
 
 This should be a separate experiment because structural context size alone does not establish value.
+
+**Status:** A first pass is complete — 5 frozen prompts × 2 CLIs × N=10 (98/100 valid), with
+cost/cache/llm-calls/latency and behavioral flags per run. Data + writeup live at
+`docs/series/research/article-03/behavioral/` (`results.md`, `results.jsonl`). Read it as
+tendencies, not a ranking. The VS Code arm is N=1 and not state-matched (open gap).
 
 ---
 
