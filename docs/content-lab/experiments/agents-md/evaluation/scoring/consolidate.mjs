@@ -9,7 +9,7 @@ const SCORING = path.dirname(new URL(import.meta.url).pathname);
 const RES = path.join(SCORING, "results");
 const PKT = `${process.env.HOME}/copilot-ledger-data/captures/agents-md/evaluation/scoring/packets`;
 const CAP = `${process.env.HOME}/copilot-ledger-data/captures/agents-md/evaluation/captures.jsonl`;
-const cond = (id) => (/-AGENTS-/.test(id) ? "AGENTS" : /-ORIG-/.test(id) ? "ORIG" : "BARE");
+const cond = (id) => (/-AGENTS-/.test(id) ? "AGENTS" : /-ORIG-/.test(id) ? "ORIG" : /-INIT-/.test(id) ? "INIT" : "BARE");
 const mean = (a) => +(a.reduce((s, x) => s + x, 0) / a.length).toFixed(2);
 const median = (a) => { a = [...a].sort((x, y) => x - y); const n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2; };
 
@@ -32,7 +32,7 @@ fs.writeFileSync(path.join(RES, "quality_by_run.json"), JSON.stringify(rows, nul
 
 const cap = fs.readFileSync(CAP, "utf8").trim().split("\n").map(JSON.parse);
 const tasks = ["E1-nav", "E2-local", "E3-debug", "E4-multifile", "E5-review"];
-const CONDS = ["BARE", "AGENTS", "ORIG"];
+const CONDS = ["BARE", "AGENTS", "ORIG", "INIT"];
 const n = (t, c) => rows.filter((r) => r.task === t && r.condition === c).length;
 console.log("H2 quality by arm (mean), success gate per arm:");
 for (const t of tasks) {

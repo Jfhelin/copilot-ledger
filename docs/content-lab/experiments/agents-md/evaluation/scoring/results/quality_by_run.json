@@ -160,6 +160,86 @@
     "quality": 21
   },
   {
+    "run_id": "evaluation-E1-nav-INIT-01",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-02",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 19
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-03",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 23
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-04",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-05",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-06",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-07",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 23
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-08",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-09",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-INIT-10",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "INIT",
+    "success": 1,
+    "quality": 20
+  },
+  {
     "run_id": "evaluation-E1-nav-ORIG-01",
     "task": "E1-nav",
     "scale": "0-27",
@@ -344,6 +424,86 @@
     "quality": 6
   },
   {
+    "run_id": "evaluation-E2-local-INIT-01",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-02",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": false,
+    "quality": 2
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-03",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-04",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-05",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": false,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-06",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-07",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-08",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": false,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-09",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": false,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E2-local-INIT-10",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 6
+  },
+  {
     "run_id": "evaluation-E2-local-ORIG-01",
     "task": "E2-local",
     "scale": "0-6",
@@ -524,6 +684,86 @@
     "task": "E3-debug",
     "scale": "0-5",
     "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-01",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-02",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-03",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-04",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-05",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-06",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-07",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-08",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-09",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-10",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "INIT",
     "success": true,
     "quality": 5
   },
@@ -736,6 +976,86 @@
     "quality": 5
   },
   {
+    "run_id": "evaluation-E4-multifile-INIT-02",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-07",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-08",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": false,
+    "quality": 3
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-06",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-05",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": false,
+    "quality": 3
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-04",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-09",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-01",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": false,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-03",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-INIT-10",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
     "run_id": "evaluation-E5-review-BARE-09",
     "task": "E5-review",
     "scale": "net(tp-fp)",
@@ -918,5 +1238,85 @@
     "condition": "ORIG",
     "success": true,
     "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-04",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-09",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-05",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-03",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-01",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 3
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-02",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-07",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-10",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-06",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-INIT-08",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5
   }
 ]

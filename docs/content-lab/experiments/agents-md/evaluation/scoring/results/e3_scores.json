@@ -320,6 +320,166 @@
     ]
   },
   {
+    "run_id": "evaluation-E3-debug-INIT-01",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 10,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-02",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 10,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-03",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 10,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-04",
+    "condition": "INIT",
+    "success": true,
+    "quality": 4,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 0,
+    "n_files": 1,
+    "tool_calls": 22,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-05",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 8,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-06",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 9,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-07",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 9,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-08",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 10,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-09",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 8,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-INIT-10",
+    "condition": "INIT",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 9,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
     "run_id": "evaluation-E3-debug-ORIG-01",
     "condition": "ORIG",
     "success": true,

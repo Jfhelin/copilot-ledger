@@ -399,5 +399,177 @@
       "incorrect error import path",
       "unused repo methods"
     ]
+  },
+  {
+    "code": "144ef877",
+    "tp": 6,
+    "fp": 2,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Asserted findByName SQL injection HIGH-risk then partially walked it back (query is parameterized).",
+      "Flagged /:id/status route ordering as a defect (not a real bug)."
+    ]
+  },
+  {
+    "code": "38d0ea0d",
+    "tp": 6,
+    "fp": 0,
+    "net": 6,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "44b8952d",
+    "tp": 5,
+    "fp": 0,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "81ad3469",
+    "tp": 5,
+    "fp": 1,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Flagged route handler ordering as an issue (non-defect)."
+    ]
+  },
+  {
+    "code": "8b8035e7",
+    "tp": 5,
+    "fp": 2,
+    "net": 3,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Asserted findByName is SQL-injectable (query is parameterized).",
+      "Flagged convertBooleanFields this-binding as a defect (non-issue)."
+    ]
+  },
+  {
+    "code": "bd2e25b3",
+    "tp": 6,
+    "fp": 2,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Asserted findByName SQL injection from string interpolation (query is parameterized).",
+      "Flagged missing JSDoc as a defect (style nit)."
+    ]
+  },
+  {
+    "code": "cb8921a4",
+    "tp": 6,
+    "fp": 0,
+    "net": 6,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "fa0ca134",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Flagged inconsistent repository method ordering as a defect (style nit)."
+    ]
+  },
+  {
+    "code": "fd9ab513",
+    "tp": 6,
+    "fp": 2,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Flagged /:id vs /:id/status route order conflict as a defect (non-issue).",
+      "Flagged missing JSDoc as a defect (style nit)."
+    ]
+  },
+  {
+    "code": "fdc260d4",
+    "tp": 5,
+    "fp": 0,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
   }
 ]

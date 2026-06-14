@@ -1,7 +1,8 @@
-# The three files — exactly what each arm added
+# The four files — exactly what each arm added
 
 > Supporting research for [`article-04-agents-md.md`](../../article-04-agents-md.md).
 > This is a shared human/agent scratchpad, not published copy.
+> (Filename is historical — this dossier now covers all four arms.)
 
 The whole experiment varies **one thing**: what instruction file (if any) sits at the repo
 root. Everything below is **direct evidence** — verbatim file contents and measured sizes.
@@ -10,10 +11,14 @@ root. Everything below is **direct evidence** — verbatim file contents and mea
 
 ## One-line thesis
 
-Three files, one axis: **nothing → a concise file built from what the agent actually
-stumbled on → the repo's own long, hand-written file.** The concise file says "there is **no**
-root workspace"; the repo's own file says the opposite ("TypeScript monorepo … `npm run
-build --workspace=api`"). That contradiction is the experiment in miniature.
+Four files, one axis: **nothing → a concise file built from what the agent actually
+stumbled on → the repo's own long, hand-written file → a file the tool auto-generates for
+you (`copilot init`).** Two of them are large (~650 tok): the human one (ORIG) is
+*factually wrong* about repo structure ("TypeScript monorepo … `npm run build
+--workspace=api`"), while the machine one (INIT) is *factually right* ("two independent
+packages"). The concise file (AGENTS) agrees with the machine on structure but says it in
+~129 tokens. The experiment in miniature: **accuracy and detail are not the same thing as
+a better outcome** — see the quality and cost dossiers.
 
 ## Sizes (the per-request "tax")
 
@@ -22,6 +27,7 @@ build --workspace=api`"). That contradiction is the experiment in miniature.
 | **BARE** | *(none)* | 0 | 0 | 0 | **0** |
 | **AGENTS** | concise, observation-built | 521 | 515 | 85 | **~129** (chars/4) |
 | **ORIG** | repo's own `.github/copilot-instructions.md`, relocated | 2,598 | 2,598 | ~330 | **~650** (~5× AGENTS) |
+| **INIT** | `copilot init` auto-generated, relocated | 2,573 | 2,563 | 345 | **~641** (≈ ORIG size, machine-written) |
 
 The file is re-sent on **every** request, so its token cost is paid per turn, not once.
 That recurring tax is what any "savings" must earn back. (Exact billed effect is measured,
@@ -79,3 +85,34 @@ Structure (full text in `intervention/AGENTS.orig-copilot-instructions.md`):
    mechanism for the E5 review regression — the file primes security-flavored findings, and
    all three ORIG review runs produced a hallucinated "SQL injection" false positive (see
    [`quality-findings.md`](./quality-findings.md)).
+
+## INIT — the auto-generated file (n=10/task, full arm)
+
+The **verbatim output of `copilot init`** run once on the locked repo (Copilot CLI 1.0.62,
+`claude-sonnet-4.5`), frozen at SHA-256 `c4f19e70…fdc1049` and relocated to the `AGENTS.md`
+path — same delivery channel as AGENTS and ORIG, so the contrast is pure **content**.
+Generating it cost **33.1 credits one-time** (the "what does the file cost to make" angle).
+
+Full text in `intervention/AGENTS.init-generated.md`. Structure: **Architecture · Build &
+Run · Testing · Linting · Key Conventions** (8 detailed convention bullets — repository
+pattern, the `api/src/utils/sql.ts` helpers, `handleDatabaseError`/`NotFoundError`, swagger
+regen, the in-memory test setup).
+
+### Three tells the writing agent may want
+
+1. **It is the one large file that is *factually correct* about structure.** Where ORIG
+   hallucinates a "TypeScript monorepo" with root workspaces, INIT opens with *"two
+   independent packages"* — exactly what the concise AGENTS file says, and exactly right. So
+   INIT is **strictly better information than ORIG** at nearly the same token size. This kills
+   the lazy reading "ORIG failed because it was wrong": INIT was right and still didn't help.
+2. **It is detailed and accurate, not padded.** The conventions it lists are real and
+   repo-specific (the SQL utils, the error helpers, the swagger step). It reads like a file a
+   careful maintainer would approve. Its ~641-token tax buys *accurate* context, not prose.
+3. **Accurate + detailed still did not lift quality — and hurt the build tasks.** INIT is the
+   **only arm that never beats BARE on any task** (E1 20.8, E2 4.8, E3 4.9, E4 4.5, E5 4.6)
+   and the only one with mechanical **gate failures** (E4 7/10, vs 10/10 elsewhere).
+   **Inference:** the richer the (correct) context, the more ambitious the implementation —
+   and the more surface area to break diff-apply, the frontend TS build, or the api vitest.
+   Unlike ORIG, it stayed **cheap** (mean = BARE, median ≈ AGENTS), because accurate structure
+   isn't prose bloat. The contrast ORIG-vs-INIT is the cleanest evidence that *what the file
+   says* — not its size, and not even its accuracy — is what determines the outcome.
