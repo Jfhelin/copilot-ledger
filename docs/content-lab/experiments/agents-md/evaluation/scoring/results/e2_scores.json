@@ -1,0 +1,403 @@
+[
+  {
+    "run_id": "evaluation-E2-local-AGENTS-01",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 35,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product-barcode.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-02",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 42,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-03",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 2,
+    "tool_calls": 42,
+    "added_test": false,
+    "files": [
+      "api/database/migrations/003_add_barcode_to_products.sql",
+      "api/src/models/product.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-04",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 30,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-05",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 45,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-06",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 48,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-07",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 60,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-08",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 4,
+    "tool_calls": 45,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/repositories/productsRepo.test.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-09",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 2,
+    "tool_calls": 41,
+    "added_test": false,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-10",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 39,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-01",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 0,
+    "n_files": 4,
+    "tool_calls": 34,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts",
+      "api/test_barcode_manual.js"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-02",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 29,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-03",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 31,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-04",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 2,
+    "tool_calls": 44,
+    "added_test": false,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-05",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 31,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_barcode_to_products.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-06",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 52,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-07",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 0,
+    "n_files": 4,
+    "tool_calls": 33,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts",
+      "api/test_barcode.js"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-08",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 0,
+    "n_files": 4,
+    "tool_calls": 43,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts",
+      "api/test_barcode.js"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-09",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 32,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-10",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 40,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_barcode_to_products.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  }
+]

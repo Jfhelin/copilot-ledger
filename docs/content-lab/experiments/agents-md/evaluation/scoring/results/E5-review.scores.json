@@ -1,0 +1,343 @@
+[
+  {
+    "code": "0d1ecda4",
+    "tp": 5,
+    "fp": 1,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed SQL injection in suppliersRepo.findByName even though it uses a parameterized LIKE query."
+    ]
+  },
+  {
+    "code": "1c492b30",
+    "tp": 5,
+    "fp": 1,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed boolean conversion was missing from findById; the real checklist issue is findByName."
+    ]
+  },
+  {
+    "code": "1ccbeb8f",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed SQL injection in suppliersRepo.findByName even though it uses a parameterized LIKE query."
+    ]
+  },
+  {
+    "code": "26a78a12",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed SQL injection in suppliersRepo.findByName even though it uses a parameterized LIKE query."
+    ]
+  },
+  {
+    "code": "27043db4",
+    "tp": 5,
+    "fp": 0,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "2ae5db84",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed the /:id/status route is shadowed by /:id and unreachable; Express route matching requires the full path segment pattern."
+    ]
+  },
+  {
+    "code": "5b5fd1ad",
+    "tp": 5,
+    "fp": 1,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed SQL injection in suppliersRepo.findByName even though it uses a parameterized LIKE query."
+    ]
+  },
+  {
+    "code": "61062c4a",
+    "tp": 5,
+    "fp": 1,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed the /:id/status route is shadowed by /:id and unreachable; Express route matching requires the full path segment pattern."
+    ]
+  },
+  {
+    "code": "62af4d73",
+    "tp": 6,
+    "fp": 0,
+    "net": 6,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "6c78f160",
+    "tp": 6,
+    "fp": 0,
+    "net": 6,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "6e18d5bb",
+    "tp": 7,
+    "fp": 1,
+    "net": 6,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed SQL injection in suppliersRepo.findByName even though it uses a parameterized LIKE query."
+    ]
+  },
+  {
+    "code": "7337c6e7",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed the supplier-only status endpoint is a defect merely because products/orders lack an equivalent endpoint."
+    ]
+  },
+  {
+    "code": "87a7f7e7",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed route ordering makes the status endpoint unreachable / misroutes /suppliers/status; this is not a defect in the reviewed /:id/status route."
+    ]
+  },
+  {
+    "code": "9010e9b0",
+    "tp": 5,
+    "fp": 0,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "b3ec611d",
+    "tp": 5,
+    "fp": 0,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "bea34dad",
+    "tp": 5,
+    "fp": 1,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed SQL injection in suppliersRepo.findByName even though it uses a parameterized LIKE query."
+    ]
+  },
+  {
+    "code": "c1bc68b9",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed SQL injection in suppliersRepo.findByName even though it uses a parameterized LIKE query."
+    ]
+  },
+  {
+    "code": "c7591e8e",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed boolean conversion was missing from findById; the checklist defect is findByName."
+    ]
+  },
+  {
+    "code": "df43d606",
+    "tp": 6,
+    "fp": 0,
+    "net": 6,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": []
+  },
+  {
+    "code": "eb505cbe",
+    "tp": 6,
+    "fp": 1,
+    "net": 5,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "Claimed the /:id/status route is shadowed by /:id and unreachable; Express route matching requires the full path segment pattern."
+    ]
+  }
+]

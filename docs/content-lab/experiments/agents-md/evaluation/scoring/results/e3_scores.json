@@ -1,0 +1,322 @@
+[
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-01",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 10,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-02",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 10,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-03",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 7,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-04",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 9,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-05",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 9,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-06",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 8,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-07",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 7,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-08",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 8,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-09",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 9,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-10",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 8,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-01",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 15,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-02",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 15,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-03",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 14,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-04",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 14,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-05",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 14,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-06",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 15,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-07",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 16,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-08",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 15,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-09",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 16,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-10",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 15,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  }
+]

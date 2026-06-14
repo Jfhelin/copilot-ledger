@@ -1,0 +1,802 @@
+[
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-01",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-02",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-03",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-04",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-05",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-06",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-07",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-08",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 23
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-09",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E1-nav-AGENTS-10",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "AGENTS",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-01",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-02",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-03",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-04",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-05",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 20
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-06",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-07",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 22
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-08",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-09",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E1-nav-BARE-10",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "BARE",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-01",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-02",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-03",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-04",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-05",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-06",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-07",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-08",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-09",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-10",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-01",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-02",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-03",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-04",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-05",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-06",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-07",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-08",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-09",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-10",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-01",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-02",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-03",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-04",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-05",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-06",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-07",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-08",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-09",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-10",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-01",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-02",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-03",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-04",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-05",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-06",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-07",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-08",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-09",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-10",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-07",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-04",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-08",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-10",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-09",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-05",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-03",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-09",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-02",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-08",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-03",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-02",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-06",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-04",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-07",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-01",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-06",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-10",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-01",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-05",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-09",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-02",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-04",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-05",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-09",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-03",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-06",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-07",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-03",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-06",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-08",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-05",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-10",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-02",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-10",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-07",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 4
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-08",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-BARE-01",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-01",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E5-review-AGENTS-04",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "AGENTS",
+    "success": true,
+    "quality": 5
+  }
+]

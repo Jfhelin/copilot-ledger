@@ -1,0 +1,639 @@
+[
+  {
+    "run_id": "evaluation-E2-local-AGENTS-01",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product-barcode.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product-barcode.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product-barcode.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-02",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m22 passed\u001b[39m\u001b[22m\u001b[90m (22)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-03",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_barcode_to_products.sql",
+      "api/src/models/product.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_barcode_to_products.sql": "A",
+      "api/src/models/product.ts": "M"
+    },
+    "n_files": 2,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_barcode_to_products.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-04",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-05",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m24 passed\u001b[39m\u001b[22m\u001b[90m (24)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-06",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-07",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-08",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m28 passed\u001b[39m\u001b[22m\u001b[90m (28)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m4 passed\u001b[39m\u001b[22m\u001b[90m (4)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/repositories/productsRepo.test.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/repositories/productsRepo.test.ts": "A",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/productsRepo.test.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-09",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M"
+    },
+    "n_files": 2,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-AGENTS-10",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-01",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts",
+      "api/test_barcode_manual.js"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A",
+      "api/test_barcode_manual.js": "A"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-02",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-03",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m25 passed\u001b[39m\u001b[22m\u001b[90m (25)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-04",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M"
+    },
+    "n_files": 2,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-05",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_barcode_to_products.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_barcode_to_products.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_barcode_to_products.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-06",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-07",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts",
+      "api/test_barcode.js"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A",
+      "api/test_barcode.js": "A"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-08",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m22 passed\u001b[39m\u001b[22m\u001b[90m (22)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts",
+      "api/test_barcode.js"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A",
+      "api/test_barcode.js": "A"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-09",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m26 passed\u001b[39m\u001b[22m\u001b[90m (26)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-BARE-10",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m26 passed\u001b[39m\u001b[22m\u001b[90m (26)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_barcode_to_products.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_barcode_to_products.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_barcode_to_products.sql"
+    ],
+    "frontend_touched": []
+  }
+]

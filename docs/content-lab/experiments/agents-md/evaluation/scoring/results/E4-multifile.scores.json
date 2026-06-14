@@ -1,0 +1,302 @@
+[
+  {
+    "code": "055baf54",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "07c661b3",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "1c57e081",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "33583972",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "42cceab8",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "45eb9f36",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "quality": 6,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Added API helper `export const getSupplierProductCount = async ...` and component calls `const count = await getSupplierProductCount(supplier.supplierId);`."
+    }
+  },
+  {
+    "code": "4a811057",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "4de0d9aa",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "4edae202",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "529278c3",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "7635b76d",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "7e333041",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "9d6d0d68",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "c51bf7a4",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "c8990b3b",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "cf515859",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "d9d52f6b",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "e2da4f21",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "e3476bc2",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  },
+  {
+    "code": "f224fbc0",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "Server-side SQL count by supplier: `SELECT COUNT(*) as count FROM products WHERE supplier_id = ?`.",
+      "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
+      "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
+    }
+  }
+]
