@@ -2,6 +2,10 @@
 
 > Working file (shared scratchpad). Collects facts, supporting runs, writing ideas, and
 > open data needs. Not the published article.
+>
+> **📊 Collected data for the writing agent:** [`research/article-04/`](./research/article-04/INDEX.md)
+> — pre-registration, the three instruction files, discovery friction, and the full H1 (cost)
+> / H2 (quality) findings from the 115-run, 3-arm sweep. Start at `INDEX.md`.
 
 - **Role:** Test one of the most practical levers available to repository owners.
 - **Status:** ⚪ Needs a **new pre-registered experiment** (~100 evaluation runs). This is
