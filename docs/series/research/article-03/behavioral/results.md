@@ -262,7 +262,11 @@ Two reads that jump out (descriptive, **not** rankings):
   interactive use are **not separately observable** from this study.
 - Version-stability re-capture for the two CLIs (different date/version) lives in the
   tooling dossiers' *Version stability* sections, not here.
-- VS Code N=1 interactive contrast is the user's manual capture; not represented above.
+- VS Code N=1 interactive contrast lives in `vscode-manual.md` (exp1–exp2 captured;
+  cannot be a rate — Agent mode isn't headless). It is **not state-matched** to the CLI
+  rows above (different checkout + custom instructions on) — see that file's deviation note
+  before any cross-harness claim. Notable VS Code-only finding documented there: two
+  per-turn `gpt-4o-mini` overhead calls (`title` + `categorization`).
 
 ---
 
