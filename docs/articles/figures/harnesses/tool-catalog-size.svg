@@ -1,24 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 290" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
   <title id="title">Tool catalogs are part of the prompt</title>
-  <desc id="desc">Horizontal bar chart of tool catalog size: Copilot CLI about 8.1k tokens across 19 tools, Claude CLI about 18.9k tokens across 27 tools.</desc>
+  <desc id="desc">Horizontal bar chart of the first-call tool-definition footprint in tokens (chars/4). Copilot CLI sends about 8.1k tokens across all 19 tools. Claude CLI sends about 18.9k tokens across all 27 tools. Copilot in VS Code has the largest catalog, 56 native tools, but ships only 23 of them on the first request (about 9.2k tokens) and defers the other 33, whose schemas, about 7k tokens, are loaded on demand and shown faded. The harness with the most tools carries one of the smallest first-call tool blocks.</desc>
 
-  <rect x="0" y="0" width="760" height="290" fill="#ffffff"/>
+  <rect x="0" y="0" width="760" height="360" fill="#ffffff"/>
   <text x="40" y="40" font-size="20" font-weight="700" fill="#24292f">Tool catalogs are part of the prompt</text>
-  <text x="40" y="64" font-size="13" fill="#57606a">More detailed tool descriptions can help tool use, but they also grow the repeated prefix.</text>
+  <text x="40" y="64" font-size="13" fill="#57606a">A bigger catalog need not mean a bigger prompt &#8212; a harness can send some tools and defer the rest.</text>
 
   <!-- scale max 20000 over 480px from x=180 -->
   <g font-size="13" fill="#24292f">
     <!-- Copilot CLI 8064 -> 194 -->
-    <text x="168" y="137" text-anchor="end" fill="#57606a">Copilot CLI</text>
-    <rect x="180" y="116" width="194" height="40" rx="5" fill="#0969da"/>
-    <text x="384" y="141" font-weight="700">~8.1k tokens · 19 tools</text>
+    <text x="168" y="117" text-anchor="end" fill="#57606a">Copilot CLI</text>
+    <rect x="180" y="96" width="194" height="40" rx="5" fill="#0969da"/>
+    <text x="384" y="121" font-weight="700">~8.1k tokens &#183; 19 tools sent</text>
 
     <!-- Claude CLI 18877 -> 453 -->
-    <text x="168" y="202" text-anchor="end" fill="#57606a">Claude CLI</text>
-    <rect x="180" y="181" width="453" height="40" rx="5" fill="#0969da"/>
-    <text x="180" y="206" font-weight="700" fill="#ffffff" dx="10">~18.9k tokens · 27 tools</text>
+    <text x="168" y="175" text-anchor="end" fill="#57606a">Claude CLI</text>
+    <rect x="180" y="154" width="453" height="40" rx="5" fill="#0969da"/>
+    <text x="180" y="179" font-weight="700" fill="#ffffff" dx="10">~18.9k tokens &#183; 27 tools sent</text>
+
+    <!-- VS Code: active 9174 -> 220, deferred ghost to full catalog 16190 -> 389 -->
+    <text x="168" y="233" text-anchor="end" fill="#57606a">VS Code (agent)</text>
+    <rect x="180" y="212" width="389" height="40" rx="5" fill="#cfe3fb" stroke="#9ec8f5" stroke-width="1" stroke-dasharray="4 3"/>
+    <rect x="180" y="212" width="220" height="40" rx="5" fill="#0969da"/>
+    <text x="579" y="237" font-weight="700">~9.2k sent &#183; 23 of 56 (33 deferred)</text>
   </g>
 
-  <line x1="180" y1="240" x2="660" y2="240" stroke="#d0d7de" stroke-width="1"/>
-  <text x="420" y="264" font-size="12" fill="#57606a" text-anchor="middle">Tool catalog size (tokens)</text>
+  <line x1="180" y1="280" x2="660" y2="280" stroke="#d0d7de" stroke-width="1"/>
+  <text x="420" y="304" font-size="12" fill="#57606a" text-anchor="middle">First-call tool-definition footprint (tokens, chars/4)</text>
+
+  <!-- legend -->
+  <rect x="180" y="324" width="13" height="13" rx="2" fill="#0969da"/>
+  <text x="200" y="335" font-size="12" fill="#24292f">Sent on first request</text>
+  <rect x="360" y="324" width="13" height="13" rx="2" fill="#cfe3fb" stroke="#9ec8f5" stroke-dasharray="3 2"/>
+  <text x="380" y="335" font-size="12" fill="#24292f">Deferred &#8212; loaded on demand via tool_search</text>
 </svg>
