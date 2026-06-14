@@ -635,5 +635,101 @@
       "api/database/migrations/003_add_barcode_to_products.sql"
     ],
     "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-01",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-02",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m22 passed\u001b[39m\u001b[22m\u001b[90m (22)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product-barcode.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product-barcode.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product-barcode.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-03",
+    "task": "E2-local",
+    "fixture_ok": true,
+    "apply_ok": false,
+    "apply_err": "error: corrupt patch at line 144 | ",
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ],
+    "file_status": {
+      "api/database/migrations/003_add_product_barcode.sql": "A",
+      "api/src/models/product.ts": "M",
+      "api/src/routes/product.test.ts": "A"
+    },
+    "n_files": 3,
+    "edited_test_files": [
+      "api/src/routes/product.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [
+      "api/database/migrations/003_add_product_barcode.sql"
+    ],
+    "frontend_touched": []
   }
 ]

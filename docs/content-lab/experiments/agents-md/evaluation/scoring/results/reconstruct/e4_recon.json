@@ -12,7 +12,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-Dvm0ArPi.js         362.85 kB │ gzip: 111.35 kB | ✓ built in 1.35s | "
+      "tail": "dist/assets/index-Dvm0ArPi.js         362.85 kB │ gzip: 111.35 kB | ✓ built in 1.29s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -52,7 +52,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-CyCC60ET.js         362.67 kB │ gzip: 111.32 kB | ✓ built in 1.14s | "
+      "tail": "dist/assets/index-CyCC60ET.js         362.67 kB │ gzip: 111.32 kB | ✓ built in 1.05s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -92,7 +92,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-Bv5MPz6y.js         362.65 kB │ gzip: 111.31 kB | ✓ built in 1.10s | "
+      "tail": "dist/assets/index-Bv5MPz6y.js         362.65 kB │ gzip: 111.31 kB | ✓ built in 1.14s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.ts",
@@ -128,7 +128,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-C3vPJ5Ni.js         362.77 kB │ gzip: 111.33 kB | ✓ built in 1.07s | "
+      "tail": "dist/assets/index-C3vPJ5Ni.js         362.77 kB │ gzip: 111.33 kB | ✓ built in 1.05s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -201,7 +201,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.08s | "
+      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.07s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -274,7 +274,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-HQNMVuR9.js         362.83 kB │ gzip: 111.34 kB | ✓ built in 1.35s | "
+      "tail": "dist/assets/index-HQNMVuR9.js         362.83 kB │ gzip: 111.34 kB | ✓ built in 1.06s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.ts",
@@ -307,7 +307,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-BIbewkHb.js         362.97 kB │ gzip: 111.33 kB | ✓ built in 1.25s | "
+      "tail": "dist/assets/index-BIbewkHb.js         362.97 kB │ gzip: 111.33 kB | ✓ built in 1.08s | "
     },
     "files_touched": [
       "api/src/repositories/productsRepo.ts",
@@ -343,7 +343,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-DoKQrzxZ.js         362.76 kB │ gzip: 111.27 kB | ✓ built in 1.23s | "
+      "tail": "dist/assets/index-DoKQrzxZ.js         362.76 kB │ gzip: 111.27 kB | ✓ built in 1.06s | "
     },
     "files_touched": [
       "api/src/repositories/productsRepo.ts",
@@ -380,7 +380,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-PFaw2gFO.js         362.81 kB │ gzip: 111.35 kB | ✓ built in 1.08s | "
+      "tail": "dist/assets/index-PFaw2gFO.js         362.81 kB │ gzip: 111.35 kB | ✓ built in 1.09s | "
     },
     "files_touched": [
       "api/src/repositories/productsRepo.ts",
@@ -416,7 +416,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-CwdP-J2r.js         362.68 kB │ gzip: 111.33 kB | ✓ built in 1.09s | "
+      "tail": "dist/assets/index-CwdP-J2r.js         362.68 kB │ gzip: 111.33 kB | ✓ built in 1.08s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -453,7 +453,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-Cj8VMTAu.js         362.85 kB │ gzip: 111.34 kB | ✓ built in 1.05s | "
+      "tail": "dist/assets/index-Cj8VMTAu.js         362.85 kB │ gzip: 111.34 kB | ✓ built in 1.04s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.ts",
@@ -486,7 +486,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-DkiBnLzC.js         362.96 kB │ gzip: 111.32 kB | ✓ built in 1.07s | "
+      "tail": "dist/assets/index-DkiBnLzC.js         362.96 kB │ gzip: 111.32 kB | ✓ built in 1.10s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.ts",
@@ -523,7 +523,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-DACVe0NC.js         362.64 kB │ gzip: 111.31 kB | ✓ built in 1.11s | "
+      "tail": "dist/assets/index-DACVe0NC.js         362.64 kB │ gzip: 111.31 kB | ✓ built in 1.07s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.ts",
@@ -556,7 +556,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-OM5c_SKi.js         362.80 kB │ gzip: 111.35 kB | ✓ built in 1.08s | "
+      "tail": "dist/assets/index-OM5c_SKi.js         362.80 kB │ gzip: 111.35 kB | ✓ built in 1.07s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -599,7 +599,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-CfjgAtZp.js         362.77 kB │ gzip: 111.33 kB | ✓ built in 1.07s | "
+      "tail": "dist/assets/index-CfjgAtZp.js         362.77 kB │ gzip: 111.33 kB | ✓ built in 1.08s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -679,7 +679,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.07s | "
+      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.04s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -719,7 +719,7 @@
     },
     "fe_build": {
       "exit": 0,
-      "tail": "dist/assets/index-DX62JB_V.js         362.60 kB │ gzip: 111.29 kB | ✓ built in 1.13s | "
+      "tail": "dist/assets/index-DX62JB_V.js         362.60 kB │ gzip: 111.29 kB | ✓ built in 1.05s | "
     },
     "files_touched": [
       "api/src/repositories/suppliersRepo.test.ts",
@@ -736,6 +736,120 @@
     "n_files": 4,
     "edited_test_files": [
       "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-01",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-ClQyg3Ci.js         362.78 kB │ gzip: 111.34 kB | ✓ built in 1.05s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-02",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-5aXkFH0B.js         362.70 kB │ gzip: 111.32 kB | ✓ built in 1.11s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-03",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m24 passed\u001b[39m\u001b[22m\u001b[90m (24)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.07s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/routes/supplier.test.ts"
     ],
     "touched_swagger": [],
     "added_migration": [],

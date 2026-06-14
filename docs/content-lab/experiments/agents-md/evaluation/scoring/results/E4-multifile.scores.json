@@ -298,5 +298,50 @@
       "p3": "Count is in a repository method such as `getProductCount(...)`/`countBySupplierId(...)`, and route calls it from `router.get('/:id/product-count', ...)`.",
       "p4": "Component calls endpoint directly, e.g. added `const countResponse = await axios.get(.../product-count...)` in `AdminProducts.tsx` rather than an API-client method."
     }
+  },
+  {
+    "code": "fc3d229a",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "SELECT COUNT(*) WHERE supplier_id=?",
+      "p3": "countProductsBySupplier() in repo; route calls it",
+      "p4": "component calls axios.get(.../product-count) directly; no shared client method"
+    }
+  },
+  {
+    "code": "8a2c66f7",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "SELECT COUNT(*) WHERE supplier_id=?",
+      "p3": "getProductCount() in repo; route calls it",
+      "p4": "component calls axios.get directly; no shared client method"
+    }
+  },
+  {
+    "code": "ea0aeaee",
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 0,
+    "p5": 1,
+    "p6": 1,
+    "quality": 5,
+    "notes": {
+      "p2": "SELECT COUNT(*) WHERE supplier_id=?",
+      "p3": "getProductCount() in repo; route calls it",
+      "p4": "component calls axios.get directly; no shared client method"
+    }
   }
 ]

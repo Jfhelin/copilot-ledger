@@ -399,5 +399,65 @@
       "api/src/models/product.ts",
       "api/src/routes/product.test.ts"
     ]
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-01",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 43,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-02",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 37,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product-barcode.test.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-03",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "p6": 1,
+    "n_files": 3,
+    "tool_calls": 52,
+    "added_test": true,
+    "files": [
+      "api/database/migrations/003_add_product_barcode.sql",
+      "api/src/models/product.ts",
+      "api/src/routes/product.test.ts"
+    ]
   }
 ]

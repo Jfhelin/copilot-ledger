@@ -19,8 +19,8 @@ const SALT = "a4-phase6-blind";
 
 function scrub(s) {
   return s
-    .replace(/evaluation-E\d-[a-z]+-(AGENTS|BARE)-\d+/gi, "[RUN]")
-    .replace(/\b(AGENTS|BARE)\b/g, "[COND]")
+    .replace(/evaluation-E\d-[a-z]+-(AGENTS|BARE|ORIG)-\d+/gi, "[RUN]")
+    .replace(/\b(AGENTS|BARE|ORIG)\b/g, "[COND]")
     .replace(/AGENTS\.md/g, "[INSTR].md");
 }
 

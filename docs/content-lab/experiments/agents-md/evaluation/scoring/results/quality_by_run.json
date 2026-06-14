@@ -160,6 +160,30 @@
     "quality": 21
   },
   {
+    "run_id": "evaluation-E1-nav-ORIG-01",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "ORIG",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E1-nav-ORIG-02",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "ORIG",
+    "success": 1,
+    "quality": 21
+  },
+  {
+    "run_id": "evaluation-E1-nav-ORIG-03",
+    "task": "E1-nav",
+    "scale": "0-27",
+    "condition": "ORIG",
+    "success": 1,
+    "quality": 23
+  },
+  {
     "run_id": "evaluation-E2-local-AGENTS-01",
     "task": "E2-local",
     "scale": "0-6",
@@ -316,6 +340,30 @@
     "task": "E2-local",
     "scale": "0-6",
     "condition": "BARE",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-01",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-02",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 6
+  },
+  {
+    "run_id": "evaluation-E2-local-ORIG-03",
+    "task": "E2-local",
+    "scale": "0-6",
+    "condition": "ORIG",
     "success": true,
     "quality": 6
   },
@@ -480,6 +528,30 @@
     "quality": 5
   },
   {
+    "run_id": "evaluation-E3-debug-ORIG-01",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-02",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-03",
+    "task": "E3-debug",
+    "scale": "0-5",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5
+  },
+  {
     "run_id": "evaluation-E4-multifile-AGENTS-07",
     "task": "E4-multifile",
     "scale": "0-6",
@@ -636,6 +708,30 @@
     "task": "E4-multifile",
     "scale": "0-6",
     "condition": "BARE",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-01",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-02",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-03",
+    "task": "E4-multifile",
+    "scale": "0-6",
+    "condition": "ORIG",
     "success": true,
     "quality": 5
   },
@@ -798,5 +894,29 @@
     "condition": "AGENTS",
     "success": true,
     "quality": 5
+  },
+  {
+    "run_id": "evaluation-E5-review-ORIG-01",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 2
+  },
+  {
+    "run_id": "evaluation-E5-review-ORIG-02",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 3
+  },
+  {
+    "run_id": "evaluation-E5-review-ORIG-03",
+    "task": "E5-review",
+    "scale": "net(tp-fp)",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 4
   }
 ]

@@ -9,7 +9,7 @@ const SCORING = path.dirname(new URL(import.meta.url).pathname);
 const RES = path.join(SCORING, "results");
 const PKT = `${process.env.HOME}/copilot-ledger-data/captures/agents-md/evaluation/scoring/packets`;
 const CAP = `${process.env.HOME}/copilot-ledger-data/captures/agents-md/evaluation/captures.jsonl`;
-const cond = (id) => (/-AGENTS-/.test(id) ? "AGENTS" : "BARE");
+const cond = (id) => (/-AGENTS-/.test(id) ? "AGENTS" : /-ORIG-/.test(id) ? "ORIG" : "BARE");
 const mean = (a) => +(a.reduce((s, x) => s + x, 0) / a.length).toFixed(2);
 const median = (a) => { a = [...a].sort((x, y) => x - y); const n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2; };
 
@@ -32,20 +32,28 @@ fs.writeFileSync(path.join(RES, "quality_by_run.json"), JSON.stringify(rows, nul
 
 const cap = fs.readFileSync(CAP, "utf8").trim().split("\n").map(JSON.parse);
 const tasks = ["E1-nav", "E2-local", "E3-debug", "E4-multifile", "E5-review"];
-console.log("H2 quality (BARE -> AGENTS), success gate 100/100:");
+const CONDS = ["BARE", "AGENTS", "ORIG"];
+const n = (t, c) => rows.filter((r) => r.task === t && r.condition === c).length;
+console.log("H2 quality by arm (mean), success gate per arm:");
 for (const t of tasks) {
-  const b = rows.filter((r) => r.task === t && r.condition === "BARE").map((r) => r.quality);
-  const a = rows.filter((r) => r.task === t && r.condition === "AGENTS").map((r) => r.quality);
-  const d = (mean(a) - mean(b)).toFixed(2);
-  console.log(`  ${t.padEnd(13)} ${rows.find((r) => r.task === t).scale.padEnd(11)} BARE ${mean(b)}  AGENTS ${mean(a)}  Δ ${d >= 0 ? "+" : ""}${d}`);
+  const scale = rows.find((r) => r.task === t).scale;
+  const parts = CONDS.map((c) => {
+    const q = rows.filter((r) => r.task === t && r.condition === c).map((r) => r.quality);
+    return q.length ? `${c} ${mean(q)} (n=${q.length})` : `${c} --`;
+  });
+  console.log(`  ${t.padEnd(13)} ${scale.padEnd(11)} ${parts.join("  ")}`);
 }
-console.log("H1 cost credits (BARE -> AGENTS) mean | median:");
+console.log("H1 cost credits by arm (mean | median):");
 for (const t of tasks) {
-  const bc = cap.filter((r) => r.task === t && r.condition === "BARE").map((r) => r.native_credits);
-  const ac = cap.filter((r) => r.task === t && r.condition === "AGENTS").map((r) => r.native_credits);
-  console.log(`  ${t.padEnd(13)} BARE ${mean(bc)}|${median(bc)}   AGENTS ${mean(ac)}|${median(ac)}`);
+  const parts = CONDS.map((c) => {
+    const cc = cap.filter((r) => r.task === t && r.condition === c).map((r) => r.native_credits);
+    return cc.length ? `${c} ${mean(cc)}|${median(cc)} (n=${cc.length})` : `${c} --`;
+  });
+  console.log(`  ${t.padEnd(13)} ${parts.join("   ")}`);
 }
-const allB = cap.filter((r) => r.condition === "BARE").map((r) => r.native_credits);
-const allA = cap.filter((r) => r.condition === "AGENTS").map((r) => r.native_credits);
-console.log(`OVERALL BARE mean ${mean(allB)} median ${median(allB)} | AGENTS mean ${mean(allA)} median ${median(allA)}`);
+console.log("OVERALL cost (mean | median):");
+for (const c of CONDS) {
+  const cc = cap.filter((r) => r.condition === c).map((r) => r.native_credits);
+  if (cc.length) console.log(`  ${c.padEnd(7)} mean ${mean(cc)} median ${median(cc)} (n=${cc.length})`);
+}
 console.log(`Wrote ${rows.length} rows -> results/quality_by_run.json`);

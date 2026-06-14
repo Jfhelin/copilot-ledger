@@ -339,5 +339,65 @@
     "hallucinations": [
       "Claimed the /:id/status route is shadowed by /:id and unreachable; Express route matching requires the full path segment pattern."
     ]
+  },
+  {
+    "code": "88d209d4",
+    "tp": 6,
+    "fp": 4,
+    "net": 2,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "SQL injection (parameterized)",
+      "catch-var implicit-any",
+      "route-order conflict",
+      "missing JSDoc"
+    ]
+  },
+  {
+    "code": "fb9c8d97",
+    "tp": 5,
+    "fp": 2,
+    "net": 3,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "SQL injection (parameterized)",
+      "this-binding in map(convertBooleanFields)"
+    ]
+  },
+  {
+    "code": "7177e4ed",
+    "tp": 7,
+    "fp": 3,
+    "net": 4,
+    "matched": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7"
+    ],
+    "extra_tp": [],
+    "hallucinations": [
+      "SQL injection in productsRepo (out of scope)",
+      "incorrect error import path",
+      "unused repo methods"
+    ]
   }
 ]

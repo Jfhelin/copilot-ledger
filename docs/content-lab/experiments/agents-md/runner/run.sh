@@ -32,6 +32,7 @@ SCRIPTS=/Users/jfhelin/Code/GitHub/jfhelin/copilot-worktrees/copilot-ledger/jfhe
 DIGEST="$SCRIPTS/packages/skill-copilot-cli/scripts/copilot-cli-digest.mjs"
 EXTRACT="$EXP_DIR/runner/extract.mjs"
 AGENTS_FILE="$EXP_DIR/intervention/AGENTS.md"                       # used only in AGENTS condition
+ORIG_FILE="$EXP_DIR/intervention/AGENTS.orig-copilot-instructions.md" # ORIG: repo's own copilot-instructions.md relocated to AGENTS.md
 
 PHASE="${PHASE:-discovery}"
 TASKS_ROOT="${TASKS_ROOT:-$EXP_DIR/$PHASE/tasks}"
@@ -81,6 +82,11 @@ run_one() {
       echo "    !! AGENTS condition but no frozen file at $AGENTS_FILE" >&2; return 1
     fi
     cp "$AGENTS_FILE" "$REPO/AGENTS.md"
+  elif [ "$cond" = "ORIG" ]; then
+    if [ ! -f "$ORIG_FILE" ]; then
+      echo "    !! ORIG condition but no frozen file at $ORIG_FILE" >&2; return 1
+    fi
+    cp "$ORIG_FILE" "$REPO/AGENTS.md"
   fi
 
   # baseline commit = exact state the agent starts from (post reset/clean/rm,

@@ -318,5 +318,53 @@
     "files": [
       "api/src/repositories/suppliersRepo.ts"
     ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-01",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 12,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-02",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 13,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-03",
+    "condition": "ORIG",
+    "success": true,
+    "quality": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "p4": 1,
+    "p5": 1,
+    "n_files": 1,
+    "tool_calls": 14,
+    "files": [
+      "api/src/repositories/suppliersRepo.ts"
+    ]
   }
 ]

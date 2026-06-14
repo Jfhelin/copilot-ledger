@@ -78,10 +78,10 @@ const e3 = E3.map((r) => {
 });
 
 const summ = (rows, max) => {
-  const by = { BARE: [], AGENTS: [] };
-  for (const r of rows) by[r.condition].push(r.quality);
+  const by = { BARE: [], AGENTS: [], ORIG: [] };
+  for (const r of rows) (by[r.condition] || (by[r.condition] = [])).push(r.quality);
   const stat = (a) => a.length ? { n: a.length, mean: +(a.reduce((s, x) => s + x, 0) / a.length).toFixed(2), min: Math.min(...a), max: Math.max(...a) } : null;
-  return { max, success: rows.filter((r) => r.success).length + "/" + rows.length, BARE: stat(by.BARE), AGENTS: stat(by.AGENTS) };
+  return { max, success: rows.filter((r) => r.success).length + "/" + rows.length, BARE: stat(by.BARE), AGENTS: stat(by.AGENTS), ORIG: stat(by.ORIG) };
 };
 
 fs.writeFileSync(path.join(OUTDIR, "e2_scores.json"), JSON.stringify(e2, null, 2));
