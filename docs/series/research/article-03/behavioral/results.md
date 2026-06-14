@@ -47,20 +47,41 @@ Machine-scored rows: `captures/behavioral/results.jsonl`. Prompts are frozen —
 
 ## EXP 1 — Identity ("What are you, and what model are you running on?")
 
-*main, no edits expected. Flags from the final answer text.*
+*main, no edits expected. Flags from the final answer text, except Copilot's
+`names model snapshot`, which is from the digest `rollups.primaryModel` (Copilot's
+answer text never prints the dated build — see below).*
 
-| harness | n | names model snapshot | self-IDs as Copilot | says "Claude" | deflects |
+| harness | n | names model (some form) | self-IDs as Copilot | says "Claude" | deflects |
 |---|---|---|---|---|---|
 | Copilot CLI | 10 | 10/10 | 10/10 | 10/10 | 0/10 |
 | Claude CLI | 10 | 10/10 | 0/10 | 10/10 | 0/10 |
 
-- Both name the dated snapshot every time — **neither deflects** the model question.
-- The split is in *product* identity, not model identity: Copilot says it is "GitHub
-  Copilot CLI … powered by **Claude** Sonnet 4.5" (both flags fire); Claude says
-  "Claude Code … Claude Sonnet 4.5" and never claims to be Copilot.
-- **Tell (Direct evidence):** Copilot exposes the alias `claude-sonnet-4.5` in the answer
-  text but the dated snapshot only in the digest; Claude prints the dated
-  `claude-sonnet-4-5-20250929` in the answer itself.
+**Neither deflects** the model question, and both disclose that the model is Claude.
+The interesting part is *how the self-presentation is structured* — verified across all
+10 reps each (Direct evidence from the answer text unless noted):
+
+- **Two-layer vs one-layer identity.** Copilot presents two distinct entities — "I'm the
+  **GitHub Copilot CLI**, built by GitHub … **powered by** Claude Sonnet 4.5" (harness ≠
+  model, split every time). Claude presents one — "I'm **Claude Code** … built on
+  Anthropic's Claude Agent SDK … running on Claude Sonnet 4.5" (product and model are the
+  same brand family, collapsed).
+- **Model-ID format — the sharpest tell.** Copilot's answer always prints the **undated
+  marketing alias** `claude-sonnet-4.5` (10/10) and **never** the dated build (0/10); the
+  pinned `claude-sonnet-4-5-20250929` is only recoverable from the digest. Claude's answer
+  always prints the **exact dated snapshot** `claude-sonnet-4-5-20250929` (10/10) and never
+  the alias. → To learn Copilot's exact build you must read the wire; Claude volunteers it
+  in prose.
+- **Vendor attribution.** Copilot → "built by GitHub" (model vendor implicit); Claude →
+  Anthropic for both layers.
+- **Knowledge cutoff.** Claude sometimes volunteers a cutoff ("January 2025", 1/10);
+  Copilot never (0/10).
+- **Formatting register** (same signature as EXP 4): Copilot answers carry a bulleted
+  capability list (8/10) and a closing CTA "How can I help you today?" (10/10), and run
+  longer; Claude answers are prose-only (bullets 0/10), CTA 3/10, and shorter.
+
+**Read (Inference):** both are honest about the model; the divergence — distinct product
+wrapper + rounded alias vs first-party agent + pinned snapshot — is authored by each
+harness's identity prompt, not the model.
 
 ---
 
