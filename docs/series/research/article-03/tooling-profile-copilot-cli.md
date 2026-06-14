@@ -16,6 +16,9 @@ debug block (full JSON schemas, lines 507–1062). Raw captures live outside git
 `~/copilot-ledger-data/captures/`.
 **Tool surface size.** 19 native tools; tool definitions ≈8,064 shape tokens =
 **54.2%** of the ~14,877-token request prefix.
+**Token divisor.** Shape-token counts in this file use **chars/4** (dossier convention);
+the published Article 3 uses **chars/3.7**, so figures here run ~7% low — normalize before
+quoting. *(Convention note, not a measurement.)*
 
 All quotes below are **direct evidence** from the captured tool schemas. Predicted
 behaviors are labelled **Inference** and would need N=10/condition runs before any
@@ -95,6 +98,50 @@ Two skills visible this run, carried as catalog stubs inside the `skill` tool:
 The `location` split implies a two-tier model (built-in vs per-user/org injection).
 Invocation is a *"BLOCKING REQUIREMENT … BEFORE generating any other response."*
 
+## Memory & state
+
+Two SQL surfaces, split by lifetime — both shipped eager in the flat 19-tool set.
+
+| Surface | Scope | Engine / mode | Cold-prefix cost |
+|---|---|---|---|
+| `sql` | **Per-session** | SQLite, read+write; DB starts empty, model creates tables | 205 tok |
+| `session_store_sql` | **Cross-session** (all past sessions) | DuckDB, **read-only** (SELECT/WITH); cloud + local stores, `_query_source` column | 1,255 tok |
+
+- **Read/write split.** `sql` is a full read/write scratchpad (*"task tracking, test cases,
+  batch items, state machines"*). `session_store_sql` is read-only history over **every**
+  prior session — *"Prefer this over store_memory for retrieving historical context — it
+  queries ALL past sessions automatically."* *(Direct evidence, wire schemas.)*
+- **A referenced-but-absent surface.** That same line names a `store_memory` tool — but
+  **`store_memory` is not in this capture's 19-tool array** (Direct evidence of the
+  reference; the tool itself **unavailable** here). Whether it ships behind a flag is not
+  observable from this capture.
+- **Explicit refusals.** None observed — neither SQL schema restricts what may be stored.
+- **UX consequence (Inference).** "What did I do last week?" is answerable without the user
+  re-explaining — a genuinely cross-session memory the Claude CLI and (per-conversation) VS
+  Code session scopes don't match.
+
+## Version stability
+
+Second data point: **v1.0.62 (2026-06-13)**, from the `agents-md/discovery` capture set
+(`runs/*/logs/process-*.log`, 3 logs cross-checked). **Caveat:** this run had **MCP servers
+ON** and used a different repo/prompt (the "BARE AGENTS.md discovery" tasks), so it is not a
+clean MCP-off rerun of the octocat_supply baseline — treat composition deltas as suggestive,
+not definitive.
+
+| Dimension | v1.0.60 (2026-06-09, MCP off) | v1.0.62 (2026-06-13, MCP on) |
+|---|---|---|
+| Native built-in tools | **19** | **18** (`write_bash` not present) |
+| Total tools on the wire | 19 | **194** (18 native + 176 MCP) |
+| Delivery mechanism | flat, all eager | **flat, all eager — zero deferral even at 194 tools** |
+
+- **Philosophy is stable; it even *scales* flat.** The headline: at 194 tools the harness
+  still ships **every schema eagerly with no `tool_search` gate** — the opposite of VS Code's
+  response to a large catalog. The flat-delivery bet did not bend under ~10× the tool count.
+  *(Direct evidence, 3 v1.0.62 logs.)*
+- **One composition delta.** `write_bash` is absent from all three v1.0.62 logs (18 native vs
+  19). Cannot attribute to version vs experiment config without an MCP-off v1.0.62
+  octocat_supply capture. *(Direct evidence for absence; cause **unavailable**.)*
+
 ## UX consequences (Inference)
 
 1. **Cheap to extend, predictable to pay for.** Registering more skills/agents grows a
@@ -114,3 +161,12 @@ Invocation is a *"BLOCKING REQUIREMENT … BEFORE generating any other response.
   capability built, UI/loop feature flag-gated. *(Direct evidence for flag; Inference.)*
 - No `delete`/`move`, no semantic search: the built-in set is deliberately minimal,
   pushing anything fancier toward `bash`, `skill`, or MCP.
+
+## Open data gaps
+
+- Per-tool token weights for v1.0.62 not recomputed (only counts/names verified).
+- `store_memory` tool: referenced in `session_store_sql` but never seen on the wire —
+  schema, scope, and gating **unavailable**.
+- Whether `write_bash`'s v1.0.62 absence is a version change or a discovery-run config flag —
+  **unavailable** (no MCP-off v1.0.62 baseline).
+- `MULTI_TURN_AGENTS` runtime effect not exercised in this capture.
