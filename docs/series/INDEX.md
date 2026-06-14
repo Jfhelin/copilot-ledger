@@ -35,12 +35,62 @@ _Last updated: 2026-06-14._
 |---|---|---|---|---|---|
 | 1 | One run can't rank two coding agents | Establish measurement discipline | ✅ research + article largely complete | GitHub Blog | [`article-01-one-run-cant-rank-two-agents.md`](./article-01-one-run-cant-rank-two-agents.md) |
 | 2 | A coding agent is more than a model | Explain the harness | 🟡 dossier complete, article drafted (in polish) | GitHub Blog | [`article-02-more-than-a-model.md`](./article-02-more-than-a-model.md) |
-| 3 | What your IDE sends before you type | Make invisible context visible | 🟡 reframed around harness design; research dossiers + 98/100-run behavioral dataset complete (see `research/article-03/`), article not yet drafted | Personal blog → maybe GitHub Blog | [`article-03-what-your-ide-sends.md`](./article-03-what-your-ide-sends.md) |
+| 3 | What your IDE sends before you type | Make invisible context visible | 🟡 reframed around **five harness design decisions** (tool surface · delivery · skills · sub-agents · memory & state); research dossiers + 98/100-run behavioral dataset complete (see `research/article-03/`); article not yet drafted. ⚠️ 3 data corrections must land in the draft — see **Article 3 — plan notes** below | Personal blog → maybe GitHub Blog | [`article-03-what-your-ide-sends.md`](./article-03-what-your-ide-sends.md) |
 | 4 | Can a good AGENTS.md improve quality and reduce cost? | Test a practical developer lever | ⚪ needs new pre-registered experiment (~100 runs) | GitHub Blog (+ MS Learn follow-up) | [`article-04-agents-md.md`](./article-04-agents-md.md) |
 | 5 | When is a more expensive model worth it? | Map the cost-quality frontier | ⚪ needs new experiment (~250 runs); some e3 data exists | Personal blog → maybe GitHub Blog | [`article-05-model-cost-quality.md`](./article-05-model-cost-quality.md) |
 | 6 | Same model, different harness | Synthesis / competitive capstone | ⚪ depends on Articles 1–5 | Personal blog → possible field adaptation | [`article-06-same-model-different-harness.md`](./article-06-same-model-different-harness.md) |
 
 Status legend: ✅ done/near-done · 🟡 drafted, in polish · 🔵 ready to write from existing data · ⚪ needs new work.
+
+---
+
+## Article 3 — plan notes (reframe + corrections)
+
+**The reframe.** Article 3 is no longer a token-footprint measurement piece. Holding the model
+constant (Claude Sonnet 4.5) across three harnesses — Copilot CLI, Claude CLI, Copilot in VS Code —
+it tells **harness design-decision stories**: *what the engineer decided → how it reaches the model →
+the UX consequence for the developer (labeled Inference) → the wire evidence.* Thesis: any
+behavioral difference is **authored by the harness, not the model, and no single choice is
+universally better**. The footprint numbers become the *cost* evidence under each decision; the
+behavioral study becomes the *consequence* evidence.
+
+**The five-decision spine** (each backed by `research/article-03/tooling-profile-*.md`):
+
+| # | Design decision | Three-way split observed |
+|---|---|---|
+| 1 | **Tool surface** — how many tools, at what schema weight | 19 (CO-CLI) · 27 (CL-CLI) · 56 (CO-IDE, incl. 18 from installed extensions) |
+| 2 | **Tool delivery** — eager vs gated | flat-slim (CO-CLI) · flat-heavy (CL-CLI) · **gated** (CO-IDE: 23 eager + 33 `defer_loading`) |
+| 3 | **Skills** — how surfaced | hidden behind a `skill` tool (CO-CLI) · 13-stub catalog preloaded (CL-CLI) · 16 folded into system (CO-IDE) |
+| 4 | **Sub-agents** — roster mechanism | fixed menu via `task` (CO-CLI, 6 built-in + 3 org) · open `subagent_type` enum (CL-CLI) · 8 via `runSubagent` (CO-IDE) |
+| 5 | **Memory & state** — what persists / is refused | dual SQL + async-shell detach (CO-CLI) · plan-mode gate + TodoWrite (CL-CLI) · per-session state + 2 gpt-4o-mini overhead calls (CO-IDE) |
+
+Supporting layers: the **structural floor** (first-call footprint, the cost side) and the
+**behavioral payoff** (5 prompts × 2 CLIs × N=10, 98/100 valid — `research/article-03/behavioral/`,
+read as tendencies not a ranking; VS Code arm is N=1 and not state-matched).
+
+**Three corrections the draft must carry** (correction-log form — preserve old claim, explain why):
+
+1. **Tool delivery is *not* "flat everywhere."** Old draft: all three ship a flat catalog, "none
+   used progressive disclosure." Corrected: Copilot in VS Code **gates** its catalog (23 schemas
+   eager + 33 flagged `defer_loading:true` behind a `tool_search` step; ~8.8k eager vs ~6.3k
+   deferred tok). The flat-catalog claim applies to the **two CLIs only**. Source:
+   `tooling-profile-copilot-ide.md`.
+2. **VS Code skills = 16, not ~37.** Old draft estimated ~37 skills folded into the system prompt.
+   Corrected count is **16** (5 core + 6 GitHub-PR ext + 2 eval ext + 2 repo + 1 user). Source:
+   `tooling-profile-copilot-ide.md` / `harness-profile-*.md`.
+3. **The 46,428-tok / 95-tool "MCP-on Copilot in VS Code" configured row is a mislabeled Claude
+   Code CLI session** (24 native incl. `Agent`/`Bash`/`Cron*`/`EnterPlanMode` + 71 `mcp__` = 95).
+   Pull that figure from any VS Code configured-footprint claim; a state-matched VS Code configured
+   snapshot is an **open data gap**. (Note: this INDEX's harness table already lists CL-IDE ≈46.4k
+   and CO-IDE ≈20.6k correctly — the mislabel lives in the article working file, not here.)
+
+**Figures needing regeneration before publish:** `tool-catalog-delivery.svg` (still draws a flat
+56-tool VS Code bar) and `ide-context-breakdown.svg` (still says "~37 skills"); no figure yet for
+the sub-agents axis (decision 4).
+
+**Where Article 3 data lives:** dossiers + behavioral results + VS Code N=1 digest all under
+`docs/series/research/article-03/`; dataset-grain ledger entry in `docs/content-lab/data/INDEX.md`;
+raw captures outside git in `~/copilot-ledger-data/`.
 
 ---
 
