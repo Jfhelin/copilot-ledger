@@ -1,0 +1,554 @@
+[
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-01",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-02",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-03",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-04",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-05",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-06",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-07",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-08",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-09",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-AGENTS-10",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-01",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-02",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-03",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-04",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-05",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-06",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-07",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-08",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-09",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-BARE-10",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-01",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-02",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  },
+  {
+    "run_id": "evaluation-E3-debug-ORIG-03",
+    "task": "E3-debug",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": null,
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M"
+    },
+    "n_files": 1,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": []
+  }
+]

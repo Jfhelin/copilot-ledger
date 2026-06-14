@@ -1,0 +1,1 @@
+Add an optional `barcode` field to the Product entity, end to end: the model, the database schema (via the migration system), the repository, the API route, and the API response. A product created with a `barcode` should return that value when fetched. Keep the existing tests passing.

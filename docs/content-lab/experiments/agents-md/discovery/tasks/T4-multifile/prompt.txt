@@ -1,0 +1,1 @@
+Add a branch-count feature end to end. Expose a new API endpoint `GET /api/headquarters/:id/branch-count` that returns the number of branches belonging to that headquarters, and surface that count in an appropriate place in the frontend. Wire it through the API client the frontend already uses, and keep the existing tests passing.

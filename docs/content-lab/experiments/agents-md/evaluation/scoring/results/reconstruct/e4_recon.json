@@ -1,0 +1,860 @@
+[
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-01",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m24 passed\u001b[39m\u001b[22m\u001b[90m (24)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-Dvm0ArPi.js         362.85 kB │ gzip: 111.35 kB | ✓ built in 1.29s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-02",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-CyCC60ET.js         362.67 kB │ gzip: 111.32 kB | ✓ built in 1.05s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx",
+      "frontend/src/components/entity/product/ProductForm.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M",
+      "frontend/src/components/entity/product/ProductForm.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx",
+      "frontend/src/components/entity/product/ProductForm.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-03",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-Bv5MPz6y.js         362.65 kB │ gzip: 111.31 kB | ✓ built in 1.14s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx",
+      "frontend/src/components/entity/product/ProductForm.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M",
+      "frontend/src/components/entity/product/ProductForm.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx",
+      "frontend/src/components/entity/product/ProductForm.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-04",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-C3vPJ5Ni.js         362.77 kB │ gzip: 111.33 kB | ✓ built in 1.05s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-05",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-DhYVdMYf.js         362.86 kB │ gzip: 111.38 kB | ✓ built in 1.07s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/api/config.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-06",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m25 passed\u001b[39m\u001b[22m\u001b[90m (25)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.07s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-07",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-BeLuHUDB.js         362.86 kB │ gzip: 111.35 kB | ✓ built in 1.06s | "
+    },
+    "files_touched": [
+      "api/src/repositories/productsRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/productsRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 3,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-08",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-HQNMVuR9.js         362.83 kB │ gzip: 111.34 kB | ✓ built in 1.06s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 3,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-09",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-BIbewkHb.js         362.97 kB │ gzip: 111.33 kB | ✓ built in 1.08s | "
+    },
+    "files_touched": [
+      "api/src/repositories/productsRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/productsRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/api/config.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-AGENTS-10",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-DoKQrzxZ.js         362.76 kB │ gzip: 111.27 kB | ✓ built in 1.06s | "
+    },
+    "files_touched": [
+      "api/src/repositories/productsRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/productsRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-01",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-PFaw2gFO.js         362.81 kB │ gzip: 111.35 kB | ✓ built in 1.09s | "
+    },
+    "files_touched": [
+      "api/src/repositories/productsRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/productsRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/api/config.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-02",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-CwdP-J2r.js         362.68 kB │ gzip: 111.33 kB | ✓ built in 1.08s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-03",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-Cj8VMTAu.js         362.85 kB │ gzip: 111.34 kB | ✓ built in 1.04s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 3,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-04",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-DkiBnLzC.js         362.96 kB │ gzip: 111.32 kB | ✓ built in 1.10s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-05",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-DACVe0NC.js         362.64 kB │ gzip: 111.31 kB | ✓ built in 1.07s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 3,
+    "edited_test_files": [],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-06",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m24 passed\u001b[39m\u001b[22m\u001b[90m (24)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-OM5c_SKi.js         362.80 kB │ gzip: 111.35 kB | ✓ built in 1.07s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/api/config.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 6,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-07",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-CfjgAtZp.js         362.77 kB │ gzip: 111.33 kB | ✓ built in 1.08s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-08",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m22 passed\u001b[39m\u001b[22m\u001b[90m (22)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-B2zO1UMn.js         362.71 kB │ gzip: 111.34 kB | ✓ built in 1.05s | "
+    },
+    "files_touched": [
+      "api/src/repositories/productsRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/productsRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/api/config.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/api/config.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-09",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m24 passed\u001b[39m\u001b[22m\u001b[90m (24)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.04s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-BARE-10",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-DX62JB_V.js         362.60 kB │ gzip: 111.29 kB | ✓ built in 1.05s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-01",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-ClQyg3Ci.js         362.78 kB │ gzip: 111.34 kB | ✓ built in 1.05s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-02",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-5aXkFH0B.js         362.70 kB │ gzip: 111.32 kB | ✓ built in 1.11s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 4,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  },
+  {
+    "run_id": "evaluation-E4-multifile-ORIG-03",
+    "task": "E4-multifile",
+    "fixture_ok": true,
+    "apply_ok": true,
+    "apply_err": null,
+    "api_test_exit": 0,
+    "api_test": {
+      "tests": "\u001b[22m \u001b[1m\u001b[32m24 passed\u001b[39m\u001b[22m\u001b[90m (24)\u001b[39m",
+      "files": "\u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m"
+    },
+    "fe_build": {
+      "exit": 0,
+      "tail": "dist/assets/index-D7t8HHJe.js         362.75 kB │ gzip: 111.33 kB | ✓ built in 1.07s | "
+    },
+    "files_touched": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/repositories/suppliersRepo.ts",
+      "api/src/routes/supplier.test.ts",
+      "api/src/routes/supplier.ts",
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ],
+    "file_status": {
+      "api/src/repositories/suppliersRepo.test.ts": "M",
+      "api/src/repositories/suppliersRepo.ts": "M",
+      "api/src/routes/supplier.test.ts": "A",
+      "api/src/routes/supplier.ts": "M",
+      "frontend/src/components/admin/AdminProducts.tsx": "M"
+    },
+    "n_files": 5,
+    "edited_test_files": [
+      "api/src/repositories/suppliersRepo.test.ts",
+      "api/src/routes/supplier.test.ts"
+    ],
+    "touched_swagger": [],
+    "added_migration": [],
+    "frontend_touched": [
+      "frontend/src/components/admin/AdminProducts.tsx"
+    ]
+  }
+]

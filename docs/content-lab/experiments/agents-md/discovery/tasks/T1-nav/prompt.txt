@@ -1,0 +1,1 @@
+You are helping a new developer get productive in this repository. Explain what it is and its purpose, the main components and how they fit together, the data flow between them, and exactly how to install, run, and test it locally. Be specific and accurate.
