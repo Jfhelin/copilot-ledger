@@ -6,7 +6,7 @@ the work without re-running any captures**. The distilled analysis lives in this
 (committed to the repo); the bulky/raw capture files live in a stable external directory
 referenced below.
 
-_Last updated: 2026-06-12._
+_Last updated: 2026-06-14._
 
 > **Keeping this current.** This file does not update itself. The
 > `copilot-behavior-lab` skill owns it: whenever a page/finding is produced that
@@ -62,6 +62,13 @@ in CI); structural / IDE session rows live in `STATIC_ROWS` inside `build-runs.m
 because their raw sources are external. Current ledger: **59 rows**
 (40 repeatability + 2 structural + 6 ask/agent t6 + 2 CO-IDE (MCP-on + MCP-off) + 2 CL-IDE +
 6 e3 model-comparison + 1 matched-pair).
+
+> **Why the 100-run Article-3 behavioral study is *not* 100 rows here.** That study keeps
+> its own per-run log (`docs/series/research/article-03/behavioral/results.jsonl`, 100 rows,
+> 98 valid) with a richer 50+-field schema (cost/cache/llm-calls/behavioral flags). Appending
+> all 100 to this spine would more than double it and mix two grains. It is therefore
+> catalogued at **dataset grain** — one entry in the Dataset catalog below — and cited from
+> its own JSONL. Treat `results.jsonl` as a satellite of this ledger, not a replacement.
 
 ---
 
@@ -144,6 +151,31 @@ raw `logs/`.
 ### `cl-ide-transcripts/` — Claude Code extension `sdk-ts` JSONL
 - `CL-IDE_extension_OFF.jsonl` (src `3864bdcd…`) and `CL-IDE_extension_ON.jsonl` (src `ad52a532…`).
 - **Headline:** cold prefix 46,364 (OFF) vs 46,418 ("ON") = +54 noise → the extension does **not** inject a project `.mcp.json` server into the model prefix. Both arms are effectively MCP-off. Native Read/Glob/Bash only; no Todo/Task tool.
+
+### Article-3 behavioral study — 5 prompts × 2 CLIs × N=10 (+ VS Code N=1)
+**This dataset is committed in the repo, not under `~/copilot-ledger-data/captures/`** — its
+per-run log and writeup live at `docs/series/research/article-03/behavioral/`
+(`results.jsonl` = 100 rows, `results.md` = analysis, `harness/` = `run.mjs`/`score.mjs`/`enrich.mjs`).
+Raw per-run captures (stdout/stream/digest) stay external at
+`~/copilot-ledger-data/captures/behavioral/`.
+- **Design.** 5 frozen prompts (identity / act-vs-advise / scope / shape / plan) × 2 harnesses
+  (Copilot CLI, Claude CLI) × N=10 = **100 runs, 98 valid** (the 2 invalid = Claude exp5 reps 9–10,
+  Anthropic session-limit 429, flagged `valid:false`; backfill pending limit reset).
+- **Pinned env.** Repo `octodemo/octocat_supply` @ `e1516cf` (exp3 on `exp/offbyone` fixture
+  `a9530a6`), model `claude-sonnet-4-5-20250929`, MCP off, fresh session per run.
+- **Schema (50+ fields per row).** Behavioral flags (`planned_before_editing`, `dove_in`,
+  `files_changed_count`, `self_id_flags`, `todo_list_present`…) joined with cost/cache/calls
+  (`llm_calls`, `total_tokens`, `cache_hit_rate`, `real_spend_usd`, `wall_ms`…). Documented in
+  `results.md` → *Dataset schema & reuse*.
+- **VS Code N=1 contrast.** exp1+exp2 captured manually in Agent mode (Agent mode can't be driven
+  headless) → `behavioral/vscode-manual.md`. ⚠️ **N=1, not state-matched** (different checkout +
+  custom instructions on) — shape observation only, never a rate. Surfaced the two per-turn
+  `gpt-4o-mini` overhead calls (`title` + `categorization`, 0 AI-credits) absent from both CLIs.
+- **Headline (tendencies, not a ranking):** see `results.md` → *Headline reads*. Cost/cache/latency
+  medians in its *Cost, cache & latency* table.
+- **Query it:** `results.jsonl` loads into the `sql` tool directly (one JSON object per line); it is
+  a satellite of the run ledger, logged here at dataset grain rather than as 100 ledger rows (see
+  the run-ledger note above).
 
 ---
 

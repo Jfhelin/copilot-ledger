@@ -6,7 +6,7 @@ the facts, supporting runs, writing ideas, and open data needs we will draw on w
 article is actually written. Both the human and the agent edit these files freely — they
 are a shared scratchpad, not the published article.
 
-_Last updated: 2026-06-13._
+_Last updated: 2026-06-14._
 
 ---
 
@@ -35,7 +35,7 @@ _Last updated: 2026-06-13._
 |---|---|---|---|---|---|
 | 1 | One run can't rank two coding agents | Establish measurement discipline | ✅ research + article largely complete | GitHub Blog | [`article-01-one-run-cant-rank-two-agents.md`](./article-01-one-run-cant-rank-two-agents.md) |
 | 2 | A coding agent is more than a model | Explain the harness | 🟡 dossier complete, article drafted (in polish) | GitHub Blog | [`article-02-more-than-a-model.md`](./article-02-more-than-a-model.md) |
-| 3 | What your IDE sends before you type | Make invisible context visible | 🔵 buildable from existing captures (no new runs) | Personal blog → maybe GitHub Blog | [`article-03-what-your-ide-sends.md`](./article-03-what-your-ide-sends.md) |
+| 3 | What your IDE sends before you type | Make invisible context visible | 🟡 reframed around harness design; research dossiers + 98/100-run behavioral dataset complete (see `research/article-03/`), article not yet drafted | Personal blog → maybe GitHub Blog | [`article-03-what-your-ide-sends.md`](./article-03-what-your-ide-sends.md) |
 | 4 | Can a good AGENTS.md improve quality and reduce cost? | Test a practical developer lever | ⚪ needs new pre-registered experiment (~100 runs) | GitHub Blog (+ MS Learn follow-up) | [`article-04-agents-md.md`](./article-04-agents-md.md) |
 | 5 | When is a more expensive model worth it? | Map the cost-quality frontier | ⚪ needs new experiment (~250 runs); some e3 data exists | Personal blog → maybe GitHub Blog | [`article-05-model-cost-quality.md`](./article-05-model-cost-quality.md) |
 | 6 | Same model, different harness | Synthesis / competitive capstone | ⚪ depends on Articles 1–5 | Personal blog → possible field adaptation | [`article-06-same-model-different-harness.md`](./article-06-same-model-different-harness.md) |
@@ -87,7 +87,9 @@ Status legend: ✅ done/near-done · 🟡 drafted, in polish · 🔵 ready to wr
 | CL-IDE | Claude Code in VS Code | ~46.4k | ~46k (exact) | `cl-ide-transcripts/CL-IDE_extension_OFF.jsonl` |
 
 **Run ledger:** `docs/content-lab/data/db/runs.jsonl` (59 rows). Query via
-`sqlite3 session.db < docs/content-lab/data/db/runs.sql`.
+`sqlite3 session.db < docs/content-lab/data/db/runs.sql`. The Article-3 behavioral study
+(100 runs, 98 valid) is logged at **dataset grain** rather than in this spine — its per-run
+log is `docs/series/research/article-03/behavioral/results.jsonl` (see the data-catalog INDEX).
 
 **Existing figures:** `docs/articles/figures/harnesses/` — `prefix-size-comparison.svg`,
 `tool-catalog-size.svg`, `agent-is-more-than-model.svg`, `model-provider-vs-harness-control.svg`.
