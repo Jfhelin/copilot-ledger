@@ -1,0 +1,14 @@
+{
+  "name": "@copilot-ledger/articles",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone GitHub Pages bubble for individually-shippable Copilot Ledger articles. Self-contained pages with no navigation into the rest of the lab.",
+  "scripts": {
+    "build": "node build.mjs",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "marked": "^12.0.2"
+  }
+}

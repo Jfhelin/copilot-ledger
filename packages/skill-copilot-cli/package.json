@@ -1,0 +1,12 @@
+{
+  "name": "@copilot-ledger/skill-copilot-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Copilot CLI skill for analysing GitHub Copilot CLI sessions from their --log-level all debug logs (exact tokens, system/tool composition, and NATIVE GitHub AI Credits), in the same digest schema as the VS Code and Claude skills.",
+  "scripts": {
+    "test": "node --test",
+    "sync": "node ./scripts/sync.mjs",
+    "sync:check": "node ./scripts/sync.mjs --check",
+    "install-local": "ln -sfn \"$(pwd)\" \"$HOME/.copilot/skills/copilot-cli-export\""
+  }
+}

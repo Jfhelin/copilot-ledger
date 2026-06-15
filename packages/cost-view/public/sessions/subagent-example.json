@@ -1,0 +1,78 @@
+{
+  "exportedAt": "2026-06-01T10:00:00.000Z",
+  "totalPrompts": 2,
+  "totalLogEntries": 4,
+  "mcpServers": [
+    { "label": "github", "command": "github-mcp-server", "type": "stdio", "version": "1.0.0" }
+  ],
+  "prompts": [
+    {
+      "promptId": "prompt-main",
+      "prompt": "Investigate the auth bug and dispatch a subagent.",
+      "logs": [
+        {
+          "kind": "request",
+          "time": "2026-06-01T10:00:01.000Z",
+          "metadata": {
+            "model": "claude-sonnet-4",
+            "duration": 4200,
+            "timeToFirstToken": 800,
+            "usage": {
+              "prompt_tokens": 12000,
+              "completion_tokens": 600,
+              "prompt_tokens_details": {
+                "cached_tokens": 9000,
+                "cache_creation_input_tokens": 1000
+              }
+            }
+          },
+          "response": { "message": [{ "type": "text", "text": "Looking into it." }] }
+        },
+        {
+          "kind": "toolCall",
+          "time": "2026-06-01T10:00:05.000Z",
+          "tool": "read_file",
+          "id": "tool-1",
+          "args": { "filePath": "src/auth.ts" },
+          "response": "export function login() {}"
+        },
+        {
+          "kind": "toolCall",
+          "time": "2026-06-01T10:00:06.000Z",
+          "tool": "runSubagent",
+          "id": "tool-2",
+          "args": {
+            "description": "Audit token refresh",
+            "prompt": "Audit the token refresh path for race conditions."
+          },
+          "response": "Subagent completed."
+        }
+      ]
+    },
+    {
+      "promptId": "prompt-sub",
+      "prompt": "Audit the token refresh path for race conditions.",
+      "logs": [
+        {
+          "kind": "request",
+          "time": "2026-06-01T10:00:07.000Z",
+          "name": "tool/runSubagent",
+          "metadata": {
+            "model": "claude-haiku-4",
+            "duration": 1500,
+            "timeToFirstToken": 300,
+            "usage": {
+              "prompt_tokens": 3000,
+              "completion_tokens": 200,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_creation_input_tokens": 0
+              }
+            }
+          },
+          "response": { "message": [{ "type": "text", "text": "No races found." }] }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{"type":"mode","sessionId":"test-sess-1"}
+{"type":"user","sessionId":"test-sess-1","version":"2.1.169","entrypoint":"cli","cwd":"/work/proj","gitBranch":"main","isSidechain":false,"timestamp":"2026-06-09T10:00:00.000Z","message":{"role":"user","content":"<command-name>/model</command-name>"}}
+{"type":"system","sessionId":"test-sess-1","version":"2.1.169","entrypoint":"cli","timestamp":"2026-06-09T10:00:01.000Z"}
+{"type":"user","sessionId":"test-sess-1","isSidechain":false,"timestamp":"2026-06-09T10:00:02.000Z","message":{"role":"user","content":"<system-reminder>cwd changed</system-reminder>"}}
+{"type":"user","sessionId":"test-sess-1","isSidechain":false,"timestamp":"2026-06-09T10:00:03.000Z","message":{"role":"user","content":"add a hello function"}}
+{"type":"attachment","sessionId":"test-sess-1","timestamp":"2026-06-09T10:00:03.500Z","attachment":{"type":"deferred_tools_delta","addedNames":["Bash","Read","Edit"]}}
+{"type":"attachment","sessionId":"test-sess-1","timestamp":"2026-06-09T10:00:03.600Z","attachment":{"type":"skill_listing","skillCount":2,"content":"- one: aaa\n- two: bbb"}}
+{"type":"assistant","sessionId":"test-sess-1","isSidechain":false,"timestamp":"2026-06-09T10:00:04.000Z","message":{"role":"assistant","model":"claude-sonnet-4-5-20250929","content":[{"type":"thinking","thinking":"Let me read the file first."},{"type":"tool_use","name":"Read","input":{"path":"a.js"}}],"usage":{"input_tokens":100,"cache_read_input_tokens":2000,"cache_creation_input_tokens":8000,"output_tokens":40}}}
+{"type":"user","sessionId":"test-sess-1","isSidechain":false,"timestamp":"2026-06-09T10:00:05.000Z","message":{"role":"user","content":[{"type":"tool_result","content":"file contents"}]}}
+{"type":"assistant","sessionId":"test-sess-1","isSidechain":false,"timestamp":"2026-06-09T10:00:06.000Z","message":{"role":"assistant","model":"claude-sonnet-4-5-20250929","content":[{"type":"text","text":"Done — added the function."}],"usage":{"input_tokens":50,"cache_read_input_tokens":10000,"cache_creation_input_tokens":200,"output_tokens":120}}}
+{"type":"user","sessionId":"test-sess-1","isSidechain":true,"timestamp":"2026-06-09T10:00:07.000Z","message":{"role":"user","content":"sub-agent: investigate tests"}}
+{"type":"assistant","sessionId":"test-sess-1","isSidechain":true,"timestamp":"2026-06-09T10:00:08.000Z","message":{"role":"assistant","model":"claude-sonnet-4-5-20250929","content":[{"type":"text","text":"tests look fine"}],"usage":{"input_tokens":30,"cache_read_input_tokens":5000,"cache_creation_input_tokens":0,"output_tokens":25}}}

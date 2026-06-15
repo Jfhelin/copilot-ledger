@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Cost vs quality — 40 headless runs (interactive)</title>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --cop:#2563eb; --cla:#ea580c; }
+  body { font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--ink); margin:0; padding:24px; background:#fff; }
+  .wrap { max-width:860px; margin:0 auto; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  p.sub { color:var(--muted); font-size:13px; margin:0 0 16px; }
+  .controls { display:flex; flex-wrap:wrap; gap:18px; align-items:center; padding:12px 14px; border:1px solid var(--line); border-radius:10px; margin-bottom:14px; font-size:13px; }
+  .group { display:flex; gap:12px; align-items:center; }
+  .group b { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  label { display:inline-flex; gap:6px; align-items:center; cursor:pointer; user-select:none; }
+  .dot { width:11px; height:11px; border-radius:50%; display:inline-block; }
+  .stats { font-size:13px; color:var(--muted); margin:10px 2px 0; line-height:1.5; }
+  .stats b { color:var(--ink); }
+  svg { width:100%; height:auto; border:1px solid var(--line); border-radius:10px; }
+  button.reset { margin-left:auto; font-size:12px; padding:5px 10px; border:1px solid var(--line); background:#f8fafc; border-radius:7px; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Same task, 40 headless runs — cost vs quality</h1>
+  <p class="sub">Token cost vs blind factual-coverage score. Toggle the filters to compare harnesses and conditions.</p>
+  <div class="controls">
+    <div class="group">
+      <b>Harness</b>
+      <label><input type="checkbox" data-h="copilot" checked><span class="dot" style="background:var(--cop)"></span>Copilot CLI</label>
+      <label><input type="checkbox" data-h="claude" checked><span class="dot" style="background:var(--cla)"></span>Claude CLI</label>
+    </div>
+    <div class="group">
+      <b>Condition</b>
+      <label><input type="checkbox" data-c="BARE" checked>BARE</label>
+      <label><input type="checkbox" data-c="TRIM" checked>TRIM</label>
+    </div>
+    <button class="reset" id="reset">Reset</button>
+  </div>
+  <svg id="chart" viewBox="0 0 780 520" role="img" aria-label="Cost vs quality scatter"></svg>
+  <div style="font-size:12px;color:#94a3b8;margin:2px 0 6px">Dashed lines mark each harness's mean cost (vertical) and mean quality (horizontal); they update as you filter.</div>
+  <div style="font-size:12px;color:#64748b;margin:0 0 6px"><b>BARE</b> = no memory file. <b>TRIM</b> = a short CLAUDE.md file included in the project.</div>
+  <div class="stats" id="stats"></div>
+</div>
+<script>
+const DATA = [{"id":"BARE-copilot-01","harness":"copilot","condition":"BARE","cost":0.1704,"quality":22,"requests":7,"wall_s":74},{"id":"BARE-copilot-02","harness":"copilot","condition":"BARE","cost":0.1185,"quality":22,"requests":4,"wall_s":50},{"id":"BARE-copilot-03","harness":"copilot","condition":"BARE","cost":0.1147,"quality":21,"requests":4,"wall_s":50},{"id":"BARE-copilot-04","harness":"copilot","condition":"BARE","cost":0.1675,"quality":22,"requests":7,"wall_s":82},{"id":"BARE-copilot-05","harness":"copilot","condition":"BARE","cost":0.1119,"quality":24,"requests":4,"wall_s":51},{"id":"BARE-copilot-06","harness":"copilot","condition":"BARE","cost":0.105,"quality":20,"requests":4,"wall_s":48},{"id":"BARE-copilot-07","harness":"copilot","condition":"BARE","cost":0.1252,"quality":19,"requests":5,"wall_s":48},{"id":"BARE-copilot-08","harness":"copilot","condition":"BARE","cost":0.1214,"quality":21,"requests":4,"wall_s":55},{"id":"BARE-copilot-09","harness":"copilot","condition":"BARE","cost":0.1118,"quality":20,"requests":4,"wall_s":46},{"id":"BARE-copilot-10","harness":"copilot","condition":"BARE","cost":0.147,"quality":24,"requests":5,"wall_s":69},{"id":"BARE-claude-01","harness":"claude","condition":"BARE","cost":0.3469,"quality":21,"requests":18,"wall_s":64},{"id":"BARE-claude-02","harness":"claude","condition":"BARE","cost":0.3464,"quality":20,"requests":22,"wall_s":70},{"id":"BARE-claude-03","harness":"claude","condition":"BARE","cost":0.3534,"quality":23,"requests":17,"wall_s":62},{"id":"BARE-claude-04","harness":"claude","condition":"BARE","cost":0.4638,"quality":21,"requests":23,"wall_s":65},{"id":"BARE-claude-05","harness":"claude","condition":"BARE","cost":0.488,"quality":18,"requests":24,"wall_s":57},{"id":"BARE-claude-06","harness":"claude","condition":"BARE","cost":0.3607,"quality":22,"requests":19,"wall_s":60},{"id":"BARE-claude-07","harness":"claude","condition":"BARE","cost":0.5296,"quality":23,"requests":26,"wall_s":83},{"id":"BARE-claude-08","harness":"claude","condition":"BARE","cost":0.4761,"quality":23,"requests":21,"wall_s":75},{"id":"BARE-claude-09","harness":"claude","condition":"BARE","cost":0.4071,"quality":21,"requests":18,"wall_s":67},{"id":"BARE-claude-10","harness":"claude","condition":"BARE","cost":0.345,"quality":22,"requests":18,"wall_s":65},{"id":"TRIM-copilot-01","harness":"copilot","condition":"TRIM","cost":0.1468,"quality":20,"requests":4,"wall_s":51},{"id":"TRIM-copilot-02","harness":"copilot","condition":"TRIM","cost":0.1428,"quality":21,"requests":5,"wall_s":60},{"id":"TRIM-copilot-03","harness":"copilot","condition":"TRIM","cost":0.1897,"quality":22,"requests":4,"wall_s":44},{"id":"TRIM-copilot-04","harness":"copilot","condition":"TRIM","cost":0.1209,"quality":20,"requests":4,"wall_s":49},{"id":"TRIM-copilot-05","harness":"copilot","condition":"TRIM","cost":0.1266,"quality":21,"requests":5,"wall_s":60},{"id":"TRIM-copilot-06","harness":"copilot","condition":"TRIM","cost":0.1163,"quality":22,"requests":4,"wall_s":48},{"id":"TRIM-copilot-07","harness":"copilot","condition":"TRIM","cost":0.1094,"quality":20,"requests":4,"wall_s":48},{"id":"TRIM-copilot-08","harness":"copilot","condition":"TRIM","cost":0.1188,"quality":18,"requests":4,"wall_s":51},{"id":"TRIM-copilot-09","harness":"copilot","condition":"TRIM","cost":0.1206,"quality":21,"requests":4,"wall_s":54},{"id":"TRIM-copilot-10","harness":"copilot","condition":"TRIM","cost":0.1133,"quality":20,"requests":4,"wall_s":44},{"id":"TRIM-claude-01","harness":"claude","condition":"TRIM","cost":0.3701,"quality":19,"requests":10,"wall_s":39},{"id":"TRIM-claude-02","harness":"claude","condition":"TRIM","cost":0.2243,"quality":21,"requests":9,"wall_s":39},{"id":"TRIM-claude-03","harness":"claude","condition":"TRIM","cost":0.3729,"quality":19,"requests":14,"wall_s":45},{"id":"TRIM-claude-04","harness":"claude","condition":"TRIM","cost":0.3211,"quality":21,"requests":15,"wall_s":52},{"id":"TRIM-claude-05","harness":"claude","condition":"TRIM","cost":0.2719,"quality":19,"requests":12,"wall_s":42},{"id":"TRIM-claude-06","harness":"claude","condition":"TRIM","cost":0.3145,"quality":20,"requests":13,"wall_s":44},{"id":"TRIM-claude-07","harness":"claude","condition":"TRIM","cost":0.3042,"quality":17,"requests":12,"wall_s":44},{"id":"TRIM-claude-08","harness":"claude","condition":"TRIM","cost":0.2922,"quality":17,"requests":12,"wall_s":47},{"id":"TRIM-claude-09","harness":"claude","condition":"TRIM","cost":0.333,"quality":19,"requests":13,"wall_s":42},{"id":"TRIM-claude-10","harness":"claude","condition":"TRIM","cost":0.2678,"quality":21,"requests":12,"wall_s":36}];
+const COL = { copilot:"#2563eb", claude:"#ea580c" };
+const W=780,H=520,mL=72,mR=24,mT=56,mB=64, pw=W-mL-mR, ph=H-mT-mB;
+const xMin=0,xMax=0.56,yMin=10,yMax=27;
+const X=v=>mL+((v-xMin)/(xMax-xMin))*pw, Y=v=>mT+ph-((v-yMin)/(yMax-yMin))*ph;
+const SVGNS="http://www.w3.org/2000/svg";
+const el=(n,a)=>{const e=document.createElementNS(SVGNS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+const chart=document.getElementById("chart"), stats=document.getElementById("stats");
+
+function filters(){
+  const hs=[...document.querySelectorAll('input[data-h]')].filter(i=>i.checked).map(i=>i.dataset.h);
+  const cs=[...document.querySelectorAll('input[data-c]')].filter(i=>i.checked).map(i=>i.dataset.c);
+  return {hs,cs};
+}
+function mean(a){return a.reduce((x,y)=>x+y,0)/a.length;}
+
+function draw(){
+  chart.innerHTML="";
+  chart.appendChild(el("rect",{x:0,y:0,width:W,height:H,fill:"#fff"}));
+  for(let q=10;q<=25;q+=5){
+    chart.appendChild(el("line",{x1:mL,y1:Y(q),x2:mL+pw,y2:Y(q),stroke:"#e2e8f0"}));
+    const t=el("text",{x:mL-10,y:Y(q)+4,"font-size":11,fill:"#64748b","text-anchor":"end"});t.textContent=q;chart.appendChild(t);
+  }
+  for(let c=0;c<=0.5;c+=0.1){
+    chart.appendChild(el("line",{x1:X(c),y1:mT,x2:X(c),y2:mT+ph,stroke:"#f1f5f9"}));
+    const t=el("text",{x:X(c),y:mT+ph+20,"font-size":11,fill:"#64748b","text-anchor":"middle"});t.textContent="$"+c.toFixed(2);chart.appendChild(t);
+  }
+  const xl=el("text",{x:mL+pw/2,y:H-18,"font-size":13,fill:"#334155","text-anchor":"middle","font-weight":600});xl.textContent="Token-normalized cost per run (USD)";chart.appendChild(xl);
+  const yl=el("text",{x:20,y:mT+ph/2,"font-size":13,fill:"#334155","text-anchor":"middle","font-weight":600,transform:"rotate(-90 20 "+(mT+ph/2)+")"});yl.textContent="Facts covered, of 27 (blind) — axis starts at 10";chart.appendChild(yl);
+
+  const {hs,cs}=filters();
+  const shown=DATA.filter(d=>hs.includes(d.harness)&&cs.includes(d.condition));
+  for(const h of hs){
+    const a=shown.filter(d=>d.harness===h);
+    if(a.length){const mc=mean(a.map(d=>d.cost)), mq=mean(a.map(d=>d.quality));
+      chart.appendChild(el("line",{x1:X(mc),y1:mT,x2:X(mc),y2:mT+ph,stroke:COL[h],"stroke-width":1.5,"stroke-dasharray":"5 4",opacity:.55}));
+      chart.appendChild(el("line",{x1:mL,y1:Y(mq),x2:mL+pw,y2:Y(mq),stroke:COL[h],"stroke-width":1.5,"stroke-dasharray":"5 4",opacity:.55}));}
+  }
+  for(const d of shown){
+    const cx=X(d.cost),cy=Y(d.quality),c=COL[d.harness];
+    const common={cx:cx.toFixed(1),cy:cy.toFixed(1),r:6};
+    let circ;
+    if(d.condition==="BARE") circ=el("circle",{...common,fill:c,"fill-opacity":.78,stroke:"#fff","stroke-width":1});
+    else circ=el("circle",{...common,fill:"#fff",stroke:c,"stroke-width":2.2});
+    const tt=el("title");tt.textContent=d.id+" · $"+d.cost.toFixed(3)+" · q="+d.quality+" · "+d.requests+" reqs · "+d.wall_s+"s";
+    circ.appendChild(tt);chart.appendChild(circ);
+  }
+  // stats
+  let s="";
+  for(const h of ["copilot","claude"]){
+    const a=shown.filter(d=>d.harness===h);
+    if(!a.length) continue;
+    const cmin=Math.min(...a.map(d=>d.cost)),cmax=Math.max(...a.map(d=>d.cost));
+    s+="<div><b>"+(h==="copilot"?"Copilot CLI":"Claude CLI")+"</b> ("+a.length+" runs): cost $"+cmin.toFixed(3)+"–$"+cmax.toFixed(3)+" ("+(cmax/cmin).toFixed(2)+"× spread) · mean $"+mean(a.map(d=>d.cost)).toFixed(3)+" · mean quality "+mean(a.map(d=>d.quality)).toFixed(1)+"/27</div>";
+  }
+  if(shown.length===0) s="<div>No runs selected.</div>";
+  stats.innerHTML=s;
+}
+document.querySelectorAll('input[type=checkbox]').forEach(i=>i.addEventListener("change",draw));
+document.getElementById("reset").addEventListener("click",()=>{document.querySelectorAll('input[type=checkbox]').forEach(i=>i.checked=true);draw();});
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+2026-06-09T13:30:01.000Z [DEBUG] Creating copilot-client. User-agent: copilot/1.0.60 (darwin v24.11.1) term/unknown
+2026-06-09T13:30:01.000Z [INFO] Workspace initialized: f91bffa0-0b1e-433c-94a2-80f6a9fb2483 (checkpoints: 0)
+2026-06-09T13:30:02.000Z [INFO] --- Start of group: Sending request to the AI model ---
+2026-06-09T13:30:02.000Z [DEBUG] Wire request: {
+  "model": "claude-sonnet-4.5",
+  "max_tokens": 8192,
+  "system": [
+    {
+      "type": "text",
+      "text": "You are the GitHub Copilot CLI.\nHere is a {literal brace} and a <skill>\nname: demo\n</skill> block to test parsing."
+    }
+  ],
+  "tools": [
+    {
+      "name": "bash",
+      "description": "Run bash. Has {braces} inside.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "view",
+      "description": "View a file.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "<current_datetime>2026-06-09T15:30:51.100+02:00</current_datetime>\n\nExplain the repo.\n\n<system_reminder>\n<sql_tables>none</sql_tables>\n</system_reminder>"
+        }
+      ]
+    }
+  ]
+}
+2026-06-09T13:30:03.000Z [INFO] --- End of group ---
+2026-06-09T13:30:03.000Z [DEBUG] response (Request-ID null):
+2026-06-09T13:30:03.000Z [DEBUG] data:
+2026-06-09T13:30:03.000Z [DEBUG] {
+  "id": "msg_1",
+  "object": "chat.completion",
+  "model": "claude-sonnet-4-5-20250929",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Let me look.",
+        "reasoning_text": "think",
+        "tool_calls": [
+          {
+            "id": "t1",
+            "type": "function",
+            "index": 0,
+            "function": {
+              "name": "view",
+              "arguments": "{\"path\":\"README.md\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1000,
+    "completion_tokens": 50,
+    "total_tokens": 1050,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_creation_tokens": 900
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10
+    }
+  },
+  "copilot_usage": {
+    "token_details": [
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 300000000000,
+        "token_count": 100,
+        "token_type": "input"
+      },
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 30000000000,
+        "token_count": 0,
+        "token_type": "cache_read"
+      },
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 375000000000,
+        "token_count": 900,
+        "token_type": "cache_write"
+      },
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 1500000000000,
+        "token_count": 50,
+        "token_type": "output"
+      }
+    ],
+    "total_nano_aiu": 442500000
+  }
+}
+2026-06-09T13:30:04.000Z [DEBUG] duplicate dump follows
+2026-06-09T13:30:04.000Z [DEBUG] response (Request-ID null):
+2026-06-09T13:30:04.000Z [DEBUG] data:
+2026-06-09T13:30:04.000Z [DEBUG] {
+  "id": "msg_1",
+  "object": "chat.completion",
+  "model": "claude-sonnet-4-5-20250929",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Let me look."
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1000,
+    "completion_tokens": 50,
+    "total_tokens": 1050,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_creation_tokens": 900
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10
+    }
+  }
+}
+2026-06-09T13:30:05.000Z [DEBUG] Tool calls count: 1
+2026-06-09T13:30:06.000Z [INFO] --- Start of group: Sending request to the AI model ---
+2026-06-09T13:30:06.000Z [DEBUG] Wire request: {
+  "model": "claude-sonnet-4.5",
+  "max_tokens": 8192,
+  "system": [
+    {
+      "type": "text",
+      "text": "You are the GitHub Copilot CLI.\nHere is a {literal brace} and a <skill>\nname: demo\n</skill> block to test parsing."
+    }
+  ],
+  "tools": [
+    {
+      "name": "bash",
+      "description": "Run bash. Has {braces} inside.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "view",
+      "description": "View a file.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "<current_datetime>2026-06-09T15:30:51.100+02:00</current_datetime>\n\nExplain the repo.\n\n<system_reminder>\n<sql_tables>none</sql_tables>\n</system_reminder>"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "Let me look."
+        },
+        {
+          "type": "tool_use",
+          "id": "t1",
+          "name": "view",
+          "input": {
+            "path": "README.md"
+          }
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "t1",
+          "content": "# Repo"
+        }
+      ]
+    }
+  ]
+}
+2026-06-09T13:30:07.000Z [INFO] --- End of group ---
+2026-06-09T13:30:07.000Z [DEBUG] response (Request-ID null):
+2026-06-09T13:30:07.000Z [DEBUG] data:
+2026-06-09T13:30:07.000Z [DEBUG] {
+  "id": "msg_2",
+  "object": "chat.completion",
+  "model": "claude-sonnet-4-5-20250929",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "The repo is a demo.",
+        "reasoning_text": "x"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1200,
+    "completion_tokens": 80,
+    "total_tokens": 1280,
+    "prompt_tokens_details": {
+      "cached_tokens": 1000,
+      "cache_creation_tokens": 100
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 20
+    }
+  },
+  "copilot_usage": {
+    "token_details": [
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 300000000000,
+        "token_count": 100,
+        "token_type": "input"
+      },
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 30000000000,
+        "token_count": 1000,
+        "token_type": "cache_read"
+      },
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 375000000000,
+        "token_count": 100,
+        "token_type": "cache_write"
+      },
+      {
+        "batch_size": 1000000,
+        "cost_per_batch": 1500000000000,
+        "token_count": 80,
+        "token_type": "output"
+      }
+    ],
+    "total_nano_aiu": 217500000
+  }
+}
+2026-06-09T13:30:08.000Z [DEBUG] session_usage_info total so far
+2026-06-09T13:30:08.000Z [INFO] done

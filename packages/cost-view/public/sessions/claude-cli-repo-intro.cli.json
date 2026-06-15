@@ -1,0 +1,622 @@
+{
+  "session": {
+    "digestVersion": 2,
+    "kind": "claude-code",
+    "generatedAt": "2026-06-11T05:49:39.348Z",
+    "claudeVersion": "2.1.170",
+    "entrypoint": "sdk-cli",
+    "lineCount": 47,
+    "redactionProfile": "proxy-modelled",
+    "textRedacted": true,
+    "toolDefinitionsRedacted": true,
+    "callFlowVisible": true,
+    "redacted": true
+  },
+  "rollups": {
+    "prompts": 1,
+    "subagentPrompts": 0,
+    "orphanPrompts": 0,
+    "requests": 19,
+    "toolCalls": 16,
+    "totalTokens": 645184,
+    "promptTokens": 639084,
+    "completionTokens": 6100,
+    "cachedTokens": 576575,
+    "cacheCreationTokens": 58593,
+    "cacheHitRate": 0.9022,
+    "primaryModel": "claude-sonnet-4-5-20250929",
+    "modelCount": 1,
+    "toolCount": 2,
+    "toolCatalogCount": 0,
+    "toolsUsedCount": 2,
+    "wallSpanMs": 77223,
+    "firstTime": "2026-06-09T18:18:47.374Z",
+    "lastTime": "2026-06-09T18:20:04.597Z",
+    "cost": {
+      "totalUsd": 0.495944,
+      "withoutCacheUsd": 2.008752,
+      "savingsUsd": 1.512808,
+      "savingsRatio": 0.753108,
+      "pricingVersion": "2026-05",
+      "currency": "USD",
+      "allModelsPriced": true,
+      "credits": {
+        "total": 49.6,
+        "withoutCache": 200.9,
+        "savings": 151.3,
+        "perUsd": 100,
+        "billingModel": "anthropic-api-token-pricing"
+      },
+      "note": "Cost is a MODELLED estimate: Claude Code transcripts report exact token usage but no billed amount (the CLI bills via Anthropic API token rates or a flat subscription, not GitHub credits). USD/credits here apply the same PRICING_TABLE as the VS Code digest so the two are comparable in token-cost terms — they are NOT GitHub AI Credits."
+    },
+    "thinking": {
+      "present": true,
+      "totalBlocks": 1,
+      "plaintextChars": 412,
+      "plaintextTokensApprox": 103,
+      "note": "Claude Code serializes thinking block text in the transcript (unlike Copilot exports). output_tokens already includes thinking, so completionTokens is NOT under-counted here."
+    }
+  },
+  "pricing": {
+    "version": "2026-05",
+    "currency": "USD",
+    "creditsPerUsd": 100,
+    "billingModel": "anthropic-api-token-pricing",
+    "resolved": [
+      {
+        "model": "claude-sonnet-4-5-20250929",
+        "matched": true,
+        "inputPerM": 3,
+        "outputPerM": 15,
+        "cacheReadPerM": 0.30000000000000004,
+        "cacheWritePerM": 3.75
+      }
+    ],
+    "table": [
+      {
+        "match": "claude-opus-4",
+        "inputPerM": 15,
+        "outputPerM": 75,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      },
+      {
+        "match": "claude-sonnet-4",
+        "inputPerM": 3,
+        "outputPerM": 15,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      },
+      {
+        "match": "claude-haiku-4",
+        "inputPerM": 1,
+        "outputPerM": 5,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      },
+      {
+        "match": "claude-3-5-sonnet",
+        "inputPerM": 3,
+        "outputPerM": 15,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      },
+      {
+        "match": "claude-3-5-haiku",
+        "inputPerM": 0.8,
+        "outputPerM": 4,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      },
+      {
+        "match": "claude-3-opus",
+        "inputPerM": 15,
+        "outputPerM": 75,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      },
+      {
+        "match": "claude-3-sonnet",
+        "inputPerM": 3,
+        "outputPerM": 15,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      },
+      {
+        "match": "claude-3-haiku",
+        "inputPerM": 0.25,
+        "outputPerM": 1.25,
+        "cacheReadRatio": 0.1,
+        "cacheWriteRatio": 1.25
+      }
+    ]
+  },
+  "models": [
+    {
+      "name": "claude-sonnet-4-5-20250929",
+      "requests": 19,
+      "promptTokens": 639084,
+      "completionTokens": 6100,
+      "cachedTokens": 576575,
+      "cacheCreationTokens": 58593,
+      "costUsd": 0.495943,
+      "calls": 19
+    }
+  ],
+  "toolCatalog": {
+    "count": 0
+  },
+  "skills": {
+    "skillCount": 13,
+    "approxCatalogTokens": 1094
+  },
+  "mcpInstructions": {
+    "count": 0,
+    "approxTokens": 0
+  },
+  "prefix": {
+    "available": true,
+    "source": "relay-capture",
+    "estimateMethod": "chars/4 (approx)",
+    "matchedByTimeAndModel": true,
+    "captureCount": 9,
+    "representative": {
+      "model": "claude-sonnet-4-5",
+      "systemApproxTokens": 7015,
+      "toolDefsApproxTokens": 18877,
+      "toolCount": 27,
+      "messagesApproxTokens": 1325,
+      "prefixApproxTokens": 27217,
+      "toolDefsShareOfPrefix": 0.693574,
+      "topTools": []
+    },
+    "note": "Prefix composition is reconstructed from raw API request bodies captured by claude-relay.mjs (chars/4 estimates). Use the transcript's exact usage for billed totals; use this only for the system-vs-tools-vs-messages SHAPE the transcript cannot show."
+  },
+  "prompts": [
+    {
+      "ord": 0,
+      "ref": "p0",
+      "requestCount": 19,
+      "toolCallCount": 16,
+      "models": [
+        "claude-sonnet-4-5-20250929"
+      ],
+      "promptTokens": 639084,
+      "completionTokens": 6100,
+      "cachedTokens": 576575,
+      "cacheCreationTokens": 58593,
+      "costUsd": 0.495943,
+      "withoutCacheUsd": 2.008752,
+      "thinkingBlockCount": 1,
+      "thinkingApproxTokens": 103,
+      "firstTime": "2026-06-09T18:18:47.374Z",
+      "lastTime": "2026-06-09T18:20:04.597Z",
+      "isSubagent": false,
+      "isOrphan": false,
+      "timeline": [
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 10,
+            "cached": 21264,
+            "cacheWrite": 8179,
+            "output": 249
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.04081545,
+            "fresh": 0.00003,
+            "cached": 0.006379200000000001,
+            "cacheWrite": 0.03067125,
+            "output": 0.003735
+          }
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 10,
+            "cached": 21264,
+            "cacheWrite": 8179,
+            "output": 249
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.04081545,
+            "fresh": 0.00003,
+            "cached": 0.006379200000000001,
+            "cacheWrite": 0.03067125,
+            "output": 0.003735
+          }
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 10,
+            "cached": 21264,
+            "cacheWrite": 8179,
+            "output": 249
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.04081545,
+            "fresh": 0.00003,
+            "cached": 0.006379200000000001,
+            "cacheWrite": 0.03067125,
+            "output": 0.003735
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 188
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 10,
+            "cached": 21264,
+            "cacheWrite": 8179,
+            "output": 249
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.04081545,
+            "fresh": 0.00003,
+            "cached": 0.006379200000000001,
+            "cacheWrite": 0.03067125,
+            "output": 0.003735
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 924
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 1264,
+            "cached": 27638,
+            "cacheWrite": 2250,
+            "output": 223
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.023865900000000002,
+            "fresh": 0.003792,
+            "cached": 0.0082914,
+            "cacheWrite": 0.0084375,
+            "output": 0.003345
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 835
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 1264,
+            "cached": 27638,
+            "cacheWrite": 2250,
+            "output": 223
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.023865900000000002,
+            "fresh": 0.003792,
+            "cached": 0.0082914,
+            "cacheWrite": 0.0084375,
+            "output": 0.003345
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 158
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 1264,
+            "cached": 27638,
+            "cacheWrite": 2250,
+            "output": 223
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.023865900000000002,
+            "fresh": 0.003792,
+            "cached": 0.0082914,
+            "cacheWrite": 0.0084375,
+            "output": 0.003345
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 146
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 29888,
+            "cacheWrite": 2958,
+            "output": 202
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.023109900000000003,
+            "fresh": 0.000021,
+            "cached": 0.008966400000000001,
+            "cacheWrite": 0.0110925,
+            "output": 0.00303
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 364
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 29888,
+            "cacheWrite": 2958,
+            "output": 202
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.023109900000000003,
+            "fresh": 0.000021,
+            "cached": 0.008966400000000001,
+            "cacheWrite": 0.0110925,
+            "output": 0.00303
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 362
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 29888,
+            "cacheWrite": 2958,
+            "output": 202
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.023109900000000003,
+            "fresh": 0.000021,
+            "cached": 0.008966400000000001,
+            "cacheWrite": 0.0110925,
+            "output": 0.00303
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 169
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 32846,
+            "cacheWrite": 2059,
+            "output": 174
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.020206050000000003,
+            "fresh": 0.000021,
+            "cached": 0.009853800000000001,
+            "cacheWrite": 0.00772125,
+            "output": 0.00261
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 834
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 32846,
+            "cacheWrite": 2059,
+            "output": 174
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.020206050000000003,
+            "fresh": 0.000021,
+            "cached": 0.009853800000000001,
+            "cacheWrite": 0.00772125,
+            "output": 0.00261
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 3
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 34905,
+            "cacheWrite": 1501,
+            "output": 145
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.018296250000000003,
+            "fresh": 0.000021,
+            "cached": 0.010471500000000002,
+            "cacheWrite": 0.00562875,
+            "output": 0.002175
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 8
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 34905,
+            "cacheWrite": 1501,
+            "output": 145
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.018296250000000003,
+            "fresh": 0.000021,
+            "cached": 0.010471500000000002,
+            "cacheWrite": 0.00562875,
+            "output": 0.002175
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 13
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 36406,
+            "cacheWrite": 229,
+            "output": 163
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.01424655,
+            "fresh": 0.000021,
+            "cached": 0.0109218,
+            "cacheWrite": 0.00085875,
+            "output": 0.002445
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Bash",
+          "contextTokens": 60
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 36406,
+            "cacheWrite": 229,
+            "output": 163
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.01424655,
+            "fresh": 0.000021,
+            "cached": 0.0109218,
+            "cacheWrite": 0.00085875,
+            "output": 0.002445
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 325
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 36635,
+            "cacheWrite": 722,
+            "output": 146
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.015909000000000003,
+            "fresh": 0.000021,
+            "cached": 0.010990500000000002,
+            "cacheWrite": 0.0027075,
+            "output": 0.00219
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 403
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 36635,
+            "cacheWrite": 722,
+            "output": 146
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.015909000000000003,
+            "fresh": 0.000021,
+            "cached": 0.010990500000000002,
+            "cacheWrite": 0.0027075,
+            "output": 0.00219
+          }
+        },
+        {
+          "kind": "tool",
+          "name": "Read",
+          "contextTokens": 365
+        },
+        {
+          "kind": "llm",
+          "model": "claude-sonnet-4-5-20250929",
+          "tokens": {
+            "fresh": 7,
+            "cached": 37357,
+            "cacheWrite": 1231,
+            "output": 2573
+          },
+          "cost": {
+            "unit": "usd",
+            "total": 0.05443935,
+            "fresh": 0.000021,
+            "cached": 0.011207100000000003,
+            "cacheWrite": 0.00461625,
+            "output": 0.038595
+          }
+        }
+      ]
+    }
+  ]
+}
