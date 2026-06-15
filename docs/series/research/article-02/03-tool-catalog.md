@@ -51,6 +51,14 @@ VS Code Copilot Chat takes the opposite approach to the CLIs — ship everything
   loaded eagerly. First-call `prompt_tokens` for the MCP-on capture is **46,428** (vs the
   20,598 MCP-off footprint in dossier 01): turning MCP on more than **doubles** the VS Code
   cold surface.
+- **All 56 MCP-off tools are product-native VS Code / Copilot Chat built-ins — none come
+  from a user-installed extension or MCP server.** MCP off is the controlled condition that
+  isolates the native catalog: with every configured MCP server disabled, the 56 are exactly
+  what VS Code + the Copilot Chat extension ship by default. The MCP-injected surface is
+  precisely the **+39** tools that appear only when MCP is switched on (56 → 95); subtract
+  those and what remains is 100% native. (The export carries no per-tool `source` field, so
+  this rests on the MCP-off isolation plus every name matching a documented product built-in,
+  in a controlled capture environment — not a tagged origin field.)
 - Deferral is a real, observable harness lever: the flag is `defer_loading: true` on each
   tool object in `metadata.tools`.
 
@@ -83,6 +91,11 @@ None of these is "the model." They are packaging decisions a harness author make
   appears to **switch off deferral** for the session, compounding the footprint hit.
 - `tool_search` is itself one of the always-active tools — deferral is a first-class,
   model-driven mechanism, not a background optimization.
+- The browser-automation tool names in the native set (`open_browser_page`, `navigate_page`,
+  `click_element`, `screenshot_page`, `run_playwright_code`, …) are **VS Code's built-in
+  browser tools**, not the configured `playwright` MCP server. They are present with MCP
+  **off**, so despite the Playwright-style naming they ship with the product — do not
+  attribute them (or any of the 56) to an installed MCP server / machine extension.
 
 ## Open data gaps
 

@@ -47,6 +47,10 @@ task:
 - The MCP-off VS Code capture already lists **12 configured MCP servers** (Azure MCP,
   github, playwright, pylance, Bicep, kusto, …) — MCP is clearly a *user/workspace* config
   surface, not something the product fixes.
+- **Those 12 servers contribute zero tools while MCP is off.** The 56-tool MCP-off catalog
+  is entirely product-native; the configured servers (playwright, github, pylance, …) add
+  their tools only when MCP is switched on — they are the **+39** that takes 56 → 95.
+  Nothing in the 56 comes from a configured server or installed machine extension.
 - Turning MCP on takes the catalog from 56→95 tools, **switches deferral off** (33→0), and
   **more than doubles** the cold prefix (20,598 → 46,428). That's the same per-tool tax as
   CL-CLI's +14/+1,876, just multiplied by a much bigger config.
