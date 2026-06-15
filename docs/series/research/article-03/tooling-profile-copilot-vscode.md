@@ -35,7 +35,7 @@ are labelled **Inference** and would need N=10/condition runs before any ranking
 
 ## One-line thesis
 
-A **big, extension-stuffed catalog the engineer then had to manage**: 56 tools is so
+A **big, all-native catalog the engineer then had to manage**: 56 tools is so
 heavy that the surface ships its own gate (`tool_search` + `defer_loading`) and hides the
 mechanics from the user (*"NEVER say the name of a tool"*) — capability maximized, then
 damage-controlled.
@@ -46,9 +46,13 @@ damage-controlled.
   (full token cost paid), but **33 carry `defer_loading:true`** and surface only after
   the model calls `tool_search`. 23 load eagerly. The bet: keep the *active* choice set
   small without dropping any capability. *(Direct evidence: `defer_loading` on 33 objects.)*
-- **Lean on the extension ecosystem.** Of 56 tools, **18 are extension-contributed** (8
-  Jupyter notebook + 10 browser/Playwright) and **all 18 are deferred**. The apparent
-  catalog is inflated by installed extensions, not product-default commitment.
+- **All 56 tools are product-native VS Code / Copilot Chat built-ins.** None come from a
+  user-installed extension or MCP server — this is the MCP-off capture, so the configured
+  servers contribute nothing and the catalog is exactly what the product ships. The
+  notebook (8) and browser/Playwright (10) groups are **VS Code's built-in tools** despite
+  the Jupyter/Playwright-style names; they are present with MCP off and are simply
+  `defer_loading:true`. (The export has no per-tool `source` field, so this rests on the
+  MCP-off isolation plus every name matching a documented product built-in.)
 - **IDE-exclusive tools are the whole point.** `get_errors`, `vscode_renameSymbol`,
   `vscode_listCodeUsages`, `run_in_terminal`, `runSubagent`, `manage_todo_list` — things
   a CLI can't offer. The harness sells *being inside the editor*.
@@ -76,10 +80,11 @@ damage-controlled.
 | Memory / state | `memory`, `session_store_sql` | `resolve_memory_file_uri` |
 | Sub-agents | `runSubagent` | — |
 | Web / media | `fetch_webpage`, `view_image` | — |
-| Notebook (ext) | — | 8 tools incl. `edit_notebook_file`, `run_notebook_cell`, `create_new_jupyter_notebook` |
-| Browser/Playwright (ext) | — | 10 tools incl. `open_browser_page`, `click_element`, `run_playwright_code`, `screenshot_page` |
+| Notebook (built-in) | — | 8 tools incl. `edit_notebook_file`, `run_notebook_cell`, `create_new_jupyter_notebook` |
+| Browser/Playwright (built-in) | — | 10 tools incl. `open_browser_page`, `click_element`, `run_playwright_code`, `screenshot_page` |
 
-**Split:** 23 eager (~8.8k tok) / 33 deferred (~6.3k tok). 38 core Copilot + 18 extension.
+**Split:** 23 eager (~8.8k tok) / 33 deferred (~6.3k tok). All 56 native to VS Code (no MCP,
+no third-party extension surface in this capture).
 *(Direct evidence: per-object `defer_loading`; chars/4 token estimate.)*
 
 ## Sub-agent roster (`<agents>` block, 8 named)
@@ -99,9 +104,9 @@ one-shot, no background/parallel param. Curated and fixed — not an arbitrary t
 | Repo-level (`.github/skills/`) | 2 | `api-endpoint`, `walkthrough-writer` |
 | User-level (`~/.agents/skills/`) | 1 | `microsoft-foundry` |
 
-**8 of 16 skills come from installed extensions; only 5 are core.** Same pattern as the
-tools: extensions inflate the visible catalog. *(Direct evidence: `<file>` paths in
-`<skills>` block.)*
+**8 of 16 skills come from installed extensions; only 5 are core.** Unlike the tools (all
+native), the **skill** catalog *is* inflated by installed extensions and repo/user config.
+*(Direct evidence: `<file>` paths in `<skills>` block.)*
 
 ## Memory & state
 
@@ -138,8 +143,9 @@ across VS Code / extension versions is **unavailable**.
    tool schema before the user types — the price of "everything the IDE can do."
 2. **The catalog the model *acts on* is smaller than the one it pays for.** Gating keeps
    the active choice set near 23, but the token bill is for all 56.
-3. **What's installed shapes the agent.** Two users with different extensions get
-   materially different tool/skill surfaces from the same product.
+3. **What's installed shapes the agent's *skills*, not its tools.** The 56-tool surface is
+   product-native and the same for everyone; it's the **skill / sub-agent** layer (repo
+   `.github` + installed extensions) that differs between two users on the same product.
 4. **Editor-native moves the CLIs can't make.** Real rename-symbol, find-all-references,
    live diagnostics, browser validation — the differentiator is being in the IDE.
 5. **The agent feels tidy because the mechanics are hidden** (*"NEVER say the name of a
@@ -150,7 +156,8 @@ across VS Code / extension versions is **unavailable**.
 - "Full cost, gated activation": deferral here protects the model's *attention*, not the
   *token budget* — schemas are present regardless. A real contrast with Copilot CLI's
   slim-catalog progressive disclosure.
-- All 18 extension tools deferred = a deliberate "core eager, ecosystem on-demand" line.
+- The 18 notebook + browser/Playwright built-ins are all deferred = a deliberate "core
+  eager, specialized capability on-demand" line — all still native to VS Code.
 - The companion sibling export `CO-IDE_CopilotChat_sonnet4.5_MCPon.json` is **mislabeled**
   — it's actually a Claude Code CLI session (24 native incl. `Agent`/`Bash`/`Cron*`/
   `EnterPlanMode` + 71 `mcp__` = 95 tools). Do **not** cite it as Copilot-in-VS-Code.

@@ -215,7 +215,7 @@ For every environment, the investigation should record:
 |---|---:|---:|---:|
 | Copilot CLI | 19 | 19 / 19 (flat) | 8,064 |
 | Claude CLI | 27 | 27 / 27 (flat) | 18,877 |
-| Copilot in VS Code | 56 (38 Copilot + 18 extension) | 56 / 56 (flat) | ~16,622 (chars/4 of tools array) |
+| Copilot in VS Code | 56 (all native to VS Code) | 23 / 56 (33 deferred) | ~16,622 (chars/4 of tools array) |
 
 Tool counts and full schemas are read directly from the request body for the two
 CLIs and from the export's `tools` array for Copilot in VS Code. The
@@ -345,10 +345,10 @@ rather than estimated.
 <figure>
   <img
     src="./figures/context-footprint/ide-context-breakdown.svg"
-    alt="Breakdown of Copilot in VS Code's 56 baseline tools: 38 core Copilot tools (product default) plus 18 notebook and browser extension tools (user-installed), with system and skills folded into an opaque block."
+    alt="Breakdown of Copilot in VS Code's 56 native tools: 23 sent on the first request and 33 deferred behind tool_search, with system instructions and skills folded into an opaque block."
   >
   <figcaption>
-    A large share of the "IDE footprint" is user-installed extension surface, not a product default.
+    All 56 tools are native to VS Code; only 23 ship on the first request, with 33 deferred behind tool_search.
   </figcaption>
 </figure>
 

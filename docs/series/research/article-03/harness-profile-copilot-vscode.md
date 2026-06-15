@@ -12,8 +12,8 @@ first request's `requestMessages`; final answer in the last request's response).
 captures live outside git at `~/copilot-ledger-data/captures/`.
 **System prompt size.** ~32.0k chars (system block). **16 skills** surface as lazy
 `<skills>` stubs (not folded into the prompt body); the tool catalog is **gated, not
-flat** — **23 eager + 33 `defer_loading:true`** behind a `tool_search` step (38 core
-Copilot + 18 notebook/browser extension, all 18 deferred).
+flat** — **23 eager + 33 `defer_loading:true`** behind a `tool_search` step (all 56 are
+native to VS Code; no MCP and no third-party extension surface in this capture).
 *(Corrected — see [`tooling-profile-copilot-vscode.md`](./tooling-profile-copilot-vscode.md).
 An earlier draft of this line claimed "~37 skills … 56 native tools in the flat catalog";
 both figures were wire-falsified and are preserved here per the correction-log rule.)*
