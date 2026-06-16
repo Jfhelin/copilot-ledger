@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="title">Same destination, different route</title>
+  <desc id="desc">Both harnesses were asked to find the one function where an order total is calculated, ten runs each on the same Claude Sonnet model. Both located it in all ten runs. Copilot CLI used dedicated grep and glob tools and reached the answer in a median of about three calls, all on the main Sonnet model. Claude CLI routed search through the Bash shell and in eight of ten runs delegated to an Explore sub-agent running on the cheaper Haiku 4.5: about two calls on Sonnet plus about fifteen on Haiku, roughly seventeen in all. Most of Claude's calls never touched the pricier model.</desc>
+
+  <rect x="0" y="0" width="760" height="380" fill="#ffffff"/>
+  <text x="40" y="34" font-size="20" font-weight="700" fill="#24292f">Same destination, different route</text>
+  <text x="40" y="57" font-size="13" fill="#57606a">&#8220;Where is the order total calculated? Find it.&#8221; &#8212; one correct location, 10 runs each.</text>
+
+  <!-- correctness banner -->
+  <rect x="40" y="72" width="680" height="32" rx="6" fill="#dafbe1" stroke="#aceebb"/>
+  <text x="58" y="93" font-size="13" fill="#1a7f37" font-weight="600">Both found the correct function in all 10 runs. The difference is how, and on which model.</text>
+
+  <!-- legend -->
+  <g font-size="11.5">
+    <rect x="40" y="120" width="12" height="12" rx="2" fill="#0969da"/>
+    <text x="57" y="130" fill="#24292f">Copilot CLI</text>
+    <rect x="150" y="120" width="12" height="12" rx="2" fill="#8250df"/>
+    <text x="167" y="130" fill="#24292f">Claude &#183; Sonnet 4.5</text>
+    <rect x="312" y="120" width="12" height="12" rx="2" fill="#9aa3ad"/>
+    <text x="329" y="130" fill="#24292f">Claude &#183; Haiku 4.5 sub-agent</text>
+  </g>
+
+  <!-- bars: 25px per call from x=250, xMax 18 -->
+  <g font-size="13">
+    <text x="40" y="174" fill="#24292f" font-weight="600">Copilot CLI</text>
+    <text x="40" y="190" fill="#57606a" font-size="11">dedicated grep / glob</text>
+    <rect x="250" y="160" width="75" height="28" rx="4" fill="#0969da"/>
+    <text x="333" y="179" fill="#24292f" font-weight="700">~3 calls</text>
+
+    <text x="40" y="238" fill="#24292f" font-weight="600">Claude CLI</text>
+    <text x="40" y="254" fill="#57606a" font-size="11">shell search, via a sub-agent</text>
+    <rect x="250" y="224" width="50" height="28" rx="4" fill="#8250df"/>
+    <rect x="300" y="224" width="375" height="28" rx="4" fill="#9aa3ad"/>
+    <text x="683" y="243" fill="#24292f" font-weight="700">~17 calls</text>
+  </g>
+  <text x="250" y="272" font-size="11" fill="#57606a">&#8776; 2 on Sonnet &#183; &#8776; 15 on a Haiku sub-agent</text>
+
+  <line x1="250" y1="290" x2="700" y2="290" stroke="#d0d7de" stroke-width="1"/>
+  <text x="475" y="310" font-size="12" fill="#57606a" text-anchor="middle">Median model calls to reach the one-file answer</text>
+  <text x="40" y="340" font-size="12" fill="#57606a">Claude's main Sonnet model is asked about as often as Copilot's; the extra calls are a cheaper Haiku sub-agent doing the legwork.</text>
+</svg>

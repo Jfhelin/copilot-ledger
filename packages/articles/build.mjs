@@ -30,6 +30,14 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
+// Search-engine indexing directive for a page. Defaults to "index,follow" so the
+// public site stays discoverable; a private/unlisted build can set
+// SITE.robots = "noindex, nofollow" (or a per-article `robots`) to keep preview
+// pages out of search results.
+function robotsFor(article) {
+  return escapeHtml(article.robots ?? SITE.robots ?? "index,follow");
+}
+
 // Resolve the author identity + disclaimer for an article, falling back to the
 // SITE-level defaults. This is what makes the byline + personal-views disclaimer
 // apply to every page — current and future, both layouts — without repeating the
@@ -365,7 +373,7 @@ ${sub ? `<span class="gh-author-sub">${sub}</span>` : ""}
 <meta property="og:title" content="${escapeHtml(article.title)}">
 <meta property="og:description" content="${escapeHtml(article.description)}">
 <meta property="og:url" content="${escapeHtml(canonical)}">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="${robotsFor(article)}">
 <style>${githubBlogStyles()}</style>
 </head>
 <body>
@@ -421,7 +429,7 @@ ${sub ? `<span class="byline-sub">${sub}</span>` : ""}
 <meta property="og:title" content="${escapeHtml(article.title)}">
 <meta property="og:description" content="${escapeHtml(article.description)}">
 <meta property="og:url" content="${escapeHtml(canonical)}">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="${robotsFor(article)}">
 <style>${styles()}</style>
 </head>
 <body>
@@ -455,14 +463,25 @@ async function build() {
   for (let i = 0; i < ordered.length; i++) {
     const article = ordered[i];
     // "Read next" defaults to the next article by order, but an entry can pin a
-    // specific successor with `readNext: "<slug>"` (used to thread a page into
-    // the chain without reshuffling everyone's order).
+    // specific successor with `readNext: "<slug>"`. Articles flagged
+    // `unlisted: true` are skipped as auto-"read next" targets (so no listed
+    // page links to them) and get no "read next" of their own — they are
+    // link-only, reachable just by their direct URL.
+    const nextListed = () => {
+      for (let k = 1; k < ordered.length; k++) {
+        const cand = ordered[(i + k) % ordered.length];
+        if (cand.unlisted !== true) return cand;
+      }
+      return null;
+    };
     const sibling = article.readNext
-      ? ordered.find((a) => a.slug === article.readNext) ?? ordered[(i + 1) % ordered.length]
-      : ordered[(i + 1) % ordered.length];
+      ? ordered.find((a) => a.slug === article.readNext) ?? nextListed()
+      : article.unlisted === true
+        ? null
+        : nextListed();
     const md = await readFile(resolve(CONTENT_DIR, article.src), "utf8");
     const bodyHtml = wrapTables(marked.parse(md));
-    const html = page(article, bodyHtml, ordered.length > 1 ? sibling : null);
+    const html = page(article, bodyHtml, sibling);
     const outName = `${article.slug}.html`;
     await writeFile(resolve(OUT_DIR, outName), html, "utf8");
     console.log(`  ✓ ${article.src} → dist/${outName}`);

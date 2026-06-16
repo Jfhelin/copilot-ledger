@@ -1,10 +1,13 @@
-// Public article set — the single published "bubble" page.
+// Public article set — what the public site builds and deploys.
 //
 // This is the PUBLIC override of the manifest: the private repo's full
 // articles.config.mjs lists every draft, but only what appears here is ever
-// built or deployed. Keep this blog3-only. The entry is marked `home: true`,
-// so it is emitted both as `index.html` (site root `/`) and as its stable
-// `<slug>.html` — share the slug URL, which survives any future reshuffle.
+// built or deployed. Two entries:
+//   1. blog3 — the public front page (`home: true` → `index.html` + its slug).
+//   2. what-your-ide-sends — an UNLISTED article: a random, hard-to-guess slug,
+//      `noindex`, and `unlisted: true` so no page links to it (the home page's
+//      "Read next" skips it). It is reachable only by its direct URL; share that
+//      link, don't expect it to be discoverable.
 
 export const SITE = {
   name: "Copilot Ledger",
@@ -30,5 +33,15 @@ export const ARTICLES = [
     category: "AI & ML",
     date: "June 11, 2026",
     order: 1,
+  },
+  {
+    slug: "c964808fb248",
+    src: "what-your-ide-sends.md",
+    title: "How harness design shows up in coding-agent behavior",
+    description:
+      "Same Claude Sonnet 4.5 across the Copilot CLI and the Claude CLI, ten runs each on six tasks. How a harness's tool, search, delegation, and prompt choices show up as observable behaviour — and where they fade — plus a structural look at Copilot in VS Code.",
+    unlisted: true,
+    robots: "noindex, nofollow",
+    order: 2,
   },
 ];

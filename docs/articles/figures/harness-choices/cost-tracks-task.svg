@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="title">Cost tracks the task, not the harness</title>
+  <desc id="desc">Line chart of median cost per run across six tasks for Copilot CLI and Claude CLI on the same Claude Sonnet model. Both lines rise together from a few cents on the identity task to roughly half a dollar on the open-ended feature task, staying close to each other throughout, including on the search task. The dominant driver of cost is the kind of task, not which harness ran it. These are descriptive figures billed in different units with different cache warmth, not a clean price comparison.</desc>
+
+  <rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+  <text x="40" y="38" font-size="20" font-weight="700" fill="#24292f">Cost tracks the task, not the harness</text>
+  <text x="40" y="60" font-size="13" fill="#57606a">Median cost per run across six tasks, 10 runs each. Both harnesses rise together.</text>
+
+  <!-- legend -->
+  <rect x="500" y="50" width="13" height="13" rx="2" fill="#0969da"/>
+  <text x="520" y="61" font-size="12" fill="#24292f">Copilot CLI</text>
+  <rect x="610" y="50" width="13" height="13" rx="2" fill="#8250df"/>
+  <text x="630" y="61" font-size="12" fill="#24292f">Claude CLI</text>
+
+  <!-- y gridlines + labels -->
+  <g font-size="11" fill="#57606a">
+    <line x1="120" y1="300" x2="700" y2="300" stroke="#d0d7de"/>
+    <text x="112" y="304" text-anchor="end">$0</text>
+    <line x1="120" y1="262" x2="700" y2="262" stroke="#eaeef2"/>
+    <text x="112" y="266" text-anchor="end">$0.10</text>
+    <line x1="120" y1="224" x2="700" y2="224" stroke="#eaeef2"/>
+    <text x="112" y="228" text-anchor="end">$0.20</text>
+    <line x1="120" y1="186" x2="700" y2="186" stroke="#eaeef2"/>
+    <text x="112" y="190" text-anchor="end">$0.30</text>
+    <line x1="120" y1="148" x2="700" y2="148" stroke="#eaeef2"/>
+    <text x="112" y="152" text-anchor="end">$0.40</text>
+    <line x1="120" y1="110" x2="700" y2="110" stroke="#eaeef2"/>
+    <text x="112" y="114" text-anchor="end">$0.50</text>
+  </g>
+
+  <!-- x labels: 120,236,352,468,584,700 -->
+  <g font-size="11" fill="#57606a" text-anchor="middle">
+    <text x="120" y="324">Identity</text>
+    <text x="236" y="324">Act vs advise</text>
+    <text x="352" y="324">Scope fix</text>
+    <text x="468" y="324">Search</text>
+    <text x="584" y="324">Explain repo</text>
+    <text x="700" y="324">Add feature</text>
+  </g>
+
+  <!-- Copilot line -->
+  <polyline fill="none" stroke="#0969da" stroke-width="2.5" points="120,287.65 236,281.91 352,280.89 468,279.59 584,259.99 700,114.56"/>
+  <g fill="#0969da">
+    <circle cx="120" cy="287.65" r="4"/><circle cx="236" cy="281.91" r="4"/><circle cx="352" cy="280.89" r="4"/><circle cx="468" cy="279.59" r="4"/><circle cx="584" cy="259.99" r="4"/><circle cx="700" cy="114.56" r="4"/>
+  </g>
+
+  <!-- Claude line -->
+  <polyline fill="none" stroke="#8250df" stroke-width="2.5" points="120,296.28 236,286.74 352,287.12 468,261.89 584,252.96 700,118.74"/>
+  <g fill="#8250df">
+    <circle cx="120" cy="296.28" r="4"/><circle cx="236" cy="286.74" r="4"/><circle cx="352" cy="287.12" r="4"/><circle cx="468" cy="261.89" r="4"/><circle cx="584" cy="252.96" r="4"/><circle cx="700" cy="118.74" r="4"/>
+  </g>
+
+  <!-- endpoint labels -->
+  <text x="694" y="104" font-size="12" font-weight="700" fill="#0969da" text-anchor="end">~$0.49</text>
+  <text x="130" y="288" font-size="11" fill="#57606a">~$0.01&#8211;0.03</text>
+
+  <text x="40" y="360" font-size="12" fill="#57606a">Descriptive only: the two products bill in different units and warm their caches differently. The shape of the climb is the point.</text>
+</svg>

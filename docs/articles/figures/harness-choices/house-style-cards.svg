@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 450" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="title">What each answer looks like</title>
+  <desc id="desc">An illustrative side-by-side of the two harnesses' answers to the same explain-the-repository prompt, same Claude Sonnet model. The Copilot CLI card is shorter, around 457 words, with emoji section headers and a small box diagram. The Claude CLI card is longer, around 653 words, plain prose with no emoji and a diagram only about half the time. Representative of a typical run, not a verbatim transcript.</desc>
+
+  <rect x="0" y="0" width="760" height="450" fill="#ffffff"/>
+  <text x="40" y="32" font-size="20" font-weight="700" fill="#24292f">What each answer looks like</text>
+  <text x="40" y="54" font-size="12" fill="#57606a">Same prompt, same model &#8212; representative of a typical run, not a verbatim transcript.</text>
+
+  <!-- ============ Copilot card ============ -->
+  <rect x="30" y="74" width="345" height="350" rx="10" fill="#ffffff" stroke="#d0d7de"/>
+  <rect x="30" y="74" width="345" height="30" rx="10" fill="#0969da" fill-opacity="0.1"/>
+  <rect x="30" y="92" width="345" height="12" fill="#ffffff"/>
+  <rect x="30" y="92" width="345" height="2" fill="#0969da" fill-opacity="0.1"/>
+  <circle cx="48" cy="89" r="5" fill="#0969da"/>
+  <text x="60" y="93" font-size="12" font-weight="700" fill="#0969da">Copilot CLI</text>
+  <text x="362" y="93" font-size="10" fill="#57606a" text-anchor="end">~457 words</text>
+
+  <g font-size="11" fill="#24292f">
+    <text x="46" y="126" font-size="12.5" font-weight="700">&#128049; Overview</text>
+    <text x="46" y="144" fill="#57606a">A demo supply-chain app: an API, a web</text>
+    <text x="46" y="158" fill="#57606a">frontend, and shared TypeScript models.</text>
+
+    <text x="46" y="182" font-size="12.5" font-weight="700">&#128230; Components</text>
+  </g>
+  <!-- mini box diagram -->
+  <g font-size="9.5" fill="#24292f">
+    <rect x="46" y="194" width="74" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/><text x="83" y="211" text-anchor="middle">Frontend</text>
+    <rect x="148" y="194" width="74" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/><text x="185" y="211" text-anchor="middle">API</text>
+    <rect x="250" y="194" width="74" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/><text x="287" y="211" text-anchor="middle">SQLite</text>
+    <line x1="120" y1="207" x2="148" y2="207" stroke="#8c959f"/><polygon points="148,207 142,204 142,210" fill="#8c959f"/>
+    <line x1="222" y1="207" x2="250" y2="207" stroke="#8c959f"/><polygon points="250,207 244,204 244,210" fill="#8c959f"/>
+  </g>
+
+  <g font-size="11" fill="#24292f">
+    <text x="46" y="250" font-size="12.5" font-weight="700">&#128640; Install &amp; run</text>
+    <text x="46" y="268" fill="#57606a">&#8226; npm install</text>
+    <text x="46" y="284" fill="#57606a">&#8226; npm run dev &#8212; starts API + web</text>
+    <text x="46" y="300" fill="#57606a">&#8226; npm test &#8212; runs the suite</text>
+
+    <text x="46" y="332" font-style="italic" fill="#57606a">How can I help you today?</text>
+  </g>
+  <rect x="46" y="386" width="313" height="22" rx="11" fill="#0969da" fill-opacity="0.08"/>
+  <text x="56" y="401" font-size="10.5" fill="#0969da">emoji headers &#183; always a diagram &#183; shorter</text>
+
+  <!-- ============ Claude card ============ -->
+  <rect x="385" y="74" width="345" height="350" rx="10" fill="#ffffff" stroke="#d0d7de"/>
+  <rect x="385" y="74" width="345" height="30" rx="10" fill="#8250df" fill-opacity="0.1"/>
+  <rect x="385" y="92" width="345" height="12" fill="#ffffff"/>
+  <rect x="385" y="92" width="345" height="2" fill="#8250df" fill-opacity="0.1"/>
+  <circle cx="403" cy="89" r="5" fill="#8250df"/>
+  <text x="415" y="93" font-size="12" font-weight="700" fill="#8250df">Claude CLI</text>
+  <text x="717" y="93" font-size="10" fill="#57606a" text-anchor="end">~653 words</text>
+
+  <g font-size="11" fill="#24292f">
+    <text x="401" y="124" font-size="12.5" font-weight="700">Repository overview</text>
+    <text x="401" y="141" fill="#57606a">This repository implements a sample supply-</text>
+    <text x="401" y="155" fill="#57606a">chain management system, organized as a</text>
+    <text x="401" y="169" fill="#57606a">monorepo with an Express API, a React</text>
+    <text x="401" y="183" fill="#57606a">frontend, and a shared set of TypeScript</text>
+    <text x="401" y="197" fill="#57606a">models used across both halves of the app.</text>
+
+    <text x="401" y="221" font-size="12.5" font-weight="700">Components and data flow</text>
+    <text x="401" y="238" fill="#57606a">The API layer exposes REST endpoints under</text>
+    <text x="401" y="252" fill="#57606a">/api and persists to a SQLite database through</text>
+    <text x="401" y="266" fill="#57606a">a thin repository layer. The frontend calls</text>
+    <text x="401" y="280" fill="#57606a">those endpoints and renders the catalogue and</text>
+    <text x="401" y="294" fill="#57606a">order views. Shared models keep request and</text>
+    <text x="401" y="308" fill="#57606a">response shapes consistent on both sides.</text>
+
+    <text x="401" y="332" font-size="12.5" font-weight="700">Install, run, and test</text>
+    <text x="401" y="349" fill="#57606a">Install dependencies, start the dev server,</text>
+    <text x="401" y="363" fill="#57606a">then run the test suite to verify the setup.</text>
+  </g>
+  <rect x="401" y="386" width="313" height="22" rx="11" fill="#8250df" fill-opacity="0.08"/>
+  <text x="411" y="401" font-size="10.5" fill="#8250df">no emoji &#183; diagram about half the time &#183; longer</text>
+
+  <text x="380" y="440" font-size="11" fill="#57606a" text-anchor="middle">Same facts, same model &#8212; the register is the harness's, not the model's.</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="title">Having a tool and sending it are different choices</title>
+  <desc id="desc">Bar chart of how each harness delivers its tool catalog to the model. Copilot CLI sends all 19 of its tools up front. Claude CLI sends all 27 up front. Copilot in VS Code has the largest catalog at 56 tools, but sends only 23 immediately and defers the other 33 behind a tool-search step, shown faded. A bigger catalog does not have to mean a bigger active tool set.</desc>
+
+  <rect x="0" y="0" width="760" height="360" fill="#ffffff"/>
+  <text x="40" y="40" font-size="20" font-weight="700" fill="#24292f">Having a tool and sending it are different choices</text>
+  <text x="40" y="64" font-size="13" fill="#57606a">How many tool definitions the model is handed on the first request.</text>
+
+  <!-- scale: 56 tools -> 480px from x=180. 1 tool = 8.57px -->
+  <g font-size="13" fill="#24292f">
+    <!-- Copilot CLI: 19 flat -->
+    <text x="168" y="121" text-anchor="end" fill="#57606a">Copilot CLI</text>
+    <rect x="180" y="100" width="163" height="40" rx="5" fill="#0969da"/>
+    <text x="353" y="125" font-weight="700">19 sent</text>
+
+    <!-- Claude CLI: 27 flat -->
+    <text x="168" y="179" text-anchor="end" fill="#57606a">Claude CLI</text>
+    <rect x="180" y="158" width="231" height="40" rx="5" fill="#8250df"/>
+    <text x="421" y="183" font-weight="700">27 sent</text>
+
+    <!-- VS Code: 23 sent + 33 deferred ghost -->
+    <text x="168" y="237" text-anchor="end" fill="#57606a">Copilot in VS Code</text>
+    <rect x="180" y="216" width="480" height="40" rx="5" fill="#e7ddfb" stroke="#c8b6f0" stroke-width="1" stroke-dasharray="4 3"/>
+    <rect x="180" y="216" width="197" height="40" rx="5" fill="#6639ba"/>
+    <text x="180" y="241" font-weight="700" fill="#ffffff" dx="10">23 sent</text>
+    <text x="650" y="241" font-weight="700" text-anchor="end" fill="#6f5aa8">+ 33 deferred</text>
+  </g>
+
+  <line x1="180" y1="284" x2="660" y2="284" stroke="#d0d7de" stroke-width="1"/>
+  <text x="420" y="306" font-size="12" fill="#57606a" text-anchor="middle">Tools in the catalog (number of tool definitions)</text>
+
+  <!-- legend -->
+  <rect x="180" y="326" width="13" height="13" rx="2" fill="#6639ba"/>
+  <text x="200" y="337" font-size="12" fill="#24292f">Sent up front</text>
+  <rect x="340" y="326" width="13" height="13" rx="2" fill="#e7ddfb" stroke="#c8b6f0" stroke-dasharray="3 2"/>
+  <text x="360" y="337" font-size="12" fill="#24292f">Deferred &#8212; loaded on demand via a tool-search step</text>
+</svg>
