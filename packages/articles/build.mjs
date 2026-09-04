@@ -16,6 +16,7 @@ import { SITE, ARTICLES } from "./articles.config.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..", "..");
 const CONTENT_DIR = resolve(REPO_ROOT, "docs", "articles");
+const STATIC_DIR = resolve(__dirname, "static");
 const OUT_DIR = resolve(__dirname, "dist");
 
 const t = getThemeTokensForMode("light");
@@ -499,6 +500,13 @@ async function build() {
   await cp(resolve(CONTENT_DIR, "figures"), resolve(OUT_DIR, "figures"), {
     recursive: true,
   });
+
+  // Publish standalone interactive exports alongside the generated articles.
+  await cp(
+    resolve(STATIC_DIR, "VSCodeBuildCart"),
+    resolve(OUT_DIR, "VSCodeBuildCart"),
+    { recursive: true },
+  );
 
   // A .nojekyll file keeps GitHub Pages from running Jekyll over the output.
   await writeFile(resolve(OUT_DIR, ".nojekyll"), "", "utf8");
