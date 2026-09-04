@@ -1,0 +1,13 @@
+{
+  "name": "@copilot-ledger/skill-publish-session-export",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Copilot CLI skill for safely publishing sanitized session-export digests through an explicit, user-chosen redaction policy.",
+  "scripts": {
+    "test": "node --test",
+    "sync": "node ./scripts/sync.mjs",
+    "sync:check": "node ./scripts/sync.mjs --check",
+    "install-local": "ln -sfn \"$(pwd)\" \"$HOME/.copilot/skills/publish-session-export\""
+  }
+}
+

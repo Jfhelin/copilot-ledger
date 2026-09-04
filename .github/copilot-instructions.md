@@ -21,6 +21,7 @@ durable changes land in the private primary repo first and are then promoted.
 | Package | What it is |
 |---|---|
 | `packages/skill` | The `copilot-chat-export` digest skill (token spend, cache, sub-agent flow, prompt-shape anomalies). |
+| `packages/skill-publish-session-export` | The `publish-session-export` skill for user-guided redaction before publishing session evidence. |
 | `packages/cost-view` | React app (Vite + React 18) that renders a chat export visually. |
 | `packages/canvas-extension` | Canvas extension that opens cost-view in a Copilot CLI side panel. |
 | `packages/articles` | Builds the published article(s) to GitHub Pages. |

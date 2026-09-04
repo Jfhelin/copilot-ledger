@@ -15,6 +15,10 @@ Stay in chat. Do not start a web app, do not open editors, do not propose code c
 unless the user explicitly asks. This skill is for reading and reasoning — and, when the
 user wants richer data, for helping them run the capture relay.
 
+> **Safe publishing handoff.** If the user wants to publish, share, bundle, commit, upload, or
+> generate a web page from this transcript, capture, or digest, invoke the
+> `publish-session-export` skill. Never publish the raw transcript or relay capture.
+
 > **Comparison handoff.** The sister skill `copilot-chat-export` digests VS Code Copilot
 > exports into the same schema. When the user wants a Copilot-vs-Claude comparison, digest
 > each side with its own skill and diff the two `rollups`/`prefix` blocks — the token and

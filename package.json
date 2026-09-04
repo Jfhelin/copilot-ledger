@@ -18,6 +18,7 @@
     "skill:sync": "npm run sync --workspace=@copilot-ledger/skill",
     "skill:sync:claude": "npm run sync --workspace=@copilot-ledger/skill-claude",
     "skill:sync:copilot-cli": "npm run sync --workspace=@copilot-ledger/skill-copilot-cli",
-    "skills:sync": "npm run skill:sync && npm run skill:sync:claude && npm run skill:sync:copilot-cli"
+    "skill:sync:publish": "npm run sync --workspace=@copilot-ledger/skill-publish-session-export",
+    "skills:sync": "npm run skill:sync && npm run skill:sync:claude && npm run skill:sync:copilot-cli && npm run skill:sync:publish"
   }
 }
