@@ -10,6 +10,10 @@ You are an expert on the **VS Code Copilot Chat export** JSON format. Your job i
 
 Stay in chat. Do not start a web app, do not open editors, do not propose code changes unless the user explicitly asks. This skill is for reading and reasoning, not building.
 
+> **Safe publishing handoff.** If the user wants to publish, share, bundle, commit, upload, or
+> generate a web page from this export or its digest, invoke the `publish-session-export` skill.
+> Do not copy the raw export into a public directory or repository.
+
 > **Optional handoff to publishing.** Analysis here sometimes feeds the *Copilot
 > Behavior Lab* content series (`docs/content-lab/`). If a session turns up a
 > surprising, publishable observation and the user wants to write it up — an

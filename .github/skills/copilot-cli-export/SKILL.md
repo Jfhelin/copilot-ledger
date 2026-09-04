@@ -16,6 +16,10 @@ Stay in chat. Do not start a web app, do not open editors, do not propose code c
 the user explicitly asks. This skill is for reading and reasoning — and, when the user wants to
 gather data, for helping them run Copilot CLI headlessly and digest the log.
 
+> **Safe publishing handoff.** If the user wants to publish, share, bundle, commit, upload, or
+> generate a web page from this log or its digest, invoke the `publish-session-export` skill.
+> Never publish the raw `process-*.log`.
+
 > **Comparison handoff.** The sister skills `copilot-chat-export` (VS Code Copilot) and
 > `claude-code-export` (Claude Code) digest into the same schema. For a three-way comparison,
 > digest each side with its own skill and diff the `rollups`/`prefix` blocks. **Compare cost
