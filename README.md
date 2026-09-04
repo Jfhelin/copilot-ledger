@@ -6,6 +6,8 @@ Tools for understanding and improving **VS Code Copilot Chat** session efficienc
 
 📄 **Flagship article (stable link): [One run can't rank two coding agents →](https://jfhelin.github.io/copilot-ledger/one-run-cant-rank-two-agents-blog3.html)** — same model, same repo, same prompt, 40 runs across the Copilot CLI and the Claude CLI. This per-article URL stays valid even after the site's front page changes.
 
+🧭 **AgentViz export: [VSCodeBuildCart →](https://jfhelin.github.io/copilot-ledger/VSCodeBuildCart/)** — explore the redacted VS Code session as an interactive agent graph and cost breakdown.
+
 > ℹ️ **This is the public mirror.** It's a generated subset of a private research repo —
 > the tool packages, the three digest skills, and published articles, promoted
 > automatically. Drafts, the article series, and raw data stay private. `main` here is
