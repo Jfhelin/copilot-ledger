@@ -32,6 +32,27 @@ jobs:
       - name: Build articles bubble
         run: npm run build --workspace=@copilot-ledger/articles
 
+      - name: Check out Agentviz Studio
+        uses: actions/checkout@v4
+        with:
+          repository: Jfhelin/agentviz-studio
+          ref: b1c950fad4b3b12cf3aec0d6c0a4b078029f2fe5
+          path: agentviz-studio
+          persist-credentials: false
+
+      - name: Install Agentviz Studio dependencies
+        working-directory: agentviz-studio
+        run: npm ci
+
+      - name: Build static Agentviz Studio
+        working-directory: agentviz-studio
+        env:
+          VITE_BASE_PATH: /copilot-ledger/agentviz/
+        run: npm run build:viewer
+
+      - name: Add Agentviz Studio to Pages artifact
+        run: cp -R agentviz-studio/dist-viewer packages/articles/dist/agentviz
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

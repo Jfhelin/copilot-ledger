@@ -64,6 +64,11 @@ function bylineSubHtml(b) {
   return [titleWithOrg, b.date].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
+function agentvizLink() {
+  if (!SITE.agentvizUrl) return "";
+  return `<p><a href="${escapeHtml(SITE.agentvizUrl)}">Open Agentviz Studio</a> — inspect your own agent logs locally in the browser.</p>`;
+}
+
 function styles() {
   return `
 :root {
@@ -391,6 +396,7 @@ ${body}
 ${readNextBlock(sibling)}
 <footer>
 ${b.disclaimer && !b.hideDisclaimer ? `<p class="gh-disclaimer">${escapeHtml(b.disclaimer)}</p>` : ""}
+${agentvizLink()}
 <p class="gh-colophon">${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</p>
 </footer>
 </main>
@@ -442,6 +448,7 @@ ${body}
 ${readNextBlock(sibling)}
 <footer>
 ${b.disclaimer && !b.hideDisclaimer ? `<p class="disclaimer">${escapeHtml(b.disclaimer)}</p>` : ""}
+${agentvizLink()}
 <p class="colophon">${escapeHtml(SITE.name)} — ${escapeHtml(SITE.tagline)}.</p>
 </footer>
 </main>
