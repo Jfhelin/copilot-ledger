@@ -8,6 +8,8 @@ Tools for understanding and improving **VS Code Copilot Chat** session efficienc
 
 🧭 **AgentViz export: [VSCodeBuildCart →](https://jfhelin.github.io/copilot-ledger/VSCodeBuildCart/)** — explore the redacted VS Code session as an interactive agent graph and cost breakdown.
 
+🛠️ **Agentviz Studio: [Open the browser viewer →](https://jfhelin.github.io/copilot-ledger/agentviz/)** — inspect local JSON or JSONL agent logs without uploading them to a backend.
+
 > ℹ️ **This is the public mirror.** It's a generated subset of a private research repo —
 > the tool packages, the three digest skills, and published articles, promoted
 > automatically. Drafts, the article series, and raw data stay private. `main` here is

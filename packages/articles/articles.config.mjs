@@ -15,6 +15,7 @@ export const SITE = {
   name: "Copilot Ledger",
   tagline: "Notes on how AI coding agents actually behave",
   baseUrl: "https://jfhelin.github.io/copilot-ledger/",
+  agentvizUrl: "https://jfhelin.github.io/copilot-ledger/agentviz/",
   author: "Jonas Helin",
   authorTitle: "Strategic Cloud Solutions Engineer",
   avatar: "author-jonas.png",
