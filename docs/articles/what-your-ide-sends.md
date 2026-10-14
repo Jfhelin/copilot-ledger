@@ -4,9 +4,9 @@ Ask two coding agents to explain the same repository, and their answers can look
 
 One opens with emoji section headers, draws a little box-and-arrow diagram of the architecture, and signs off in about 450 words. The other writes closer to 650, almost never reaches for an emoji, and only sometimes bothers with the diagram. Put the two replies side by side and you would happily bet they came from different products, maybe even different model families.
 
-They did not. Underneath both was the same Claude Sonnet 4.5 snapshot, reading the same prompt, in the same repository, at the same commit, from a fresh session with no extra context loaded. The only thing I changed was the harness wrapped around the model — GitHub Copilot CLI on one side, the Claude CLI on the other.
+They did not. Underneath both was the same Claude Sonnet 4.5 snapshot, reading the same prompt, in the same repository, at the same commit, from a fresh session with no extra context loaded. The only thing I changed was the harness wrapped around the model — GitHub Copilot CLI on one side, the Claude Code CLI on the other.
 
-So the house style is not really coming from the model. The harness is doing most of the shaping.
+So the different house styles were primarily shaped by the harness.
 
 In the previous article I described a coding agent as a model living inside a **harness**: the software that writes its instructions, hands it tools, loads its context, manages its memory, and runs the loop. That piece mapped the parts. This one is about what you can actually *see* when you hold the model still and let those engineering decisions play out, over and over, on real tasks.
 
@@ -16,11 +16,13 @@ The short version is that the harness's fingerprints are easy to spot in some pl
 
 I ran a small, fixed set of prompts through both command-line agents under matched conditions: the same model snapshot, the same repository pinned to the same commit, a fresh session every time, and MCP switched off so nothing extra crept into the context. Each prompt ran ten times on each harness, so I could talk about tendencies instead of cherry-picking a single run.
 
-The prompts ranged from the trivial (what are you?) to the open-ended (add a feature), with a tightly scoped bug fix, a couple of repository-comprehension tasks, and a focused search task in between. All told, that came to a couple hundred runs across the two CLIs.
+The six prompts ranged from the trivial (what are you?) to the open-ended (add a feature), with a tightly scoped bug fix, a couple of repository-comprehension tasks, and a focused search task in between. Each ran ten times on each CLI, for 120 matched runs total — 60 per CLI, not 120 pairs.
 
 A third harness — GitHub Copilot inside the VS Code editor — gets its own section near the end. It has to be looked at differently: its agent mode can't be driven headlessly the way the CLIs can, so that section is a structural look at how it's built rather than a behavioral one.
 
 None of this is meant to crown a winner. It's a look at how design choices surface as behavior.
+
+**Version note:** The 120-run behavioral batch was recorded on June 14, 2026, using GitHub Copilot CLI 1.0.62 and Claude Code CLI 2.1.173, with the main-agent model snapshot `claude-sonnet-4-5-20250929` (Claude Sonnet 4.5) verified per run. The separate June 9 structural reference captures identify Copilot CLI 1.0.60 and Claude Code CLI 2.1.170; those are not the behavioral-batch versions. The VS Code structural evidence is also from June 2026, but does not preserve a VS Code build number. These observations reflect the captured product versions and model snapshot. Tool inventories and system instructions evolve quickly; the structural conclusions are the focus, not a current product inventory.
 
 ---
 
@@ -28,7 +30,7 @@ None of this is meant to crown a winner. It's a look at how design choices surfa
 
 The clearest tell turned up on the most ordinary task in the set — *explain this repository to a new developer.* There is no single correct shape for that answer, which is exactly why it lets each harness's habits show. Over ten runs apiece, the two agents were consistently, recognizably different:
 
-| Behavior | Copilot CLI | Claude CLI |
+| Behavior | Copilot CLI | Claude Code CLI |
 |---|---:|---:|
 | Median answer length | 457 words | 653 words |
 | Runs containing emoji | 10 of 10 | 3 of 10 |
@@ -37,14 +39,14 @@ The clearest tell turned up on the most ordinary task in the set — *explain th
 <figure>
   <img
     src="./figures/harness-choices/house-style-cards.svg"
-    alt="An illustrative side-by-side of the two answers to the same prompt. The Copilot CLI reply is shorter, with emoji section headers and a small Frontend-to-API-to-database box diagram. The Claude CLI reply is longer, plain prose with no emoji and no diagram in this example. Representative of a typical run, not a verbatim transcript."
+    alt="An illustrative side-by-side of the two answers to the same prompt. The Copilot CLI reply is shorter, with emoji section headers and a small Frontend-to-API-to-database box diagram. The Claude Code CLI reply is longer, plain prose with no emoji and no diagram in this example. Representative of a typical run, not a verbatim transcript."
   >
   <figcaption>
     What the two styles look like on the same prompt — same facts, same model, different register. Illustrative of a typical run.
   </figcaption>
 </figure>
 
-This isn't formatting noise. The two harnesses give the model different marching orders, and you can trace the difference back to a single line. The Claude CLI's instructions tell the model to skip emoji unless the user asks for them. Copilot's say nothing of the kind. And the behavior follows: seven of the ten Claude answers were emoji-free, all ten Copilot answers had at least one.
+This isn't formatting noise. The two harnesses give the model different marching orders, and you can trace the difference back to a single line. The Claude Code CLI's instructions tell the model to skip emoji unless the user asks for them. Copilot's say nothing of the kind. And the behavior follows: seven of the ten Claude answers were emoji-free, all ten Copilot answers had at least one.
 
 But here is the part I find more interesting, because it complicates the neat story. The instruction didn't win every time.
 
@@ -71,9 +73,9 @@ The two toolboxes were not the same size, or the same shape:
 | Harness | Native tools | Estimated tool-definition footprint |
 |---|---:|---:|
 | Copilot CLI | 19 | approximately 8.1k tokens |
-| Claude CLI | 27 | approximately 18.9k tokens |
+| Claude Code CLI | 27 | approximately 18.9k tokens |
 
-The counts only hint at the design. The Claude CLI pours a lot of behavior into one big `Bash` tool whose description carries pages of usage guidance and safety rules — pick up the shell and you pick up a whole process. Copilot CLI went the other way, splitting terminal work across several smaller tools for starting, reading, listing, and stopping shell processes. Neither is better in the abstract; one is a broad shell with opinions baked in, the other a tidier kit of process-management parts.
+The counts only hint at the design. The Claude Code CLI pours a lot of behavior into one big `Bash` tool whose description carries pages of usage guidance and safety rules — pick up the shell and you pick up a whole process. Copilot CLI went the other way, splitting terminal work across several smaller tools for starting, reading, listing, and stopping shell processes. Neither is better in the abstract; one is a broad shell with opinions baked in, the other a tidier kit of process-management parts.
 
 But the difference that actually changed behavior was simpler than any of that. One harness shipped dedicated search tools. The other folded search into the shell.
 
@@ -85,12 +87,12 @@ I handed both agents the same small assignment, ten times each:
 
 There's one right answer — a single function, in a single file. Both agents found it in all ten runs, every time, no misses. The model knew the job. What differed was the journey.
 
-Copilot reached for its dedicated `grep` and `glob` tools and went more or less straight there — a median of about **three** calls to the model. The Claude CLI, with no standalone search tool, ran its searches through `Bash` — `rg`, `find`, that sort of thing — and in eight of ten runs handed the digging to a helper sub-agent. That detail matters more than it first looks, because the sub-agent isn't even the same model: it's an *Explore* agent running on the cheaper, faster **Haiku 4.5**, while the main Sonnet agent waits in the background. So Claude's tally comes in two layers — the Sonnet parent made only about **two** calls, much like Copilot, while the Haiku helper made another **fifteen or so**, churning through shell output, for roughly seventeen model calls in all.
+Copilot reached for its dedicated `grep` and `glob` tools and went more or less straight there — a median of about **three** calls to the model. The Claude Code CLI, with no standalone search tool, ran its searches through `Bash` — `rg`, `find`, that sort of thing — and in eight of ten runs handed the digging to a helper sub-agent. That detail matters more than it first looks, because the sub-agent isn't even the same model: it's an *Explore* agent running on the cheaper, faster **Haiku 4.5**, while the main Sonnet agent waits in the background. So Claude's tally comes in two layers — the Sonnet parent made only about **two** calls, much like Copilot, while the Haiku helper made another **fifteen or so**, churning through shell output, for roughly seventeen model calls in all.
 
 <figure>
   <img
     src="./figures/harness-choices/search-same-destination.svg"
-    alt="Both harnesses found the correct function in all ten runs. Copilot CLI used dedicated search tools and reached the answer in a median of about three calls, all on the main Sonnet model. Claude CLI delegated to an Explore sub-agent on the cheaper Haiku 4.5: about two calls on Sonnet plus about fifteen on Haiku, roughly seventeen in all. Most of Claude's calls never touched the pricier model."
+    alt="Both harnesses found the correct function in all ten runs. Copilot CLI used dedicated search tools and reached the answer in a median of about three calls, all on the main Sonnet model. Claude Code CLI delegated to an Explore sub-agent on the cheaper Haiku 4.5: about two calls on Sonnet plus about fifteen on Haiku, roughly seventeen in all. Most of Claude's calls never touched the pricier model."
   >
   <figcaption>
     Both reach the destination every time. Claude's main Sonnet model is asked about as often as Copilot's — the extra calls are a cheaper Haiku 4.5 sub-agent doing the legwork.
@@ -99,7 +101,7 @@ Copilot reached for its dedicated `grep` and `glob` tools and went more or less 
 
 Same target, same perfect success rate — two very different routes there. The gap is the abstraction each harness chose to offer. A dedicated search tool packages a common operation into one clean request — *this pattern, in this path, with these filters.* A shell hands the model a general-purpose environment and lets it assemble the search itself, step by step — and Claude's harness leans into that by spinning off a separate, cheaper model to grind through it.
 
-It shows up in the bill, too. A Claude search run cost about twice a Copilot one — roughly ten cents against five — and, against intuition, the cheap Haiku helper is the *bigger* half of that, simply because it makes so many calls. That is the strategy in miniature: push the noisy, repetitive searching onto a cheaper model and keep the expensive one for the reasoning. It also means a raw "Claude made seventeen calls" reads worse than it is, since most of those calls never touched the pricier model.
+The reported usage costs show a similar pattern: the median Claude Code CLI search run comes to about twice a Copilot CLI run — roughly ten cents against five. Here and in the chart below, Copilot's dollars are equivalents of the native GitHub AI Credits reported in its telemetry, converted at $0.01 per credit; Claude's are its CLI-reported Anthropic list-price cost estimates, including sub-agent usage. Neither is an invoice total or a like-for-like comparison of what a user would pay. Against intuition, the cheap Haiku helper accounts for the *bigger* half of Claude's aggregate search-cost estimate, simply because it makes so many calls. That is the strategy in miniature: push the noisy, repetitive searching onto a cheaper model and keep the expensive one for the reasoning. It also means a raw "Claude made seventeen calls" reads worse than it is, since most of those calls never touched the pricier model.
 
 I don't want to oversell any of this as "fewer calls is better." It isn't a quality score. A single shell command can do more than a narrow search call, and a more exploratory, one-step-at-a-time path can sometimes react more carefully to what it finds. The honest takeaway is narrower, and more interesting:
 
@@ -111,7 +113,7 @@ I don't want to oversell any of this as "fewer calls is better." It isn't a qual
 
 It's tempting to describe a coding agent by its most impressive capabilities — sub-agents, skills, persistent memory, planning modes, background tasks, web access. But a capability sitting in the toolbox is a different thing from a capability in use, and the gap between them turned out to be a finding of its own.
 
-On the everyday tasks, the sub-agent machinery went completely untouched — not once. But on the open-ended search, broad enough to be worth handing off, the Claude CLI delegated to a sub-agent in eight of ten runs. The capability had been there the whole time. The shape of the task decided whether the model ever reached for it.
+On the everyday tasks, the sub-agent machinery went completely untouched — not once. But on the open-ended search, broad enough to be worth handing off, the Claude Code CLI delegated to a sub-agent in eight of ten runs. The capability had been there the whole time. The shape of the task decided whether the model ever reached for it.
 
 > A capability surface tells you what *can* happen, not what usually does.
 
@@ -131,19 +133,19 @@ On a tightly specified task, the harness has little room to leave a fingerprint.
 
 It's also the cleanest reply to anyone waving a single run as proof that one agent is smarter. On the task with one right answer, they landed in the same place. The differences that looked so dramatic lived in presentation and in route — not in whether the work got done.
 
-Cost tells the same story, since that's where these comparisons usually start. Plot what each task cost on both harnesses and the striking thing isn't the gap between them — it's how closely they move together. The price climbed with the task, from a couple of cents on the trivial questions to real money on the open-ended feature, and the two agents climbed it side by side.
+The reported usage costs tell the same story, since that's where these comparisons usually start. Plot the figure for each task on both harnesses and the striking thing isn't the gap between them — it's how closely they move together. The reported cost climbed with the task, from a couple of cents on the trivial questions to roughly half a dollar on the open-ended feature, and the two agents climbed it side by side.
 
 <figure>
   <img
     src="./figures/harness-choices/cost-tracks-task.svg"
-    alt="Median cost per run across six tasks for both CLIs. Both lines rise together from a few cents on the simplest task to roughly half a dollar on the open-ended feature, staying close to each other throughout, including on the search task."
+    alt="Median reported usage cost per run across six tasks for Copilot CLI and Claude Code CLI: GitHub credit-derived dollar equivalents and Anthropic list-price estimates, respectively. Both lines rise together from a few cents on the simplest task to roughly half a dollar on the open-ended feature, staying close to each other throughout, including on the search task."
   >
   <figcaption>
-    The task set the bill far more than the harness did: both agents' costs rise together as the work opens up.
+    The task moved the reported usage cost far more than the harness did: both lines rise together as the work opens up. Credit-derived dollar equivalents and list-price estimates, not invoice totals.
   </figcaption>
 </figure>
 
-So the task, not the harness, mostly decided what a run cost — the gap between the two agents stays small next to how much the task itself moves the number. I won't push it further than that: the products bill in different units and warm their caches differently from run to run, so this is the shape of the curve, not a verdict on which is cheaper. Article 1 covers run-to-run variance, and a later piece takes on cost versus quality directly.
+So the task, not the harness, mostly decided the reported usage cost — the gap between the two agents stays small next to how much the task itself moves the number. I won't push it further than that: these telemetry-derived figures are not invoice totals, and the products account for usage and cache warmth differently from run to run, so this is the shape of the curve, not a verdict on which is cheaper. Article 1 covers run-to-run variance, and a later piece takes on cost versus quality directly.
 
 ---
 
@@ -162,7 +164,7 @@ And the toolbox is delivered differently. Both CLIs hand the model their whole c
 <figure>
   <img
     src="./figures/harness-choices/tool-catalog-delivery.svg"
-    alt="How each harness delivers its catalog. Copilot CLI sends all 19 tools up front, Claude CLI all 27, and Copilot in VS Code sends 23 immediately while deferring 33 behind a tool-search step."
+    alt="How each harness delivers its catalog. Copilot CLI sends all 19 tools up front, Claude Code CLI all 27, and Copilot in VS Code sends 23 immediately while deferring 33 behind a tool-search step."
   >
   <figcaption>
     A bigger catalog need not mean a bigger active tool set. The two CLIs send everything; the editor keeps 23 tools active and holds 33 back behind a tool-search step.

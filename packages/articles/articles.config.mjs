@@ -2,14 +2,12 @@
 //
 // This is the PUBLIC override of the manifest: the private repo's full
 // articles.config.mjs lists every draft, but only what appears here is ever
-// built or deployed. Three entries form a linked series (1 → 2 → 3), all
-// listed and indexable; the home page's "Read next" leads into the chain and
-// each article links on to the next. Slugs are kept stable so existing links
-// survive:
+// built or deployed. Three entries form a linked series (1 -> 2 -> 3), all
+// listed and indexable. Keep the public slugs and navigation metadata stable:
 //   1. blog3 — the public front page (`home: true` → `index.html` + its slug).
 //   2. more-than-a-model — slug `a-coding-agent-is-more-than-a-model`.
-//   3. what-your-ide-sends — slug `c964808fb248` (kept from when it was an
-//      unlisted, link-only page, so that direct link still resolves).
+//   3. what-your-ide-sends — slug `c964808fb248`, retained from its former
+//      unlisted, link-only publication so existing direct links still resolve.
 
 export const SITE = {
   name: "Copilot Ledger",
@@ -31,10 +29,10 @@ export const ARTICLES = [
     src: "one-run-cant-rank-two-agents-blog3.md",
     title: "One run can't rank two coding agents",
     description:
-      "Same model, same repo, same prompt, 40 headless runs across the Copilot CLI and the Claude CLI. Why the cost gap traced back to a paragraph of system-prompt wording — batch your tool calls — not to which agent is smarter.",
+      "Same model, same repo, same prompt, 40 headless runs across the Copilot CLI and the Claude CLI. Why the cost gap appears linked to harness behavior — including how each system prompt frames parallel tool use — not to which agent is smarter.",
     theme: "github-blog",
     category: "AI & ML",
-    date: "June 11, 2026",
+    date: "August, 2026",
     readNext: "a-coding-agent-is-more-than-a-model",
     order: 1,
   },

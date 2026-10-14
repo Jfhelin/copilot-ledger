@@ -20,7 +20,7 @@ For this particular task, Copilot CLI delivered similar factual coverage at mate
 
 But that is not the most important point.
 
-The more important point is that the difference came from harness behavior, not model capability. For this task, Copilot CLI's strategy was more efficient. For a different task, a different harness strategy could easily come out ahead.
+The more important point is that the difference appeared at the harness level, not in the underlying model choice. For this task, Copilot CLI's strategy was more efficient. For a different task, a different harness strategy could easily come out ahead.
 
 ## The experiment
 
@@ -34,6 +34,9 @@ To make the comparison as fair as possible, I controlled the obvious variables:
 - Same pinned commit
 - Same prompt
 - Same underlying model
+- Captured June 9, 2026
+- Copilot CLI v1.0.60
+- Claude Code CLI v2.1.170
 - MCP servers disabled
 - Auto-loaded instruction files removed
 - Two conditions: one bare repo, one repo with a short memory/instruction file
@@ -105,19 +108,19 @@ So where did that difference in round-trips come from?
 
 The most likely source is the part of the harness you never see: the system prompt.
 
-Copilot CLI's system prompt tells the model, in plain imperative language, to batch independent tool calls — and even gives it a worked example: if you need to read three files, make three calls in a single response, not three in a row.
+In Copilot CLI v1.0.60, the system prompt told the model, in plain imperative language, to batch independent tool calls — and even gave it a worked example: if you need to read three files, make three calls in a single response, not three in a row.
 
-Claude CLI's system prompt mentions parallel tool calls too. But it frames them as something the model *can* do rather than *should* do, hedges them with a caveat about dependent steps, and gives no worked example.
+In Claude Code CLI v2.1.170, the system prompt mentioned parallel tool calls too. But it framed them as something the model *can* do rather than *should* do, hedged them with a caveat about dependent steps, and gave no worked example.
 
-Same model. Different default behavior. The wording nudged one harness toward batching and left the other leaning sequential.
+Same model. Different default behavior. The wording is one plausible contributor to why one harness batched more often while the other leaned sequential.
 
 For this repository-explanation task, batching worked well.
 
-That is a real product difference.
+That is a real behavioral difference between the harness versions tested.
 
 It is also not a universal ranking.
 
-That product difference is, in the end, a paragraph of system-prompt wording.
+The system-prompt wording may help explain that difference, but this experiment did not isolate it as the sole cause.
 
 Either vendor can rewrite it in the next release. If they do, these numbers can shrink, vanish, or flip.
 

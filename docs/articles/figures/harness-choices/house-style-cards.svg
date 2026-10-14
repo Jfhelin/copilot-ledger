@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 450" width="100%" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
   <title id="title">What each answer looks like</title>
-  <desc id="desc">An illustrative side-by-side of the two harnesses' answers to the same explain-the-repository prompt, same Claude Sonnet model. The Copilot CLI card is shorter, around 457 words, with emoji section headers and a small box diagram. The Claude CLI card is longer, around 653 words, plain prose with no emoji and a diagram only about half the time. Representative of a typical run, not a verbatim transcript.</desc>
+  <desc id="desc">An illustrative side-by-side of the two harnesses' answers to the same explain-the-repository prompt, same Claude Sonnet model. The Copilot CLI card is shorter, around 457 words, with emoji section headers and a small box diagram. The Claude Code CLI card is longer, around 653 words, plain prose with no emoji and a diagram only about half the time. Representative of a typical run, not a verbatim transcript.</desc>
 
   <rect x="0" y="0" width="760" height="450" fill="#ffffff"/>
   <text x="40" y="32" font-size="20" font-weight="700" fill="#24292f">What each answer looks like</text>
@@ -48,7 +48,7 @@
   <rect x="385" y="92" width="345" height="12" fill="#ffffff"/>
   <rect x="385" y="92" width="345" height="2" fill="#8250df" fill-opacity="0.1"/>
   <circle cx="403" cy="89" r="5" fill="#8250df"/>
-  <text x="415" y="93" font-size="12" font-weight="700" fill="#8250df">Claude CLI</text>
+  <text x="415" y="93" font-size="12" font-weight="700" fill="#8250df">Claude Code CLI</text>
   <text x="717" y="93" font-size="10" fill="#57606a" text-anchor="end">~653 words</text>
 
   <g font-size="11" fill="#24292f">
@@ -74,5 +74,5 @@
   <rect x="401" y="386" width="313" height="22" rx="11" fill="#8250df" fill-opacity="0.08"/>
   <text x="411" y="401" font-size="10.5" fill="#8250df">no emoji &#183; diagram about half the time &#183; longer</text>
 
-  <text x="380" y="440" font-size="11" fill="#57606a" text-anchor="middle">Same facts, same model &#8212; the register is the harness's, not the model's.</text>
+  <text x="380" y="440" font-size="11" fill="#57606a" text-anchor="middle">Same facts, same model &#8212; the different registers were primarily shaped by the harness.</text>
 </svg>

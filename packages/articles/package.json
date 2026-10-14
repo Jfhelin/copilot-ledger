@@ -6,6 +6,7 @@
   "description": "Standalone GitHub Pages bubble for individually-shippable Copilot Ledger articles. Self-contained pages with no navigation into the rest of the lab.",
   "scripts": {
     "build": "node build.mjs",
+    "test": "node --test",
     "clean": "rm -rf dist"
   },
   "dependencies": {
