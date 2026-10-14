@@ -22,7 +22,7 @@ A third harness — GitHub Copilot inside the VS Code editor — gets its own se
 
 None of this is meant to crown a winner. It's a look at how design choices surface as behavior.
 
-**Version note:** The 120-run behavioral batch was recorded on June 14, 2026, using GitHub Copilot CLI 1.0.62 and Claude Code CLI 2.1.173, with the main-agent model snapshot `claude-sonnet-4-5-20250929` (Claude Sonnet 4.5) verified per run. The separate June 9 structural reference captures identify Copilot CLI 1.0.60 and Claude Code CLI 2.1.170; those are not the behavioral-batch versions. The VS Code structural evidence is also from June 2026, but does not preserve a VS Code build number. These observations reflect the captured product versions and model snapshot. Tool inventories and system instructions evolve quickly; the structural conclusions are the focus, not a current product inventory.
+**Version note:** The 120-run CLI study used Copilot CLI 1.0.62 and Claude Code CLI 2.1.173 (June 14, 2026). Separate structural captures used versions 1.0.60 and 2.1.170.
 
 ---
 
