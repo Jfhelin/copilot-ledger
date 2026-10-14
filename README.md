@@ -4,6 +4,8 @@ Tools for understanding and improving **VS Code Copilot Chat** session efficienc
 
 🔬 **Live site: [Copilot Behavior Lab →](https://jfhelin.github.io/copilot-ledger/)** — read the experiments and explore example reports without installing anything.
 
+🧭 **AgentViz Studio: [Open the published UI →](https://jfhelin.github.io/copilot-ledger/agentviz/)** — upload and explore your own agent logs.
+
 📄 **Flagship article (stable link): [One run can't rank two coding agents →](https://jfhelin.github.io/copilot-ledger/one-run-cant-rank-two-agents-blog3.html)** — same model, same repo, same prompt, 40 runs across the Copilot CLI and the Claude CLI. This per-article URL stays valid even after the site's front page changes.
 
 > ℹ️ **This is the public mirror.** It's a generated subset of a private research repo —
